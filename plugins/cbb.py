@@ -1,3 +1,4 @@
+import os
 from pyrogram import Client
 from bot import Bot
 from config import *
