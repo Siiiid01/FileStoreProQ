@@ -47,6 +47,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For any inquiries, please contact us at [support@filestoremaster.com](mailto:support@filestoremaster.com).
 
-![Thank You](https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif)
+
 
 Stay organized with **FileStore Master**!
