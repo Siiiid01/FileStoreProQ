@@ -1,7 +1,7 @@
 from pyrogram import filters, enums
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 import os
-
+import random 
 from bot import Bot
 from config import *  # Using existing (PICS)
 
