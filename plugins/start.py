@@ -102,7 +102,7 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-            temp_msg = await message.reply("")
+            temp_msg = await message.reply("Please wait...")
         # Create a typing effect for "Please wait..."
         text = "Please wait..."
         for i in range(1, len(text) + 1):
