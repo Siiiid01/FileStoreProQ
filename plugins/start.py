@@ -101,8 +101,7 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-
-             temp_msg = await message.reply("P")  # Start with the first letter
+    temp_msg = await message.reply("P")  # Start with the first letter
              text = "Please wait...🔥🔥"
         prev_text = "P"  # Store previous text to compare
 
