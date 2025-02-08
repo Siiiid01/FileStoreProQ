@@ -102,21 +102,49 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-            temp_msg = await message.reply("Please wait...")
-        # Create a typing effect for "Please wait..."
-        text = "Please wait..."
-        for i in range(1, len(text) + 1):
-            await temp_msg.edit_text(text[:i])  # Update message dynamically
-            await asyncio.sleep(0.1)  # 100ms delay per character
 
+             temp_msg = await message.reply("P")  # Start with the first letter
+             text = "Please wait...🔥🔥"
+        prev_text = "P"  # Store previous text to compare
+
+        for i in range(1, len(text) + 1):
+        current_text = text[:i]
+        if current_text != prev_text:  # Only update if text is different
         try:
-            messages = await get_messages(client, ids)
+            await temp_msg.edit_text(current_text)
+            prev_text = current_text  # Update previous text
         except Exception as e:
-            await message.reply_text("Something went wrong!")
-            print(f"Error getting messages: {e}")
-            return
-        finally:
-            await temp_msg.delete()
+            print(f"Edit failed: {e}")  # Catch errors if any
+            break
+       await asyncio.sleep(0.07)  # 70ms delay per character
+
+       try:
+       messages = await get_messages(client, ids)
+       except Exception as e:
+       await message.reply_text("Something went wrong!")
+       print(f"Error getting messages: {e}")
+       return
+       finally:
+    await temp_msg.delete()
+
+
+       # ___________________________________
+
+           # temp_msg = await message.reply("Please wait...")
+        # Create a typing effect for "Please wait..."
+       # text = "Please wait..."
+       # for i in range(1, len(text) + 1):
+          #  await temp_msg.edit_text(text[:i])  # Update message dynamically
+          #  await asyncio.sleep(0.1)  # 100ms delay per character
+
+      #  try:
+           # messages = await get_messages(client, ids)
+       # except Exception as e:
+          #  await message.reply_text("Something went wrong!")
+          #  print(f"Error getting messages: {e}")
+           # return
+       # finally:
+           # await temp_msg.delete()
 
 # *********************************************************************************************************                
 #         temp_msg = await message.reply("")
