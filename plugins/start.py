@@ -100,32 +100,31 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 print(f"Error decoding ID: {e}")
                 return
-
-    temp_msg = await message.reply("P")  # Start with the first letter
-             text = "Please wait...🔥🔥"
+        temp_msg = await message.reply("P")  # Start with the first letter
+        text = "Please wait...🔥🔥"
         prev_text = "P"  # Store previous text to compare
 
         for i in range(1, len(text) + 1):
-        current_text = text[:i]
-        if current_text != prev_text:  # Only update if text is different
+            current_text = text[:i]
+            if current_text != prev_text:  # Only update if text is different
+                try:
+                    await temp_msg.edit_text(current_text)
+                    prev_text = current_text  # Update previous text
+                except Exception as e:
+                    print(f"Edit failed: {e}")  # Catch errors if any
+                    break
+            await asyncio.sleep(0.07)  # 70ms delay per character
+
         try:
-            await temp_msg.edit_text(current_text)
-            prev_text = current_text  # Update previous text
+            messages = await get_messages(client, ids)
         except Exception as e:
-            print(f"Edit failed: {e}")  # Catch errors if any
-            break
-       await asyncio.sleep(0.07)  # 70ms delay per character
+            await message.reply_text("Something went wrong!")
+            print(f"Error getting messages: {e}")
+            return
+        finally:
+            await temp_msg.delete()
 
-       try:
-       messages = await get_messages(client, ids)
-       except Exception as e:
-       await message.reply_text("Something went wrong!")
-       print(f"Error getting messages: {e}")
-       return
-       finally:
-    await temp_msg.delete()
-
-
+    
        # ___________________________________
 
        # ___________________________________
