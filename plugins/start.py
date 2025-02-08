@@ -197,19 +197,13 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
-        reply_markup = InlineKeyboardMarkup(
-
-                    [InlineKeyboardButton("More", callback_data="more")],
-
-            [
-
-    [
-                    InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data = "about"),
-                    InlineKeyboardButton('Adult', url='https://t.me/H_Anime_and_popular_videos')
-
-    ]
-            ]
-        )
+        reply_markup = InlineKeyboardMarkup([
+    [InlineKeyboardButton("More", callback_data="more")],  # First row
+    [  
+        InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data="about"),  
+        InlineKeyboardButton("Adult", url="https://t.me/H_Anime_and_popular_videos")  
+    ]  # Second row
+        ])
         await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
