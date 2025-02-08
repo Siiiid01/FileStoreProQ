@@ -113,7 +113,7 @@ async def start_command(client: Client, message: Message):
                 except Exception as e:
                     print(f"Edit failed: {e}")  # Catch errors if any
                     break
-            await asyncio.sleep(0.05)  # 70ms delay per character
+            await asyncio.sleep(0.07)  # 70ms delay per character
 
         try:
             messages = await get_messages(client, ids)
@@ -225,13 +225,13 @@ async def start_command(client: Client, message: Message):
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
         reply_markup = InlineKeyboardMarkup([
-    [InlineKeyboardButton("More", callback_data="more")],  # First row
-    [  
-        InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data="about"),  
-        InlineKeyboardButton("Adult", url="https://t.me/H_Anime_and_popular_videos")  
-    ]  # Second row
+            [InlineKeyboardButton("More", callback_data="more")],  # First row
+            [  
+                InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data="about"),  
+                InlineKeyboardButton("Adult", url="https://t.me/H_Anime_and_popular_videos")  
+            ]  # Second row
         ])
-        await message.reply_photo(
+        sent_message = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
@@ -240,11 +240,25 @@ async def start_command(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=reply_markup,
-            message_effect_id=5104841245755180586  # 🔥
+            reply_markup=reply_markup
         )
+
+        # Apply a big reaction effect to the sent message
+        await sent_message.react(emoji=random.choice(REACTIONS), big=True)
         return
 
+        # await message.reply_photo(
+        #     photo=random.choice(PICS),
+        #     caption=START_MSG.format(
+        #         first=message.from_user.first_name,
+        #         last=message.from_user.last_name,
+        #         username=None if not message.from_user.username else '@' + message.from_user.username,
+        #         mention=message.from_user.mention,
+        #         id=message.from_user.id
+        #     ),
+        #     reply_markup=reply_markup,
+        #     message_effect_id=5104841245755180586  # 🔥
+        # )
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
@@ -296,19 +310,20 @@ async def not_joined(client: Client, message: Message):
     except IndexError:
         pass  # Ignore if no second argument is present
 
-    await message.reply_photo(
+    sent_message = await message.reply_photo(
         photo=random.choice(PICS),
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons),
-    message_effect_id=5104841245755180586  # Add the effect ID here
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
+    # Apply reaction
+    await sent_message.react(emoji=random.choice(REACTIONS), big=True)
 
 #=====================================================================================##
 
