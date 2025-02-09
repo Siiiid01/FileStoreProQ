@@ -56,6 +56,11 @@ async def showid(client, message: Message):
     # Add reaction to bot's message
     await bot_msg.react("🔥")
 
+@Bot.on_callback_query(filters.regex("^close"))
+async def close_callback(client, callback_query):
+    await callback_query.message.delete()
+
+
 
 # @Bot.on_callback_query(filters.regex(r"^more_info_(\d+)"))
 # async def more_info(client, callback_query):

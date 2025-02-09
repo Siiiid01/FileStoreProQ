@@ -22,23 +22,23 @@ def upload_image_requests(image_path):
         print(f"Error during upload: {e}")
         return None
 
-@Client.on_message(filters.command("telegraph") & filters.private)
-async def telegraph_upload(client, message):
+@Client.on_message(filters.command(["telegraph", "tg"]) & filters.private)
+async def telegraph_upload(client, message: Message):
     try:
         # Send initial message
-        await message.reply_text("Now Send Me Your Photo Or Video Under 5MB To Get Media Link.")
+        msg = await message.reply_text("Now Send Me Your Photo Or Video Under 5MB To Get Media Link.")
         
         # Wait for user's media message
         try:
-            t_msg = await client.listen(message.chat.id, timeout=60)
+            t_msg = await client.wait_for_message(chat_id=message.chat.id, timeout=60)
         except TimeoutError:
-            return await message.reply_text("**Timeout: No media received within 60 seconds.**")
+            return await msg.edit_text("**Timeout: No media received within 60 seconds.**")
 
         if not t_msg.media:
-            return await message.reply_text("**Only Media Supported.**")
+            return await msg.edit_text("**Only Media Supported.**")
 
         # Download and upload process
-        uploading_message = await message.reply_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")
+        uploading_message = await msg.edit_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")
         
         try:
             path = await t_msg.download()
@@ -69,4 +69,12 @@ async def telegraph_upload(client, message):
                 
     except Exception as e:
         await message.reply_text(f"**An error occurred: {str(e)}**")
+
+# Add callback handler for the close button
+@Client.on_callback_query(filters.regex("^close"))
+async def close_button(client, callback_query: CallbackQuery):
+    try:
+        await callback_query.message.delete()
+    except MessageNotModified:
+        pass
     
