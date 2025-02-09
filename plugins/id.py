@@ -107,11 +107,11 @@ async def close_callback(client, callback_query):
 
 
 
-    # Edit the existing message with updated info & new image
-    await callback_query.message.edit_media(
-        media=profile_pic,
-        caption=response_text
-    )
+    # # Edit the existing message with updated info & new image
+    # await callback_query.message.edit_media(
+    #     media=profile_pic,
+    #     caption=response_text
+    # )
 
 
 
