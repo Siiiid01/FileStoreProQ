@@ -7,7 +7,6 @@ from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
 from config import *
-from telegraph import telegraph_upload
 
 
 name ="""
