@@ -23,34 +23,40 @@ async def showid(client, message: Message):
     about = chat.bio or "N/A"
     bot_lang_code = client.me.language_code if client.me.language_code else "N/A"
 
-    # All info in one message
+    # All info in one message with improved formatting
     info_text = (
-        f"<b><blockquote><i>🔥 User Information</i></blockquote></b>\n\n"
-        f"<b><blockquote>🆔 User ID: <code>{user_id}</code>\n"
-        f"📛 First Name: <code>{first_name}</code>\n"
-        f"📝 Last Name: <code>{last_name}</code>\n"
-        f"🔗 Username: <code>{username}</code>\n"
-        f"🌍 Language: <code>{language}</code>\n"
-        f"📝 Bio: <code>{about}</code>\n"
-        f"<b><blockquote>🤖 Bot Language: <code>{bot_lang_code}</code></b></blockquote>\n\n"
-        f"</b></blockquote><i>👑 Bot Owner: @Anime106_Request_Bot</i></b></blockquote>"
+        f"<blockquote><b>🔥 𝚄𝚂𝙴𝚁 𝙸𝙽𝙵𝙾𝚁𝙼𝙰𝚃𝙸𝙾𝙽</b></blockquote>\n\n"
+        f"<blockquote><b>"
+        f"🆔 𝚄𝚂𝙴𝚁 𝙸𝙳: <code>{user_id}</code>\n"
+        f"📛 𝙵𝙸𝚁𝚂𝚃 𝙽𝙰𝙼𝙴: <code>{first_name}</code>\n"
+        f"📝 𝙻𝙰𝚂𝚃 𝙽𝙰𝙼𝙴: <code>{last_name}</code>\n"
+        f"🔗 𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴: <code>{username}</code>\n"
+        f"🌍 𝙻𝙰𝙽𝙶𝚄𝙰𝙶𝙴: <code>{language}</code>\n"
+        f"📝 𝙱𝙸𝙾: <code>{about}</code>\n"
+        f"🤖 𝙱𝙾𝚃 𝙻𝙰𝙽𝙶𝚄𝙰𝙶𝙴: <code>{bot_lang_code}</code></b></blockquote>\n\n"
+        f"<blockquote><i>👑 𝙱𝙾𝚃 𝙾𝚆𝙽𝙴𝚁: @Anime106_Request_Bot</i></blockquote>"
     )
     
-    # Create button
+    # Create button with improved style
     buttons = InlineKeyboardMarkup([[
-        InlineKeyboardButton("• Close •", callback_data="close")
+        InlineKeyboardButton("✯ 𝙲𝙻𝙾𝚂𝙴 ✯", callback_data="close")
     ]])
 
     # Send message with all info
-    bot_msg = await message.reply_photo(
-        photo=random.choice(PICS),
-        caption=info_text,
-        reply_markup=buttons,
-        parse_mode=enums.ParseMode.HTML
-    )
-
-    await bot_msg.react("🔥")
+    try:
+        bot_msg = await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=info_text,
+            reply_markup=buttons,
+            parse_mode=enums.ParseMode.HTML
+        )
+        await bot_msg.react("🔥")
+    except Exception as e:
+        await message.reply_text(f"An error occurred: {str(e)}")
 
 @Bot.on_callback_query(filters.regex("^close$"))
-async def close_callback(client, callback_query):
-    await callback_query.message.delete()
+async def close_callback(client, callback_query: CallbackQuery):
+    try:
+        await callback_query.message.delete()
+    except Exception as e:
+        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
