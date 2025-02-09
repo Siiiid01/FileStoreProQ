@@ -7,17 +7,17 @@ from pyrogram.errors import MessageNotModified
 
 def upload_image_requests(image_path):
     upload_url = "https://envs.sh"
-
+    
     try:
         with open(image_path, 'rb') as file:
             files = {'file': file} 
             response = requests.post(upload_url, files=files)
-
+            
             if response.status_code == 200:
                 return response.text.strip() 
             else:
                 return print(f"Upload failed with status code {response.status_code}")
-
+    
     except Exception as e:
         print(f"Error during upload: {e}")
         return None
@@ -30,12 +30,12 @@ async def telegraph_upload(client, message):
         
         # Wait for user's media message
         try:
-            t_msg = await client.listen(message.chat.id, timeout=60)  # Using listen instead of wait_for_message
+            t_msg = await client.listen(message.chat.id, timeout=60)
         except TimeoutError:
-            return await ask_msg.edit("**Timeout: No media received within 60 seconds.**")
+            return await message.reply_text("**Timeout: No media received within 60 seconds.**")
 
         if not t_msg.media:
-            return await ask_msg.edit("**Only Media Supported.**")
+            return await message.reply_text("**Only Media Supported.**")
 
         # Download and upload process
         uploading_message = await message.reply_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")

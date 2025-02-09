@@ -24,13 +24,21 @@ async def showid(client, message: Message):
 
     # Generate response text
     response_text = (
-        f"<blockquote>🔥 **User Info:**\n</blockquote>"
-        f"<blockquote>🆔 **User ID:** `{user_id}`\n</blockquote>"
-        f"<blockquote>📛 **First Name:** `{first_name}`\n</blockquote>"
-        f"<blockquote>📝 **Last Name:** `{last_name}`\n</blockquote>"
-        f"<blockquote>🔗 **Username:** `{username}`\n</blockquote>"
-        f"<blockquote>🌍 **Language:** `{language}`</blockquote>"
+        f"<blockquote>🔥 User Info:\n"
+        f"🆔 User ID:`{user_id}`\n"
+        f"📛 First Name: `{user.first_name}`\n"
+        f"📝 Last Name: `{user.last_name or 'N/A'}`\n"
+        f"🔗 Username: `{user.username or 'N/A'}`\n"
+        f"🌍 Language: `{callback_query.message.chat.language_code}`</blockquote>\n\n"
+        
+        f"<blockquote>🔹 More Info:\n"
+        f"📷 Profile Picture: Sent above 👆\n"
+        f"📝 Bio: `{about}`\n"
+        f"📅 Joined Telegram: `{join_date}`\n"
+        f"🤖 Bot Language Code: `{bot_lang_code}`\n\n"
+        f"👑 Bot Owner: @Anime106_Request_Bot </blockquote>"
     )
+
 
     # More Info and Close buttons
     buttons = InlineKeyboardMarkup([
