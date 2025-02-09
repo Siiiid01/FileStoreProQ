@@ -42,7 +42,6 @@ async def showid(client, message: Message):
 
     # More Info and Close buttons
     buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("• More Info •", callback_data=f"more_info_{user_id}")],
         [InlineKeyboardButton("• Close •", callback_data="close")]
     ])
 
@@ -58,60 +57,60 @@ async def showid(client, message: Message):
     await bot_msg.react("🔥")
 
 
-@Bot.on_callback_query(filters.regex(r"^more_info_(\d+)"))
-async def more_info(client, callback_query):
-    user_id = int(callback_query.data.split("_")[1])
-    user = await client.get_users(user_id)  # Fetch full user info
+# @Bot.on_callback_query(filters.regex(r"^more_info_(\d+)"))
+# async def more_info(client, callback_query):
+#     user_id = int(callback_query.data.split("_")[1])
+#     user = await client.get_users(user_id)  # Fetch full user info
 
-    # Fetch user details
-    about = user.bio or "N/A"
-    try:
-        profile_pics = await client.get_chat_photos(user_id)
-        first_photo = await profile_pics.next()
-        profile_pic = first_photo.file_id
-    except StopAsyncIteration:
-        profile_pic = NO_PROFILE_PHOTO  # Use the default photo if no profile picture
+#     # Fetch user details
+#     about = user.bio or "N/A"
+#     try:
+#         profile_pics = await client.get_chat_photos(user_id)
+#         first_photo = await profile_pics.next()
+#         profile_pic = first_photo.file_id
+#     except StopAsyncIteration:
+#         profile_pic = NO_PROFILE_PHOTO  # Use the default photo if no profile picture
 
-    join_date = user.status.date.strftime("%Y-%m-%d") if user.status else "Unknown"
-    bot_lang_code = callback_query.message.chat.language_code or "N/A"
+#     join_date = user.status.date.strftime("%Y-%m-%d") if user.status else "Unknown"
+#     bot_lang_code = callback_query.message.chat.language_code or "N/A"
 
-    # Update response text
-    response_text = (
-        f"<blockquote>🔥 User Info:\n"
-        f"🆔 User ID:`{user_id}`\n"
-        f"📛 First Name: `{user.first_name}`\n"
-        f"📝 Last Name: `{user.last_name or 'N/A'}`\n"
-        f"🔗 Username: `{user.username or 'N/A'}`\n"
-        f"🌍 Language: `{callback_query.message.chat.language_code}`</blockquote>\n\n"
+#     # Update response text
+#     response_text = (
+#         f"<blockquote>🔥 User Info:\n"
+#         f"🆔 User ID:`{user_id}`\n"
+#         f"📛 First Name: `{user.first_name}`\n"
+#         f"📝 Last Name: `{user.last_name or 'N/A'}`\n"
+#         f"🔗 Username: `{user.username or 'N/A'}`\n"
+#         f"🌍 Language: `{callback_query.message.chat.language_code}`</blockquote>\n\n"
         
-        f"<blockquote>🔹 More Info:\n"
-        f"📷 Profile Picture: Sent above 👆\n"
-        f"📝 Bio: `{about}`\n"
-        f"📅 Joined Telegram: `{join_date}`\n"
-        f"🤖 Bot Language Code: `{bot_lang_code}`\n\n"
-        f"👑 Bot Owner: @Anime106_Request_Bot </blockquote>"
-    )
+#         f"<blockquote>🔹 More Info:\n"
+#         f"📷 Profile Picture: Sent above 👆\n"
+#         f"📝 Bio: `{about}`\n"
+#         f"📅 Joined Telegram: `{join_date}`\n"
+#         f"🤖 Bot Language Code: `{bot_lang_code}`\n\n"
+#         f"👑 Bot Owner: @Anime106_Request_Bot </blockquote>"
+#     )
 
-    # Close button
-    buttons = InlineKeyboardMarkup([[
-        InlineKeyboardButton("• Close •", callback_data="close")
-    ]])
-
-
-    # Edit the existing message with updated info & new image
-    await callback_query.message.edit_media(
-        media=dict(
-            type="photo",
-            media=profile_pic,
-            caption=response_text
-        ),
-        reply_markup=buttons
-    )
+#     # Close button
+#     buttons = InlineKeyboardMarkup([[
+#         InlineKeyboardButton("• Close •", callback_data="close")
+#     ]])
 
 
-@Bot.on_callback_query(filters.regex("^close"))
-async def close_callback(client, callback_query):
-    await callback_query.message.delete()
+#     # Edit the existing message with updated info & new image
+#     await callback_query.message.edit_media(
+#         media=dict(
+#             type="photo",
+#             media=profile_pic,
+#             caption=response_text
+#         ),
+#         reply_markup=buttons
+#     )
+
+
+# @Bot.on_callback_query(filters.regex("^close"))
+# async def close_callback(client, callback_query):
+#     await callback_query.message.delete()
 
 
 
