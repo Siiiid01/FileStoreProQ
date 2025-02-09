@@ -46,6 +46,7 @@ async def showid(client, message: Message):
 
     # Since there's no profile photo fetching, we can use a default photo
     bot_msg = await message.reply_photo(
+        photo=random.choice(PICS),
         caption=response_text,
         reply_markup=buttons,
         parse_mode=enums.ParseMode.MARKDOWN
