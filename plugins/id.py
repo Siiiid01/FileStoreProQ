@@ -19,11 +19,11 @@ async def showid(client, message: Message):
 
     # Basic info message
     basic_info = (
-        f"<blockquote>🔥 User Info:\n"
-        f"🆔 User ID: `{user_id}`\n"
-        f"📛 First Name: `{first_name}`\n"
-        f"📝 Last Name: `{last_name}`\n"
-        f"🔗 Username: `{username}`</blockquote>"
+        f"<b>🔥 User Info:</b>\n\n"
+        f"🆔 User ID: <code>{user_id}</code>\n"
+        f"📛 First Name: <code>{first_name}</code>\n"
+        f"📝 Last Name: <code>{last_name}</code>\n"
+        f"🔗 Username: <code>{username}</code>"
     )
     
     # Create buttons
@@ -37,42 +37,38 @@ async def showid(client, message: Message):
         photo=random.choice(PICS),
         caption=basic_info,
         reply_markup=buttons,
-        parse_mode=enums.ParseMode.MARKDOWN
+        parse_mode=enums.ParseMode.HTML
     )
 
     await bot_msg.react("🔥")
 
-@Bot.on_callback_query(filters.regex("^more_info"))
+@Bot.on_callback_query(filters.regex("^more_info$"))
 async def more_info_callback(client, callback_query: CallbackQuery):
     user = callback_query.from_user
     user_id = user.id
     
     # Fetch additional user info
     language = user.language_code if user.language_code else "N/A"
-    about = (await client.get_chat(user_id)).bio or "N/A"
-    join_date = user.date if user.date else "Unknown"
-    if join_date != "Unknown":
-        join_date = join_date.strftime("%Y-%m-%d %H:%M:%S")
+    chat = await client.get_chat(user_id)
+    about = chat.bio or "N/A"
     bot_lang_code = client.me.language_code if client.me.language_code else "N/A"
 
-    # Basic info (same as before)
+    # Basic info
     basic_info = (
-        f"<blockquote>🔥 User Info:\n"
-        f"🆔 User ID: `{user_id}`\n"
-        f"📛 First Name: `{user.first_name}`\n"
-        f"📝 Last Name: `{user.last_name or 'N/A'}`\n"
-        f"🔗 Username: `{'@' + user.username if user.username else 'N/A'}`</blockquote>"
+        f"<b>🔥 User Info:</b>\n\n"
+        f"🆔 User ID: <code>{user_id}</code>\n"
+        f"📛 First Name: <code>{user.first_name}</code>\n"
+        f"📝 Last Name: <code>{user.last_name or 'N/A'}</code>\n"
+        f"🔗 Username: <code>{'@' + user.username if user.username else 'N/A'}</code>"
     )
 
     # Additional info
     additional_info = (
-        f"\n<blockquote>🔹 More Info:\n"
-        f"🌍 Language: `{language}`\n"
-        f"📷 Profile Picture: Default (no fetching)\n"
-        f"📝 Bio: `{about}`\n"
-        f"📅 Joined Telegram: `{join_date}`\n"
-        f"🤖 Bot Language Code: `{bot_lang_code}`\n\n"
-        f"👑 Bot Owner: @Anime106_Request_Bot </blockquote>"
+        f"\n\n<b>🔹 More Info:</b>\n\n"
+        f"🌍 Language: <code>{language}</code>\n"
+        f"📝 Bio: <code>{about}</code>\n"
+        f"🤖 Bot Language Code: <code>{bot_lang_code}</code>\n\n"
+        f"👑 Bot Owner: @Anime106_Request_Bot"
     )
 
     # Combined message
@@ -87,11 +83,12 @@ async def more_info_callback(client, callback_query: CallbackQuery):
         await callback_query.message.edit_caption(
             caption=full_message,
             reply_markup=buttons,
-            parse_mode=enums.ParseMode.MARKDOWN
+            parse_mode=enums.ParseMode.HTML
         )
+        await callback_query.answer("Showing more information!")
     except Exception as e:
         await callback_query.answer(f"Error: {str(e)}", show_alert=True)
 
-@Bot.on_callback_query(filters.regex("^close"))
+@Bot.on_callback_query(filters.regex("^close$"))
 async def close_callback(client, callback_query):
     await callback_query.message.delete()
