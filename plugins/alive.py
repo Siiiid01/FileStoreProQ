@@ -1,5 +1,6 @@
 import time
 import random
+import asyncio
 from pyrogram import Client, filters
 
 CMD = ["/", "."]
@@ -44,11 +45,20 @@ PING_CAPTIONS = [
 async def check_alive(_, message):
     sticker = random.choice(STICKERS)
     caption = random.choice(ALIVE_CAPTIONS)
-    await message.reply_sticker(sticker)
-    await message.reply_text(f"<b><i><blockquote>{caption}</b></i></blockquote>")
-
-     # Auto delete the message after 10 seconds
-    await msg.delete(delay=10)
+    
+    # Send sticker and text
+    sticker_msg = await message.reply_sticker(sticker)
+    text_msg = await message.reply_text(f"<b><i><blockquote>{caption}</b></i></blockquote>")
+    
+    # Wait for 10 seconds
+    await asyncio.sleep(10)
+    
+    # Delete both messages
+    try:
+        await sticker_msg.delete()
+        await text_msg.delete()
+    except:
+        pass  # Ignore if deletion fails
 
 
 @Client.on_message(filters.command("ping", CMD))

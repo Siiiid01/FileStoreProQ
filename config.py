@@ -80,7 +80,7 @@ PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" e
 # Start Command Reactions
 REACTIONS = [
     "5104841245755180586",  # 🔥
-    "5044134455711629726"  # ❤️
+    "5159385139981059251"  # ❤️
 ] #don't add any emoji because tg not support all emoji reactions
 
 #Set true if you want Disable your Channel Posts Share button
