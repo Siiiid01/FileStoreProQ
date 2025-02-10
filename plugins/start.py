@@ -68,7 +68,7 @@ async def start_command(client: Client, message: Message):
 # Handle "More" button to refresh with a new random image
 @Bot.on_callback_query(filters.regex("refresh_start"))
 async def refresh_start(client: Client, callback_query):
-    new_photo = random.choice(START_PICS)
+    new_photo = random.choice(PICS)
 
     await callback_query.message.edit_media(
         media=new_photo,
