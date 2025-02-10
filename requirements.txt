@@ -20,3 +20,4 @@ telegraph
 youtube-search-python
 yt-dlp
 aiogram
+youtube-search
