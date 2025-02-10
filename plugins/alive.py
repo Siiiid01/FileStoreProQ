@@ -43,6 +43,13 @@ PING_CAPTIONS = [
 
 @Client.on_message(filters.command("alive", CMD))
 async def check_alive(_, message):
+    # Delete the command message
+    try:
+        await message.delete()
+    except:
+        pass
+
+    # Send sticker and text
     sticker = random.choice(STICKERS)
     caption = random.choice(ALIVE_CAPTIONS)
     
@@ -57,9 +64,9 @@ async def check_alive(_, message):
     try:
         await sticker_msg.delete()
         await text_msg.delete()
-    except:
-        pass  # Ignore if deletion fails
-
+    except Exception as e:
+        print(f"Error deleting messages: {e}")
+        pass
 
 @Client.on_message(filters.command("ping", CMD))
 async def ping(_, message):
@@ -71,3 +78,12 @@ async def ping(_, message):
     caption = random.choice(PING_CAPTIONS)
     
     await rm.edit(f"🏓 Pong!\n⏳ `{time_taken_s:.3f} ms`\n\n{caption}")
+    
+    # Wait for 10 seconds and delete both messages
+    await asyncio.sleep(10)
+    try:
+        await message.delete()
+        await rm.delete()
+    except Exception as e:
+        print(f"Error deleting ping messages: {e}")
+        pass

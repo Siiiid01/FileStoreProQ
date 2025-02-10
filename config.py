@@ -77,7 +77,7 @@ CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<<blockquote><i><b>• ʙʏ @
 #set True if you want to prevent users from forwarding files from bot
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False
 
-# Start Command Reactions
+# Message effect IDs
 REACTIONS = [
     "5104841245755180586",  # 🔥
     "5159385139981059251"  # ❤️

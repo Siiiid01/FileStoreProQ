@@ -11,13 +11,17 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, 
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 
-# Import only what's needed from aiogram for message effects
-from aiogram.types import Message as AioMessage
+# Aiogram imports for message effects
+from aiogram import Bot as AiogramBot
+from aiogram.types import Message as AiogramMessage
 
 from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
+
+# Initialize aiogram bot with the same token from config
+aiogram_bot = AiogramBot(token=TG_BOT_TOKEN)  # Using existing token from config.py
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -241,7 +245,10 @@ async def start_command(client: Client, message: Message):
                 InlineKeyboardButton("Adult", url="https://t.me/H_Anime_and_popular_videos")  
             ]  # Second row
         ])
-        sent_message = await message.reply_photo(
+
+        # Send photo using aiogram for message effects
+        await aiogram_bot.send_photo(
+            chat_id=message.chat.id,
             photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
@@ -251,7 +258,7 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=random.choice(REACTIONS)  # Add this line for the effect
+            message_effect_id=random.choice(REACTIONS)
         )
 
         # Apply a big reaction effect to the sent message
@@ -328,7 +335,9 @@ async def not_joined(client: Client, message: Message):
     except IndexError:
         pass  # Ignore if no second argument is present
 
-    sent_message = await message.reply_photo(
+    # Send photo using aiogram for message effects
+    await aiogram_bot.send_photo(
+        chat_id=message.chat.id,
         photo=random.choice(PICS),
         caption=FORCE_MSG.format(
             first=message.from_user.first_name,

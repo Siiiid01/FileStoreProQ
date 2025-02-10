@@ -19,6 +19,6 @@ asyncio
 telegraph
 youtube-search-python
 yt-dlp
-aiogram
+aiogram>=3.0.0
 youtube-search
 aiosqlite

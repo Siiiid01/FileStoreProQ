@@ -68,12 +68,14 @@ async def play_game(client, message):
     # Edit the status message to indicate the game result
     await status_message.edit(f"🎮 {game.capitalize()} Over! Your result: {dice_msg.dice.value} 🎲")
 
-    # Optionally delete the status message after some time
-    await asyncio.sleep(5)
+    # Wait for 10 seconds before deleting both messages
+    await asyncio.sleep(10)
     try:
         await status_message.delete()
-    except:
-        pass  # Ignore if deletion fails
+        await dice_msg.delete()
+    except Exception as e:
+        print(f"Error deleting game messages: {e}")
+        pass
 
 # Random funny responses
 RUN_STRINGS = [
