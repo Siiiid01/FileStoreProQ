@@ -174,7 +174,7 @@ async def start_command(client: Client, message: Message):
     ]
             ]
         )
-        await message.reply_photo(
+        await message.reply_text(
             photo=random.choices(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
@@ -184,7 +184,7 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_thread_id=5104841245755180586  # 🔥
+            message_effect_id=5104841245755180586  # 🔥
         )
         return
 
@@ -240,7 +240,7 @@ async def not_joined(client: Client, message: Message):
     except IndexError:
         pass  # Ignore if no second argument is present
 
-    await message.reply_photo(
+    await message.reply_text(
         photo=random.choices(PICS),
         caption=FORCE_MSG.format(
         first=message.from_user.first_name,
@@ -250,7 +250,7 @@ async def not_joined(client: Client, message: Message):
         id=message.from_user.id
     ),
     reply_markup=InlineKeyboardMarkup(buttons),
-    message_thread_id=5104841245755180586  # Add the effect ID here 😉 
+    message_effect_id=5104841245755180586  # Add the effect ID here 😉 
 )
 
 
