@@ -322,7 +322,7 @@ async def not_joined(client: Client, message: Message):
             id=message.from_user.id
         ),
         reply_markup=InlineKeyboardMarkup(buttons)
-        effect_id=random.choice(REACTIONS)  # Add this line for the effect
+        #effect_id=random.choice(REACTIONS)  # Add this line for the effect
     )
 
     # Apply reaction
