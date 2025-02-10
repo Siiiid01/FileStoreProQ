@@ -184,7 +184,7 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586  # 🔥
+            message_thread_id=5104841245755180586  # 🔥
         )
         return
 
@@ -250,7 +250,7 @@ async def not_joined(client: Client, message: Message):
         id=message.from_user.id
     ),
     reply_markup=InlineKeyboardMarkup(buttons),
-    message_effect_id=5104841245755180586  # Add the effect ID here
+    message_thread_id=5104841245755180586  # Add the effect ID here 😉 
 )
 
 
