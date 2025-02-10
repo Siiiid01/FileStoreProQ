@@ -87,7 +87,7 @@ RUN_STRINGS = [
     "Children..",
     "Your father to Paul...",
     "Before falling in the 4th pegging, I will arrive there.",
-    "To tell me I love Yo....",",
+    "To tell me I love Yo....",
 ]
 
 @Client.on_message(filters.command("runs") & private_filter)
