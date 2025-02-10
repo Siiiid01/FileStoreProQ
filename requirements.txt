@@ -24,3 +24,4 @@ telegraph
 youtube-search-python
 yt_dlp
 aiogram
+youtube-search-python
