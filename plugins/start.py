@@ -175,7 +175,7 @@ async def start_command(client: Client, message: Message):
             ]
         )
         await message.reply_photo(
-            photo=random.choices(PICS),
+            photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -241,7 +241,7 @@ async def not_joined(client: Client, message: Message):
         pass  # Ignore if no second argument is present
 
     await message.reply_photo(
-        photo=random.choices(PICS),
+        photo=random.choice(PICS),
         caption=FORCE_MSG.format(
         first=message.from_user.first_name,
         last=message.from_user.last_name,
