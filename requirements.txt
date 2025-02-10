@@ -5,14 +5,11 @@ pyromod
 humanize
 schedule
 APscheduler
-# --- For-Database ------------ #
 pymongo
 motor
 dnspython
-# --- For-Web-Response ------- #
 aiohttp
 python-dotenv
-# --- For-Web-Response ------- #
 pytz
 requests
 bs4
@@ -20,8 +17,6 @@ shortzy
 aiofiles
 asyncio
 telegraph
-# --- Song-Downloader ------- #
 youtube-search-python
-yt_dlp
+yt-dlp
 aiogram
-youtube-search-python
