@@ -321,7 +321,7 @@ async def not_joined(client: Client, message: Message):
             mention=message.from_user.mention,
             id=message.from_user.id
         ),
-        reply_markup=InlineKeyboardMarkup(buttons)
+        reply_markup=InlineKeyboardMarkup(buttons),
         effect_id=random.choice(REACTIONS)  # Add this line for the effect
     )
 
