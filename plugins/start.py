@@ -10,14 +10,14 @@ from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
+
+# Import only what's needed from aiogram for message effects
+from aiogram.types import Message as AioMessage
+
 from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
-from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.types import Message
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -25,6 +25,12 @@ TUT_VID = f"{TUT_VID}"
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
+    # Delete the /start command message
+    try:
+        await message.delete()
+    except:
+        pass  # Ignore if deletion fails
+        
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -268,6 +274,12 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
+    # Delete the /start command message
+    try:
+        await message.delete()
+    except:
+        pass  # Ignore if deletion fails
+        
     # Initialize buttons list
     buttons = []
 
@@ -342,13 +354,13 @@ REPLY_ERROR = "<code>Use this command as a reply to any telegram message without
 
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
-async def get_users(client: Bot, message: Message):
+async def get_users(client: Client, message: Message):
     msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
     users = await full_userbase()
     await msg.edit(f"{len(users)} users are using this bot")
 
 @Bot.on_message(filters.private & filters.command('broadcast') & filters.user(ADMINS))
-async def send_text(client: Bot, message: Message):
+async def send_text(client: Client, message: Message):
     if message.reply_to_message:
         query = await full_userbase()
         broadcast_msg = message.reply_to_message
