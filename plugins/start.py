@@ -262,8 +262,8 @@ async def start_command(client: Client, message: Message):
         )
 
         # Apply a big reaction effect to the sent message
-        # await sent_message.react(emoji=random.choice(REACTIONS), big=True)
-        await message.react(emoji="🔥", big=True)
+        await sent_message.react(emoji=random.choice(REACTIONS), big=True)
+        # await message.react(emoji="🔥", big=True)
         return
 
         # await message.reply_photo(
@@ -347,12 +347,13 @@ async def not_joined(client: Client, message: Message):
             id=message.from_user.id
         ),
         reply_markup=InlineKeyboardMarkup(buttons),
-        message_effect_id=random.choice(REACTIONS)  # Add this line for the effect
+        await message.react(emoji="🔥", big=True)
+        # message_effect_id=random.choice(REACTIONS)  # Add this line for the effect
     )
 
     # Apply reaction
     # await sent_message.react(emoji=random.choice(REACTIONS), big=True)
-    # await message.react(emoji="🔥", big=True)
+    
 #=====================================================================================##
 
 WAIT_MSG = "<b>Working....</b>"
