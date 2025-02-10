@@ -241,7 +241,7 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            effect_id=random.choice(REACTIONS)  # Add this line for the effect
+            message_effect_id=random.choice(REACTIONS)  # Add this line for the effect
         )
 
         # Apply a big reaction effect to the sent message
@@ -322,7 +322,7 @@ async def not_joined(client: Client, message: Message):
             id=message.from_user.id
         ),
         reply_markup=InlineKeyboardMarkup(buttons),
-        effect_id=random.choice(REACTIONS)  # Add this line for the effect
+        message_effect_id=random.choice(REACTIONS)  # Add this line for the effect
     )
 
     # Apply reaction

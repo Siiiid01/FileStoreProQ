@@ -30,7 +30,10 @@ async def song(client, message: Message):
     
     await m.edit("📥 **Downloading your song...**")
     
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    ydl_opts = {
+        "format": "bestaudio[ext=m4a]",
+        "no_check_certificate": True
+    }
     
     try:
         with YoutubeDL(ydl_opts) as ydl:

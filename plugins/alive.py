@@ -45,7 +45,10 @@ async def check_alive(_, message):
     sticker = random.choice(STICKERS)
     caption = random.choice(ALIVE_CAPTIONS)
     await message.reply_sticker(sticker)
-    await message.reply_text(f"**{caption}**")
+    await message.reply_text(f"<b><i><blockquote>{caption}</b></i></blockquote>")
+
+     # Auto delete the message after 10 seconds
+    await msg.delete(delay=10)
 
 
 @Client.on_message(filters.command("ping", CMD))

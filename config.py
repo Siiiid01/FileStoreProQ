@@ -78,7 +78,7 @@ CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<<blockquote><i><b>• ʙʏ @
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False
 
 # Start Command Reactions
-SUCCESS_EFFECT_IDS = [
+REACTIONS = [
     "5104841245755180586",  # 🔥
     "5044134455711629726"  # ❤️
 ] #don't add any emoji because tg not support all emoji reactions

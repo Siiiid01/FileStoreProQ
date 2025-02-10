@@ -47,17 +47,24 @@ async def play_game(client, message):
     
     # Delete the user's command message for a clean UI
     await message.delete()
-    
+
+    # Send a status message indicating the game is starting
     status_message = await message.reply_text(f"🎮 Playing {game.capitalize()}...")
-    await asyncio.sleep(1)
-    
+
+    # Send dice with the respective emoji
     await client.send_dice(
         chat_id=message.chat.id,
         emoji=emoji,
         disable_notification=True,
         reply_to_message_id=status_message.message_id
     )
-    
+
+    # Once dice is sent, edit the status message to indicate game has been played
+    await asyncio.sleep(2)  # Wait for the dice animation to complete
+    await status_message.edit(f"{game.capitalize()} finished! 🎲")
+
+    # Optionally delete the status message after some time
+    await asyncio.sleep(5)
     await status_message.delete()
 
 # Random funny responses
