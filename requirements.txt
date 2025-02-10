@@ -20,3 +20,7 @@ shortzy
 aiofiles
 asyncio
 telegraph
+# --- Song-Downloader ------- #
+youtube-search-python
+yt_dlp
+aiogram

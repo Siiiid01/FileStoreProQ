@@ -1,0 +1,35 @@
+from pyrogram import Client, filters
+from pyrogram.errors import FloodWait
+import asyncio
+
+@Client.on_message(filters.command("stickerid") & filters.private)
+async def stickerid(bot, message):
+    # Delete the command message for a cleaner UI
+    await message.delete()
+
+    try:
+        # Send a welcome sticker (Replace 'STICKER_FILE_ID' with an actual sticker ID)
+        WELCOME_STICKER_ID = "CAACAgEAAxkBAAENwWNnqY0y0m9-EfNyiAPMqYilkaoGCQACVwQAApvNAAFGhwkqyn3jKmg2BA"  # Replace with a valid sticker file_id
+        await bot.send_sticker(chat_id=message.chat.id, sticker=WELCOME_STICKER_ID)
+
+        # Ask user for a sticker
+        status_msg = await bot.send_message(
+            chat_id=message.chat.id, 
+            text="🎭 **Send me a sticker, and I'll fetch its ID!**"
+        )
+        
+        # Wait for user's response
+        s_msg = await bot.ask(chat_id=message.from_user.id, text="⏳ Waiting for a sticker...")
+
+        # Check if the response is a sticker
+        if s_msg.sticker:
+            sticker_info = (
+                f"🎟 **Sticker ID:**\n`{s_msg.sticker.file_id}`\n\n"
+                f"🔖 **Unique ID:**\n`{s_msg.sticker.file_unique_id}`"
+            )
+            await status_msg.edit(sticker_info)
+        else:
+            await status_msg.edit("⚠ **Oops!** That’s not a sticker. Please try again.")
+
+    except FloodWait as e:
+        await asyncio.sleep(e.value)  # Handles Telegram rate limits

@@ -1,0 +1,85 @@
+from pyrogram import Client, filters
+import random
+import asyncio
+
+# Convert text to aesthetic style (light and cool font)
+def aesthetify(string):
+    light_font_offset = 0x1D5D4 - 0x41  # Uppercase A in the light font
+    result = []
+    for c in string:
+        if "A" <= c <= "Z":  # Uppercase letters
+            result.append(chr(ord(c) + light_font_offset))
+        elif "a" <= c <= "z":  # Lowercase letters
+            result.append(chr(ord(c) + (light_font_offset + 6)))
+        elif c == " ":
+            result.append(" ")
+        else:
+            result.append(c)
+    return "".join(result)
+
+# Restrict bot to private chats only
+private_filter = filters.private & ~filters.channel & ~filters.group
+
+@Client.on_message(filters.command("ae") & private_filter)
+async def aesthetic(client, message):
+    text = " ".join(message.command[1:])
+    if not text:
+        await message.reply_text("⚠ Please provide some text to convert.")
+        return
+    
+    aesthetic_text = aesthetify(text)
+    await message.edit(aesthetic_text)
+
+# Emoji Constants for games
+GAMES = {
+    "dart": "🎯",
+    "dice": "🎲",
+    "luck": "🎰",
+    "goal": "⚽",
+    "basketball": "🏀",
+    "bowling": "🎳"
+}
+
+@Client.on_message(filters.command(list(GAMES.keys())) & private_filter)
+async def play_game(client, message):
+    game = message.command[0]  # Get the command name
+    emoji = GAMES.get(game)
+    
+    # Delete the user's command message for a clean UI
+    await message.delete()
+    
+    status_message = await message.reply_text(f"🎮 Playing {game.capitalize()}...")
+    await asyncio.sleep(1)
+    
+    await client.send_dice(
+        chat_id=message.chat.id,
+        emoji=emoji,
+        disable_notification=True,
+        reply_to_message_id=status_message.message_id
+    )
+    
+    await status_message.delete()
+
+# Random funny responses
+RUN_STRINGS = [
+    "A broken soul filled with darkness... Why have you come to remind it?",
+    "We have become the lost souls of the underwater world...",
+    "You want the bad call ... but you need good thunder ....",
+    "Oh Bloody Grama Virtues!",
+    "Sea MUGGie I Am Going to Pay The Bill.",
+    "You are not a male chaff!!",
+    "Kindi ... Kindi ...!",
+    "Children..",
+    "Your father to Paul...",
+    "Before falling in the 4th pegging, I will arrive there.",
+    "To tell me I love Yo....",
+]
+
+@Client.on_message(filters.command("runs") & private_filter)
+async def runs(_, message):
+    """ Send a random funny string """
+    status_message = await message.reply_text("🏃 Running...")
+    await asyncio.sleep(1)
+    
+    effective_string = random.choice(RUN_STRINGS)
+    await status_message.edit(effective_string)
