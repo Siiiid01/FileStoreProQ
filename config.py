@@ -78,10 +78,7 @@ CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<<blockquote><i><b>• ʙʏ @
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False
 
 # Message effect IDs
-REACTIONS = [
-    "5104841245755180586",  # 🔥
-    "5159385139981059251"  # ❤️
-] #don't add any emoji because tg not support all emoji reactions
+REACTIONS = ["❤️", "🔥", "🎉" ]
 
 #Set true if you want Disable your Channel Posts Share button
 DISABLE_CHANNEL_BUTTON = os.environ.get("DISABLE_CHANNEL_BUTTON", None) == 'True'

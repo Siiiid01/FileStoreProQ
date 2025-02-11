@@ -18,7 +18,7 @@ def aesthetify(string):
     return "".join(result)
 
 # Restrict bot to private chats only
-private_filter = filters.private & ~filters.channel & ~filters.group
+private_filter = filters.private & ~filters.channel & ~filters.group  # Allows any user in private chat
 
 @Client.on_message(filters.command("ae") & private_filter)
 async def aesthetic(client, message):
