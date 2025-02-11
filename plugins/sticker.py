@@ -5,43 +5,47 @@ import asyncio
 import random
 from config import PICS  # Import PICS from config
 
-# Welcome stickers - you can add more
-WELCOME_STICKERS = [
-    "CAACAgEAAxkBAAENwWNnqY0y0m9-EfNyiAPMqYilkaoGCQACVwQAApvNAAFGhwkqyn3jKmg2BA",
-    # Add more sticker IDs here
-]
+# Welcome message animation steps
+WAIT_ANIMATION = ["W", "Wa", "Wai", "Wait", "Wait🔥", "Wait🔥🔥"]
 
-@Client.on_message(filters.command(["stickerid", "sticker"]) & filters.private)  # No admin check, anyone can use
+@Client.on_message(filters.command(["stickerid", "sticker"]) & filters.private)
 async def stickerid(bot, message: Message):
     try:
         # Delete the command message
         await message.delete()
-        
-        # Send welcome message with photo
+
+        # Send initial "Please wait..." message
         welcome_msg = await message.reply_photo(
             photo=random.choice(PICS),
-            caption="<b>👋 Welcome to Sticker ID Finder!</b>\n\n"
-                   "<b>Send me any sticker to get its ID and details.</b>",
+            caption="⏳ W",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("❌ Cancel", callback_data="cancel_sticker")]
+                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
             ])
         )
-        
-        # Send random welcome sticker
-        await bot.send_sticker(
-            chat_id=message.chat.id, 
-            sticker=random.choice(WELCOME_STICKERS)
+
+        # Animate the "Wait🔥🔥" text
+        for text in WAIT_ANIMATION:
+            await asyncio.sleep(0.07)  # 70ms delay
+            await welcome_msg.edit_caption(f"⏳ {text}")
+
+        # Update the final welcome message
+        await asyncio.sleep(1)  # Small delay before showing final text
+        await welcome_msg.edit_caption(
+            "<b>👋 Welcome to Sticker ID Finder!</b>\n\n"
+            "<b>Send me any sticker to get its ID and details.</b>",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
+            ])
         )
-        
+
+        # Auto-delete welcome message after 60 seconds
+        asyncio.create_task(auto_delete(welcome_msg, 60))
+
         # Wait for user's sticker
-        try:
-            s_msg = await bot.wait_for_message(
-                chat_id=message.chat.id,
-                filters=filters.sticker,
-                timeout=60  # 60 seconds timeout
-            )
-            
-            if s_msg.sticker:
+        async with bot.listen(message.chat.id, filters.sticker, timeout=60) as listener:
+            s_msg = await listener.get()
+
+            if s_msg and s_msg.sticker:
                 # Get sticker details
                 sticker = s_msg.sticker
                 info_text = (
@@ -53,42 +57,52 @@ async def stickerid(bot, message: Message):
                     f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
                     f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
                 )
-                
+
                 # Create buttons
                 buttons = [
                     [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
                     [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
                 ]
-                
+
                 # Edit welcome message with sticker info
-                await welcome_msg.edit_photo(
-                    photo=random.choice(PICS),
-                    caption=info_text,
+                await welcome_msg.edit_caption(
+                    info_text,
                     reply_markup=InlineKeyboardMarkup(buttons)
                 )
-                
-        except asyncio.TimeoutError:
-            await welcome_msg.edit_photo(
-                photo=random.choice(PICS),
-                caption="⏳ Timeout! Please send /sticker to start again.",
-                reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another")
-                ]])
-            )
-            
+
+    except asyncio.TimeoutError:
+        # Timeout reached, update the message
+        await welcome_msg.edit_caption(
+            "⏳ Timeout! Please send /sticker to start again.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("🔄 Try Again", callback_data="check_another")
+            ]])
+        )
+
     except FloodWait as e:
         await asyncio.sleep(e.x)
     except Exception as e:
         print(f"Error in stickerid: {e}")
         await message.reply_text("An error occurred. Please try again later.")
 
+
+# Auto-delete function for the welcome message after 60s
+async def auto_delete(msg: Message, delay: int):
+    await asyncio.sleep(delay)
+    try:
+        await msg.delete()
+    except:
+        pass
+
+
 # Callback handler for buttons
-@Client.on_callback_query(filters.regex('^(cancel_sticker|check_another|close_sticker)$'))
+@Client.on_callback_query(filters.regex('^(close_sticker|check_another)$'))
 async def sticker_callback(bot, callback_query):
     data = callback_query.data
-    
-    if data == "cancel_sticker" or data == "close_sticker":
+
+    if data == "close_sticker":
         await callback_query.message.delete()
+
     elif data == "check_another":
         await callback_query.message.delete()
         # Trigger sticker command again
