@@ -50,7 +50,7 @@ async def stickerid(bot, message: Message):
             await welcome_msg.edit_caption(
                 "Oops! This isn't a sticker. Please send a sticker file.",
                 reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("❌ Close", callback_data="closw")
+                    InlineKeyboardButton("❌ Close", callback_data="close")
                 ]])
             )
 
