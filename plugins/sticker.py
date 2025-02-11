@@ -5,34 +5,16 @@ import asyncio
 import random
 from config import PICS  # Import PICS from config
 
-# Welcome message animation steps
-WAIT_ANIMATION = ["W", "Wa", "Wai", "Wait", "Wait🔥", "Wait🔥🔥"]
-
 @Client.on_message(filters.command(["stickerid", "sticker"]) & filters.private)
 async def stickerid(bot, message: Message):
     try:
         # Delete the command message
         await message.delete()
 
-        # Send initial "Please wait..." message
+        # Send initial message with a photo
         welcome_msg = await message.reply_photo(
             photo=random.choice(PICS),
-            caption="⏳ W",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
-            ])
-        )
-
-        # Animate the "Wait🔥🔥" text
-        for text in WAIT_ANIMATION:
-            await asyncio.sleep(0.07)  # 70ms delay
-            await welcome_msg.edit_caption(f"⏳ {text}")
-
-        # Update the final welcome message
-        await asyncio.sleep(1)  # Small delay before showing final text
-        await welcome_msg.edit_caption(
-            "<b>👋 Welcome to Sticker ID Finder!</b>\n\n"
-            "<b>Send me any sticker to get its ID and details.</b>",
+            caption="⏳ Please send me a sticker.",
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
             ])
@@ -42,33 +24,36 @@ async def stickerid(bot, message: Message):
         asyncio.create_task(auto_delete(welcome_msg, 60))
 
         # Wait for user's sticker
-        async with bot.listen(message.chat.id, filters.sticker, timeout=60) as listener:
-            s_msg = await listener.get()
+        s_msg = await bot.wait_for_message(
+            message.chat.id,
+            filters=filters.sticker,
+            timeout=60
+        )
 
-            if s_msg and s_msg.sticker:
-                # Get sticker details
-                sticker = s_msg.sticker
-                info_text = (
-                    f"<b>🎯 Sticker Information</b>\n\n"
-                    f"<b>🔖 File ID:</b>\n<code>{sticker.file_id}</code>\n\n"
-                    f"<b>🎟️ Unique ID:</b>\n<code>{sticker.file_unique_id}</code>\n\n"
-                    f"<b>📏 Dimensions:</b> {sticker.width}x{sticker.height}\n"
-                    f"<b>📦 File Size:</b> {sticker.file_size} bytes\n"
-                    f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
-                    f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
-                )
+        if s_msg and s_msg.sticker:
+            # Get sticker details
+            sticker = s_msg.sticker
+            info_text = (
+                f"<b>🎯 Sticker Information</b>\n\n"
+                f"<b>🔖 File ID:</b>\n<code>{sticker.file_id}</code>\n\n"
+                f"<b>🎟️ Unique ID:</b>\n<code>{sticker.file_unique_id}</code>\n\n"
+                f"<b>📏 Dimensions:</b> {sticker.width}x{sticker.height}\n"
+                f"<b>📦 File Size:</b> {sticker.file_size} bytes\n"
+                f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
+                f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
+            )
 
-                # Create buttons
-                buttons = [
-                    [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
-                    [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
-                ]
+            # Create buttons
+            buttons = [
+                [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
+                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
+            ]
 
-                # Edit welcome message with sticker info
-                await welcome_msg.edit_caption(
-                    info_text,
-                    reply_markup=InlineKeyboardMarkup(buttons)
-                )
+            # Edit welcome message with sticker info
+            await welcome_msg.edit_caption(
+                info_text,
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
 
     except asyncio.TimeoutError:
         # Timeout reached, update the message
