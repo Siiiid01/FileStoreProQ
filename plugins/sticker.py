@@ -1,37 +1,28 @@
 from pyrogram import Client, filters
-from pyrogram.errors import FloodWait
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import asyncio
 import random
-from config import PICS  # Import PICS from config
+from config import PICS  # Assuming PICS is imported from your config file
 
-@Client.on_message(filters.command(["stickerid", "sticker"]) & filters.private)
+@Client.on_message(filters.command("stickerid") & filters.private)
 async def stickerid(bot, message: Message):
     try:
         # Delete the command message
         await message.delete()
 
-        # Send initial message with a photo
+        # Send an initial "Please wait..." message
         welcome_msg = await message.reply_photo(
             photo=random.choice(PICS),
-            caption="⏳ Please send me a sticker.",
+            caption="⏳ Please wait...",
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
             ])
         )
 
-        # Auto-delete welcome message after 60 seconds
-        asyncio.create_task(auto_delete(welcome_msg, 60))
+        # Prompt the user to send a sticker
+        s_msg = await bot.ask(chat_id=message.from_user.id, text="Now send me your sticker.")
 
-        # Wait for user's sticker
-        s_msg = await bot.wait_for_message(
-            message.chat.id,
-            filters=filters.sticker,
-            timeout=60
-        )
-
-        if s_msg and s_msg.sticker:
-            # Get sticker details
+        # Check if the message contains a sticker
+        if s_msg.sticker:
             sticker = s_msg.sticker
             info_text = (
                 f"<b>🎯 Sticker Information</b>\n\n"
@@ -43,41 +34,29 @@ async def stickerid(bot, message: Message):
                 f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
             )
 
-            # Create buttons
+            # Create buttons for checking another sticker or closing
             buttons = [
                 [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
                 [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
             ]
 
-            # Edit welcome message with sticker info
+            # Edit the welcome message with the sticker info
             await welcome_msg.edit_caption(
                 info_text,
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
 
-    except asyncio.TimeoutError:
-        # Timeout reached, update the message
-        await welcome_msg.edit_caption(
-            "⏳ Timeout! Please send /sticker to start again.",
-            reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("🔄 Try Again", callback_data="check_another")
-            ]])
-        )
+        else:
+            await welcome_msg.edit_caption(
+                "Oops! This isn't a sticker. Please send a sticker file.",
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
+                ]])
+            )
 
-    except FloodWait as e:
-        await asyncio.sleep(e.x)
     except Exception as e:
         print(f"Error in stickerid: {e}")
         await message.reply_text("An error occurred. Please try again later.")
-
-
-# Auto-delete function for the welcome message after 60s
-async def auto_delete(msg: Message, delay: int):
-    await asyncio.sleep(delay)
-    try:
-        await msg.delete()
-    except:
-        pass
 
 
 # Callback handler for buttons
@@ -90,9 +69,9 @@ async def sticker_callback(bot, callback_query):
 
     elif data == "check_another":
         await callback_query.message.delete()
-        # Trigger sticker command again
+        # Trigger the sticker command again
         await bot.send_message(
             callback_query.message.chat.id,
-            "/sticker",
+            "/stickerid",
             disable_notification=True
         )
