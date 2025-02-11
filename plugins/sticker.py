@@ -14,12 +14,12 @@ async def stickerid(bot, message: Message):
             photo=random.choice(PICS),
             caption="⏳ Please wait...",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
+                [InlineKeyboardButton("❌ Close", callback_data="close")]
             ])
         )
 
         # Prompt the user to send a sticker
-        s_msg = await bot.ask(chat_id=message.from_user.id, text="Now send me your sticker.")
+        s_msg = await bot.ask(chat_id=message.from_user.id, text="")
 
         # Check if the message contains a sticker
         if s_msg.sticker:
@@ -37,7 +37,7 @@ async def stickerid(bot, message: Message):
             # Create buttons for checking another sticker or closing
             buttons = [
                 [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
+                [InlineKeyboardButton("❌ Close", callback_data="close")]
             ]
 
             # Edit the welcome message with the sticker info
@@ -50,7 +50,7 @@ async def stickerid(bot, message: Message):
             await welcome_msg.edit_caption(
                 "Oops! This isn't a sticker. Please send a sticker file.",
                 reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
+                    InlineKeyboardButton("❌ Close", callback_data="closw")
                 ]])
             )
 
