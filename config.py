@@ -83,12 +83,12 @@ REACTIONS = ["❤️", "🔥", "🎉" ]
 #Set true if you want Disable your Channel Posts Share button
 DISABLE_CHANNEL_BUTTON = os.environ.get("DISABLE_CHANNEL_BUTTON", None) == 'True'
 
-BOT_STATS_TEXT = """📊 <b>BOT STATISTICS</b>
+BOT_STATS_TEXT = """
+<b>📊 Bot Statistics</b>
 
-<b>⏳ Uptime:</b> {uptime}
-<b>👥 Total Users:</b> {total_users}
-<b>⚡ CPU Usage:</b> {cpu_usage}
-<b>🖥️ RAM Usage:</b> {ram_usage}"""
+👥 Total Users: {total_users}
+⏱ Uptime: {uptime}
+"""
 
 USER_REPLY_TEXT = "ʙᴀᴋᴋᴀ ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴍʏ ꜱᴇɴᴘᴀɪ!!"
 

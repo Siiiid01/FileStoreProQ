@@ -85,13 +85,17 @@ async def process_chunk(client: Bot, message: Message, users: list, status: Broa
 async def update_status_message(status_msg: Message, status: BroadcastStatus):
     """Update the status message with current progress"""
     try:
-        await status_msg.edit_media(
-            media=InputMediaPhoto(
-                random.choice(PICS),
-                caption=status.get_progress_text(),
-                has_spoiler=True
+        current_text = getattr(status_msg, 'caption', '')
+        new_text = status.get_progress_text()
+        
+        if current_text != new_text:  # Only update if text has changed
+            await status_msg.edit_media(
+                media=InputMediaPhoto(
+                    random.choice(PICS),
+                    caption=new_text,
+                    has_spoiler=True
+                )
             )
-        )
     except Exception as e:
         print(f"Error updating status: {e}")
 

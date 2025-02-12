@@ -15,6 +15,7 @@ from config import *
 from helper_func import *
 from database.database import *
 from asyncio import sleep
+from datetime import datetime
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -325,20 +326,19 @@ async def show_loading_animation(message: Message):
         has_spoiler=True
     )
     
-    for _ in range(2):  # Run animation 2 times
-        for frame in ANIMATION_FRAMES:
-            await sleep(ANIMATION_INTERVAL)
-            try:
-                await loading_msg.edit_caption(frame)
-            except Exception as e:
-                print(f"Error in animation frame update: {e}")
-        # Reset animation
-        await sleep(ANIMATION_INTERVAL)
-        try:
-            await loading_msg.edit_caption(WAIT_ANIMATION_TEXT)
-        except Exception as e:
-            print(f"Error in animation reset: {e}")
-    
+    try:
+        for _ in range(2):  # Run animation 2 times
+            for frame in ANIMATION_FRAMES:
+                await asyncio.sleep(ANIMATION_INTERVAL)
+                if frame != loading_msg.caption:  # Only edit if content is different
+                    await loading_msg.edit_caption(frame)
+            # Reset animation
+            await asyncio.sleep(ANIMATION_INTERVAL)
+            if WAIT_ANIMATION_TEXT != loading_msg.caption:  # Only edit if content is different
+                await loading_msg.edit_caption(WAIT_ANIMATION_TEXT)
+    except Exception as e:
+        print(f"Error in animation: {e}")
+        
     return loading_msg
 
 # Add the auto-delete utility function
@@ -369,10 +369,18 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
     """Helper function to edit message with photo while preserving message ID"""
     try:
         if getattr(message, 'photo', None):
-            return await message.edit_media(
-                media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
-                reply_markup=reply_markup
-            )
+            # Check if content is actually different
+            current_caption = getattr(message, 'caption', None)
+            current_markup = getattr(message, 'reply_markup', None)
+            
+            if (current_caption != caption or 
+                str(current_markup) != str(reply_markup)):
+                return await message.edit_media(
+                    media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
+                    reply_markup=reply_markup
+                )
+            return message  # Return existing message if no changes needed
+            
         await message.delete()
         return await message.reply_photo(
             photo=photo,
@@ -403,20 +411,35 @@ async def stats(client: Bot, message: Message):
         except:
             pass
 
+        # Show loading animation
+        loading_msg = await show_loading_animation(message)
+
         # Get user count
         users = await full_userbase()
         total_users = len(users)
 
         # Calculate uptime
-        uptime = time.time() - client.start_time
-        uptime_str = humanize.naturaltime(uptime)
+        current_time = datetime.now()
+        uptime = current_time - client.start_time
+        uptime_str = get_readable_time(uptime.total_seconds())
 
-        # Send stats message
-        await message.reply_photo(
+        # Format stats text
+        stats_text = BOT_STATS_TEXT.format(
+            total_users=total_users,
+            uptime=uptime_str
+        )
+
+        # Update loading message with stats
+        await edit_message_with_photo(
+            loading_msg,
             photo=random.choice(PICS),
-            caption=BOT_STATS_TEXT,
+            caption=stats_text,
             has_spoiler=True
         )
+
+        # Schedule message for auto-deletion
+        asyncio.create_task(auto_delete_message(loading_msg, AUTO_DELETE_TIME))
+
     except Exception as e:
         print(f"Error in stats command: {e}")
         await message.reply("❌ An error occurred while fetching stats.")
