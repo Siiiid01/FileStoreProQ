@@ -21,7 +21,31 @@ message_cache = {}
 
 # File auto-delete time in seconds
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
+
 LOADING_ANIMATION = ["○ ○ ○", "• ○ ○", "• • ○", "• • •"]
+
+async def show_loading(client, message):
+    """Show a quick loading animation, delete it, and then send the start message."""
+    
+    loading_msg = await message.reply("○ ○ ○")  # Initial loading message
+    prev_frame = ""  # Track the last frame to avoid unnecessary edits
+
+    for _ in range(2):  # Run animation for about 2 seconds
+        for frame in LOADING_ANIMATION:
+            if frame != prev_frame:  # Only update if the frame is different
+                await loading_msg.edit(frame)
+                prev_frame = frame
+                await asyncio.sleep(0.4)  # Short delay for smooth animation
+
+    await loading_msg.delete()  # Remove loading animation after completion
+
+    # Now send the actual start message
+    await send_start_message(client, message)  
+
+async def send_start_message(client, message):
+    """Send the /start message after the loading animation."""
+    start_text = "🔥 Welcome to the Bot! How can I help you today?"
+    await message.reply(start_text)
 
 
 async def show_loading(client, message):
@@ -46,7 +70,7 @@ async def start_command(client: Client, message: Message):
     )
 
     sent_message = await message.reply_photo(
-        photo=START_PIC,
+        photo=random.choice(PICS),
         caption=START_MSG.format(
             first=message.from_user.first_name,
             last=message.from_user.last_name,
