@@ -7,7 +7,7 @@ import asyncio
 # Constants
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.3
+ANIMATION_INTERVAL = 0.2
 AUTO_DELETE_TIME = 600  # 10 minutes
 
 async def show_loading_animation(message: Message):
@@ -62,8 +62,8 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
             print(f"Error in fallback photo send: {e}")
             return None
 
-@Client.on_message(filters.command("stickerid") & filters.private)
-async def stickerid(bot, message: Message):
+@Client.on_message(filters.command('stickerid') & filters.private)
+async def stickerid(bot: Client, message: Message):
     try:
         # Add reaction to command
         try:
@@ -71,96 +71,18 @@ async def stickerid(bot, message: Message):
         except:
             pass
 
-        # Delete the command message
-        await message.delete()
-
-        # Show loading animation
-        loading_msg = await show_loading_animation(message)
-
-        # Update loading message to prompt for sticker
-        await edit_message_with_photo(
-            loading_msg,
+        # Show initial message
+        await message.reply_photo(
             photo=random.choice(PICS),
-            caption="📤 Please send me any sticker to get its information...",
+            caption="📤 Please send me any sticker as a reply to this message to get its information...",
             reply_markup=InlineKeyboardMarkup([[
                 InlineKeyboardButton("❌ Cancel", callback_data="close_sticker")
-            ]])
+            ]]),
+            has_spoiler=True
         )
-
-        # Wait for user's sticker
-        try:
-            s_msg = await bot.wait_for_message(
-                chat_id=message.chat.id,
-                filters=filters.sticker,
-                timeout=60
-            )
-        except TimeoutError:
-            await edit_message_with_photo(
-                loading_msg,
-                photo=random.choice(PICS),
-                caption="⏳ Timeout! Please try again.",
-                reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
-                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
-                ]])
-            )
-            return
-
-        if s_msg and s_msg.sticker:
-            sticker = s_msg.sticker
-            info_text = (
-                f"<b>🎯 Sticker Information</b>\n\n"
-                f"<b>🔖 File ID:</b>\n<code>{sticker.file_id}</code>\n\n"
-                f"<b>🎟️ Unique ID:</b>\n<code>{sticker.file_unique_id}</code>\n\n"
-                f"<b>📏 Dimensions:</b> {sticker.width}x{sticker.height}\n"
-                f"<b>📦 File Size:</b> {sticker.file_size} bytes\n"
-                f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
-                f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
-            )
-
-            buttons = [
-                [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
-            ]
-
-            await edit_message_with_photo(
-                loading_msg,
-                photo=random.choice(PICS),
-                caption=info_text,
-                reply_markup=InlineKeyboardMarkup(buttons)
-            )
-
-            # Delete the user's sticker message for cleaner chat
-            try:
-                await s_msg.delete()
-            except:
-                pass
-
-        else:
-            await edit_message_with_photo(
-                loading_msg,
-                photo=random.choice(PICS),
-                caption="❌ This isn't a sticker. Please send a valid sticker.",
-                reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
-                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
-                ]])
-            )
-
     except Exception as e:
         print(f"Error in stickerid: {e}")
-        if 'loading_msg' in locals():
-            await edit_message_with_photo(
-                loading_msg,
-                photo=random.choice(PICS),
-                caption="❌ An error occurred. Please try again later.",
-                reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
-                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
-                ]])
-            )
-        else:
-            await message.reply_text("❌ An error occurred. Please try again later.")
+        await message.reply("❌ An error occurred. Please try again.")
 
 @Client.on_callback_query(filters.regex('^(close_sticker|check_another)$'))
 async def sticker_callback(bot, callback_query):
@@ -180,3 +102,34 @@ async def sticker_callback(bot, callback_query):
             await new_msg.delete()
     except Exception as e:
         print(f"Error in sticker callback: {e}")
+
+@Client.on_message(filters.private & filters.sticker & filters.reply)
+async def process_sticker(client: Client, message: Message):
+    """Handle sticker in response to stickerid command"""
+    try:
+        sticker = message.sticker
+        info_text = (
+            f"<b>🎯 Sticker Information</b>\n\n"
+            f"<b>🔖 File ID:</b>\n<code>{sticker.file_id}</code>\n\n"
+            f"<b>🎟️ Unique ID:</b>\n<code>{sticker.file_unique_id}</code>\n\n"
+            f"<b>📏 Dimensions:</b> {sticker.width}x{sticker.height}\n"
+            f"<b>📦 File Size:</b> {sticker.file_size} bytes\n"
+            f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
+            f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
+        )
+
+        buttons = [
+            [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
+            [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
+        ]
+
+        await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=info_text,
+            reply_markup=InlineKeyboardMarkup(buttons),
+            has_spoiler=True
+        )
+
+    except Exception as e:
+        print(f"Error processing sticker: {e}")
+        await message.reply("❌ An error occurred. Please try again.")

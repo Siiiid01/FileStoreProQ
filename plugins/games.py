@@ -2,6 +2,11 @@ from pyrogram import Client, filters
 import random
 import asyncio
 
+# Constants
+DELETE_TIMEOUT = 60  # 1 minute in seconds
+ANIMATION_TIME = 2  # Time to wait for dice animation
+RESULT_DISPLAY_TIME = 5  # Time to show result before deleting
+
 # Convert text to aesthetic style (light and cool font)
 def aesthetify(string):
     light_font_offset = 0x1D5D4 - 0x41  # Uppercase A in the light font
@@ -18,17 +23,25 @@ def aesthetify(string):
     return "".join(result)
 
 # Restrict bot to private chats only
-private_filter = filters.private & ~filters.channel & ~filters.group  # Allows any user in private chat
+private_filter = filters.private & ~filters.channel & ~filters.group
 
 @Client.on_message(filters.command("ae") & private_filter)
 async def aesthetic(client, message):
     text = " ".join(message.command[1:])
     if not text:
-        await message.reply_text("⚠ Please provide some text to convert.")
+        temp_msg = await message.reply_text("⚠ Please provide some text to convert.")
+        await asyncio.sleep(DELETE_TIMEOUT)
+        await temp_msg.delete()
         return
     
     aesthetic_text = aesthetify(text)
-    await message.edit(aesthetic_text)
+    result_msg = await message.reply_text(aesthetic_text)
+    await asyncio.sleep(DELETE_TIMEOUT)
+    await result_msg.delete()
+    try:
+        await message.delete()
+    except:
+        pass
 
 # Emoji Constants for games
 GAMES = {
@@ -58,24 +71,22 @@ async def play_game(client, message):
     dice_msg = await client.send_dice(
         chat_id=message.chat.id,
         emoji=emoji,
-        disable_notification=True,
-        reply_to_message_id=status_message.id
+        disable_notification=True
     )
 
     # Wait for the dice animation to complete
-    await asyncio.sleep(2)
+    await asyncio.sleep(ANIMATION_TIME)
 
     # Edit the status message to indicate the game result
-    await status_message.edit(f"🎮 {game.capitalize()} Over! Your result: {dice_msg.dice.value} 🎲")
+    result_msg = await status_message.edit(f"🎮 {game.capitalize()} Over! Your result: {dice_msg.dice.value} 🎲")
 
-    # Wait for 10 seconds before deleting both messages
-    await asyncio.sleep(10)
+    # Wait for specified time before deleting messages
+    await asyncio.sleep(DELETE_TIMEOUT)
     try:
         await status_message.delete()
         await dice_msg.delete()
     except Exception as e:
         print(f"Error deleting game messages: {e}")
-        pass
 
 # Random funny responses
 RUN_STRINGS = [
@@ -95,6 +106,11 @@ RUN_STRINGS = [
 @Client.on_message(filters.command("runs") & private_filter)
 async def runs(_, message):
     """ Send a random funny string """
+    try:
+        await message.delete()
+    except:
+        pass
+        
     status_message = await message.reply_text("🏃 Running...")
     await asyncio.sleep(1)
     
@@ -199,3 +215,10 @@ async def runs(_, message):
     
 #     effective_string = random.choice(RUN_STRINGS)
 #     await status_message.edit(effective_string)
+    
+    # Delete after timeout
+    await asyncio.sleep(DELETE_TIMEOUT)
+    try:
+        await status_message.delete()
+    except Exception as e:
+        print(f"Error deleting run message: {e}")

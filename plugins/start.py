@@ -21,11 +21,9 @@ FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
 
 # Add these constants at the top
-BROADCAST_CHUNK_SIZE = 100  # Number of users to broadcast to at once
-MAX_RETRIES = 3  # Maximum number of retry attempts for failed broadcasts
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.3  # Speed of animation in seconds
+ANIMATION_INTERVAL = 0.2  # Speed of animation in seconds
 
 # Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
@@ -194,9 +192,9 @@ async def start_command(client: Client, message: Message):
             [
                 InlineKeyboardButton("More", callback_data="more")
             ],
-            [
+    [
                 InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
             ]
         ])
         start_msg = await message.reply_photo(
@@ -317,167 +315,6 @@ async def get_users(client: Bot, message: Message):
     users = await full_userbase()
     await msg.edit(f"{len(users)} users are using this bot")
 
-# Add these utility functions
-async def get_verify_status(user_id: int):
-    """Cache verify status to reduce database hits"""
-    return await _get_verify_status(user_id)  # Actual database query function
-
-async def get_messages(client, ids):
-    """Cache message fetching to reduce API calls"""
-    return await _get_messages(client, ids)
-
-async def send_broadcast_to_chunk(client: Bot, message: Message, users) -> tuple:
-    """Send broadcast to a chunk of users and return statistics"""
-    successful = blocked = deleted = unsuccessful = 0
-    failed_users = []
-    
-    for chat_id in users:
-        try:
-            await message.copy(chat_id)
-            successful += 1
-            await asyncio.sleep(0.1)  # Rate limiting to prevent floods
-        except FloodWait as e:
-            await asyncio.sleep(e.x)
-            try:
-                await message.copy(chat_id)
-                successful += 1
-            except:
-                unsuccessful += 1
-                failed_users.append(chat_id)
-        except UserIsBlocked:
-            blocked += 1
-            await del_user(chat_id)
-        except InputUserDeactivated:
-            deleted += 1
-            await del_user(chat_id)
-        except Exception:
-            unsuccessful += 1
-            failed_users.append(chat_id)
-            
-    return successful, blocked, deleted, unsuccessful, failed_users
-
-# Replace the existing broadcast command with this improved version
-@Bot.on_message(filters.private & filters.command('broadcast') & filters.user(ADMINS))
-async def broadcast_handler(client: Bot, message: Message):
-    if not message.reply_to_message:
-        await message.reply(REPLY_ERROR)
-        return
-
-    status_msg = await message.reply_photo(
-        photo=random.choice(PICS),
-        caption="<i>Starting broadcast...</i>",
-        has_spoiler=True
-    )
-    broadcast_msg = message.reply_to_message
-    
-    try:
-        all_users = await full_userbase()
-        total_users = len(all_users)
-        
-        if total_users == 0:
-            await status_msg.edit_caption("No users found in database!")
-            return
-
-        # Split users into chunks
-        chunks = [all_users[i:i + BROADCAST_CHUNK_SIZE] for i in range(0, len(all_users), BROADCAST_CHUNK_SIZE)]
-        total_chunks = len(chunks)
-        
-        # Initialize counters
-        total_success = total_blocked = total_deleted = total_unsuccessful = 0
-        failed_users = []
-        
-        # Process each chunk
-        for index, chunk in enumerate(chunks, 1):
-            retry_count = 0
-            chunk_success = False
-            
-            while not chunk_success and retry_count < MAX_RETRIES:
-                try:
-                    success, blocked, deleted, unsuccessful, failed = await send_broadcast_to_chunk(
-                        client, broadcast_msg, chunk
-                    )
-                    chunk_success = True
-                    
-                    # Update counters
-                    total_success += success
-                    total_blocked += blocked
-                    total_deleted += deleted
-                    total_unsuccessful += unsuccessful
-                    failed_users.extend(failed)
-
-                    # Update status message periodically
-                    if index % 5 == 0 or index == total_chunks:
-                        progress = f"<b>Broadcast Progress: {index}/{total_chunks} chunks</b>\n\n"
-                        progress += f"Total Users: {total_users}\n"
-                        progress += f"✅ Successful: {total_success}\n"
-                        progress += f"🚫 Blocked: {total_blocked}\n"
-                        progress += f"❌ Deleted: {total_deleted}\n"
-                        progress += f"📝 Failed: {total_unsuccessful}\n"
-                        progress += f"\nProcessing chunk {index}..."
-                        
-                        await status_msg.edit_caption(progress)
-                        
-                except Exception as e:
-                    retry_count += 1
-                    if retry_count == MAX_RETRIES:
-                        await message.reply(f"⚠️ Failed to process chunk {index}/{total_chunks} after {MAX_RETRIES} attempts.\nError: {str(e)}")
-                    await asyncio.sleep(5)
-
-        # Final status message
-        final_status = f"<b>📊 Broadcast Completed!</b>\n\n"
-        final_status += f"Total Users: {total_users}\n"
-        final_status += f"✅ Successful: {total_success}\n"
-        final_status += f"🚫 Blocked: {total_blocked}\n"
-        final_status += f"❌ Deleted: {total_deleted}\n"
-        final_status += f"📝 Failed: {total_unsuccessful}"
-
-        if failed_users:
-            with open('failed_broadcasts.txt', 'w') as f:
-                f.write('\n'.join(map(str, failed_users)))
-            await message.reply_document(
-                'failed_broadcasts.txt',
-                caption="List of users where broadcast failed"
-            )
-
-        await status_msg.edit_caption(final_status)
-
-    except Exception as e:
-        await status_msg.edit_caption(f"<b>❌ Broadcast Failed!</b>\n\nError: {str(e)}")
-        await message.reply(f"⚠️ Broadcast system encountered a critical error: {str(e)}")
-
-# Add this helper function at the top with other utilities
-async def edit_message_with_photo(message: Message, photo, caption, reply_markup=None):
-    """Helper function to edit message with photo while preserving message ID"""
-    try:
-        # Try to edit existing photo message
-        if getattr(message, 'photo', None):
-            return await message.edit_media(
-                media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
-                reply_markup=reply_markup
-            )
-        # If not a photo message, delete and send new
-        await message.delete()
-        return await message.reply_photo(
-            photo=photo,
-            caption=caption,
-            reply_markup=reply_markup,
-            has_spoiler=True
-        )
-    except Exception as e:
-        print(f"Error in edit_message_with_photo: {e}")
-        # Fallback to delete and send new
-        try:
-            await message.delete()
-            return await message.reply_photo(
-                photo=photo,
-                caption=caption,
-                reply_markup=reply_markup,
-                has_spoiler=True
-            )
-        except Exception as e:
-            print(f"Error in fallback photo send: {e}")
-            return None
-
 # Modify the loading animation function to use edit
 async def show_loading_animation(message: Message):
     """Shows an animated loading message"""
@@ -526,3 +363,34 @@ async def auto_delete_message(message: Message, delay: int):
     except Exception as e:
         print(f"Error in auto-delete: {e}")
         pass
+
+# Keep these utility functions as they're used by other features
+async def edit_message_with_photo(message: Message, photo, caption, reply_markup=None):
+    # ... keep this function ...
+
+@Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
+async def stats(client: Bot, message: Message):
+    try:
+        # Add reaction to command
+        try:
+            await message.react(emoji=random.choice(REACTIONS), big=True)
+        except:
+            pass
+
+        # Get user count
+        users = await full_userbase()
+        total_users = len(users)
+
+        # Calculate uptime
+        uptime = time.time() - client.start_time
+        uptime_str = humanize.naturaltime(uptime)
+
+        # Send stats message
+        await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=BOT_STATS_TEXT,
+            has_spoiler=True
+        )
+    except Exception as e:
+        print(f"Error in stats command: {e}")
+        await message.reply("❌ An error occurred while fetching stats.")
