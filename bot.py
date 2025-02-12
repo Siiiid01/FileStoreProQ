@@ -7,7 +7,6 @@ from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
 from config import *
-import signal
 
 
 name ="""
@@ -30,89 +29,79 @@ class Bot(Client):
         )
         self.LOGGER = LOGGER
         self.start_time = datetime.now()
-        
-        # Add signal handlers
-        signal.signal(signal.SIGTERM, self.signal_handler)
-        signal.signal(signal.SIGINT, self.signal_handler)
-
-    def signal_handler(self, signum, frame):
-        self.LOGGER(__name__).info(f"Received signal {signum}")
-        asyncio.create_task(self.stop())
-        sys.exit(0)
 
     async def start(self):
-        try:
-            await super().start()
-            usr_bot_me = await self.get_me()
-            self.uptime = datetime.now()
+        await super().start()
+        usr_bot_me = await self.get_me()
+        self.uptime = datetime.now()
 
-            if FORCE_SUB_CHANNEL1:
-                try:
-                    link = (await self.get_chat(FORCE_SUB_CHANNEL1)).invite_link
-                    if not link:
-                        await self.export_chat_invite_link(FORCE_SUB_CHANNEL1)
-                        link = (await self.get_chat(FORCE_SUB_CHANNEL1)).invite_link
-                    self.invitelink1 = link
-                except Exception as a:
-                    self.LOGGER(__name__).warning(a)
-                    self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
-                    self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL1 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL1}")
-                    self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
-                    sys.exit()
-            if FORCE_SUB_CHANNEL2:
-                try:
-                    link = (await self.get_chat(FORCE_SUB_CHANNEL2)).invite_link
-                    if not link:
-                        await self.export_chat_invite_link(FORCE_SUB_CHANNEL2)
-                        link = (await self.get_chat(FORCE_SUB_CHANNEL2)).invite_link
-                    self.invitelink2 = link
-                except Exception as a:
-                    self.LOGGER(__name__).warning(a)
-                    self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
-                    self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL2 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL2}")
-                    self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
-                    sys.exit()
-            if FORCE_SUB_CHANNEL3:
-                try:
-                    link = (await self.get_chat(FORCE_SUB_CHANNEL3)).invite_link
-                    if not link:
-                        await self.export_chat_invite_link(FORCE_SUB_CHANNEL3)
-                        link = (await self.get_chat(FORCE_SUB_CHANNEL3)).invite_link
-                    self.invitelink3 = link
-                except Exception as a:
-                    self.LOGGER(__name__).warning(a)
-                    self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
-                    self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL3 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL3}")
-                    self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
-                    sys.exit()
-            if FORCE_SUB_CHANNEL4:
-                try:
-                    link = (await self.get_chat(FORCE_SUB_CHANNEL4)).invite_link
-                    if not link:
-                        await self.export_chat_invite_link(FORCE_SUB_CHANNEL4)
-                        link = (await self.get_chat(FORCE_SUB_CHANNEL4)).invite_link
-                    self.invitelink4 = link
-                except Exception as a:
-                    self.LOGGER(__name__).warning(a)
-                    self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
-                    self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL4 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL4}")
-                    self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
-                    sys.exit()
+        if FORCE_SUB_CHANNEL1:
             try:
-                db_channel = await self.get_chat(CHANNEL_ID)
-                self.db_channel = db_channel
-                test = await self.send_message(chat_id = db_channel.id, text = "Test Message")
-                await test.delete()
-            except Exception as e:
-                self.LOGGER(__name__).warning(e)
-                self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB Channel, and Double check the CHANNEL_ID Value, Current Value {CHANNEL_ID}")
-                self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/Moviess_Ok for support")
+                link = (await self.get_chat(FORCE_SUB_CHANNEL1)).invite_link
+                if not link:
+                    await self.export_chat_invite_link(FORCE_SUB_CHANNEL1)
+                    link = (await self.get_chat(FORCE_SUB_CHANNEL1)).invite_link
+                self.invitelink1 = link
+            except Exception as a:
+                self.LOGGER(__name__).warning(a)
+                self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
+                self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL1 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL1}")
+                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
                 sys.exit()
+        if FORCE_SUB_CHANNEL2:
+            try:
+                link = (await self.get_chat(FORCE_SUB_CHANNEL2)).invite_link
+                if not link:
+                    await self.export_chat_invite_link(FORCE_SUB_CHANNEL2)
+                    link = (await self.get_chat(FORCE_SUB_CHANNEL2)).invite_link
+                self.invitelink2 = link
+            except Exception as a:
+                self.LOGGER(__name__).warning(a)
+                self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
+                self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL2 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL2}")
+                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
+                sys.exit()
+        if FORCE_SUB_CHANNEL3:
+            try:
+                link = (await self.get_chat(FORCE_SUB_CHANNEL3)).invite_link
+                if not link:
+                    await self.export_chat_invite_link(FORCE_SUB_CHANNEL3)
+                    link = (await self.get_chat(FORCE_SUB_CHANNEL3)).invite_link
+                self.invitelink3 = link
+            except Exception as a:
+                self.LOGGER(__name__).warning(a)
+                self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
+                self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL3 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL3}")
+                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
+                sys.exit()
+        if FORCE_SUB_CHANNEL4:
+            try:
+                link = (await self.get_chat(FORCE_SUB_CHANNEL4)).invite_link
+                if not link:
+                    await self.export_chat_invite_link(FORCE_SUB_CHANNEL4)
+                    link = (await self.get_chat(FORCE_SUB_CHANNEL4)).invite_link
+                self.invitelink4 = link
+            except Exception as a:
+                self.LOGGER(__name__).warning(a)
+                self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
+                self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL4 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL4}")
+                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/Moviess_Ok for support")
+                sys.exit()
+        try:
+            db_channel = await self.get_chat(CHANNEL_ID)
+            self.db_channel = db_channel
+            test = await self.send_message(chat_id = db_channel.id, text = "Test Message")
+            await test.delete()
+        except Exception as e:
+            self.LOGGER(__name__).warning(e)
+            self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB Channel, and Double check the CHANNEL_ID Value, Current Value {CHANNEL_ID}")
+            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/Moviess_Ok for support")
+            sys.exit()
 
-            self.set_parse_mode(ParseMode.HTML)
-            self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/Moviess_Ok")
-            self.LOGGER(__name__).info(f"""
-                                       
+        self.set_parse_mode(ParseMode.HTML)
+        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/Moviess_Ok")
+        self.LOGGER(__name__).info(f"""
+                                   
 
 
 
@@ -131,21 +120,18 @@ class Bot(Client):
  
                                                           """)
 
-            self.set_parse_mode(ParseMode.HTML)
-            self.username = usr_bot_me.username
-            self.LOGGER(__name__).info(f"Bot Running..! Made by @Moviess_Ok")   
+        self.set_parse_mode(ParseMode.HTML)
+        self.username = usr_bot_me.username
+        self.LOGGER(__name__).info(f"Bot Running..! Made by @Moviess_Ok")   
 
-            # Start Web Server
-            app = web.AppRunner(await web_server())
-            await app.setup()
-            await web.TCPSite(app, "0.0.0.0", PORT).start()
+        # Start Web Server
+        app = web.AppRunner(await web_server())
+        await app.setup()
+        await web.TCPSite(app, "0.0.0.0", PORT).start()
 
 
-            try: await self.send_message(OWNER_ID, text = f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Moviess_Ok</blockquote></b>")
-            except: pass
-        except Exception as e:
-            self.LOGGER(__name__).error(f"Error starting bot: {e}")
-            sys.exit(1)
+        try: await self.send_message(OWNER_ID, text = f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Moviess_Ok</blockquote></b>")
+        except: pass
 
     async def stop(self, *args):
         await super().stop()
