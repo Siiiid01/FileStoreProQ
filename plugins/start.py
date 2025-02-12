@@ -15,11 +15,7 @@ from config import *
 from helper_func import *
 from database.database import *
 from functools import lru_cache, wraps
-from typing import List, Tuple
-import math
-from datetime import datetime
 from asyncio import sleep
-from time import time
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -28,7 +24,6 @@ TUT_VID = f"{TUT_VID}"
 # Add these constants at the top
 BROADCAST_CHUNK_SIZE = 100  # Number of users to broadcast to at once
 MAX_RETRIES = 3  # Maximum number of retry attempts for failed broadcasts
-CACHE_TIME = 600  # Cache duration in seconds (10 minutes)
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.3  # Speed of animation in seconds
@@ -36,39 +31,6 @@ ANIMATION_INTERVAL = 0.3  # Speed of animation in seconds
 # Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
-
-def timed_lru_cache(seconds: int, maxsize: int = 128):
-    def wrapper_decorator(func):
-        func = lru_cache(maxsize=maxsize)(func)
-        func.lifetime = seconds
-        func.expiration = time() + seconds
-
-        @wraps(func)
-        async def wrapped_func(*args, **kwargs):
-            if time() > func.expiration:
-                func.cache_clear()
-                func.expiration = time() + func.lifetime
-            return await func(*args, **kwargs)
-
-        wrapped_func.cache_info = func.cache_info
-        wrapped_func.cache_clear = func.cache_clear
-        return wrapped_func
-    return wrapper_decorator
-
-@timed_lru_cache(seconds=CACHE_TIME)
-async def get_cached_userbase():
-    """Cache the userbase to avoid frequent database hits"""
-    return await full_userbase()
-
-@timed_lru_cache(seconds=CACHE_TIME)
-async def get_cached_verify_status(user_id: int):
-    """Cache verify status to reduce database hits"""
-    return await _get_verify_status(user_id)
-
-@timed_lru_cache(seconds=CACHE_TIME)
-async def get_cached_messages(client: Bot, ids: tuple):
-    """Cache message fetching to reduce API calls. Note: ids must be tuple for caching"""
-    return await _get_messages(client, list(ids))
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -97,7 +59,7 @@ async def start_command(client: Client, message: Message):
             'link': ""
         }
     else:
-        verify_status = await get_cached_verify_status(id)
+        verify_status = await get_verify_status(id)
 
         # If TOKEN is enabled, handle verification logic
         if TOKEN:
@@ -163,7 +125,7 @@ async def start_command(client: Client, message: Message):
 
         temp_msg = await message.reply("Please wait...")
         try:
-            messages = await get_cached_messages(client, tuple(ids))
+            messages = await get_messages(client, ids)
         except Exception as e:
             await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
@@ -232,12 +194,12 @@ async def start_command(client: Client, message: Message):
         reply_markup = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("More", callback_data="more")
-                ],
-                [
-                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+                    InlineKeyboardButton("More", callback_data = "more")
                 ]
+    [
+                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data = "about"),
+                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+    ]
             ]
         )
         start_msg = await message.reply_photo(
@@ -355,21 +317,19 @@ REPLY_ERROR = "<code>Use this command as a reply to any telegram message without
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
     msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
-    users = await get_cached_userbase()
+    users = await full_userbase()
     await msg.edit(f"{len(users)} users are using this bot")
 
 # Add these utility functions
-@lru_cache(maxsize=100, ttl=CACHE_TIME)
 async def get_verify_status(user_id: int):
     """Cache verify status to reduce database hits"""
     return await _get_verify_status(user_id)  # Actual database query function
 
-@lru_cache(maxsize=1000, ttl=CACHE_TIME)
 async def get_messages(client: Bot, ids: List[int]):
     """Cache message fetching to reduce API calls"""
     return await _get_messages(client, ids)  # Actual message fetching function
 
-async def send_broadcast_to_chunk(client: Bot, message: Message, users: List[int]) -> Tuple[int, int, int, int, List[int]]:
+async def send_broadcast_to_chunk(client: Bot, message: Message, users) -> tuple:
     """Send broadcast to a chunk of users and return statistics"""
     successful = blocked = deleted = unsuccessful = 0
     failed_users = []
@@ -406,7 +366,6 @@ async def broadcast_handler(client: Bot, message: Message):
         await message.reply(REPLY_ERROR)
         return
 
-    # Initialize status message with photo
     status_msg = await message.reply_photo(
         photo=random.choice(PICS),
         caption="<i>Starting broadcast...</i>",
@@ -415,11 +374,11 @@ async def broadcast_handler(client: Bot, message: Message):
     broadcast_msg = message.reply_to_message
     
     try:
-        all_users = await get_cached_userbase()
+        all_users = await full_userbase()
         total_users = len(all_users)
         
         if total_users == 0:
-            await status_msg.edit("No users found in database!")
+            await status_msg.edit_caption("No users found in database!")
             return
 
         # Split users into chunks
@@ -429,8 +388,7 @@ async def broadcast_handler(client: Bot, message: Message):
         # Initialize counters
         total_success = total_blocked = total_deleted = total_unsuccessful = 0
         failed_users = []
-        start_time = datetime.now()
-
+        
         # Process each chunk
         for index, chunk in enumerate(chunks, 1):
             retry_count = 0
@@ -465,27 +423,18 @@ async def broadcast_handler(client: Bot, message: Message):
                 except Exception as e:
                     retry_count += 1
                     if retry_count == MAX_RETRIES:
-                        # Alert admin about the chunk failure
-                        alert_msg = f"⚠️ Failed to process chunk {index}/{total_chunks} after {MAX_RETRIES} attempts.\n"
-                        alert_msg += f"Error: {str(e)}"
-                        await message.reply(alert_msg)
-                    await asyncio.sleep(5)  # Wait before retrying
-
-        # Calculate completion time and success rate
-        completion_time = datetime.now() - start_time
-        success_rate = (total_success / total_users) * 100
+                        await message.reply(f"⚠️ Failed to process chunk {index}/{total_chunks} after {MAX_RETRIES} attempts.\nError: {str(e)}")
+                    await asyncio.sleep(5)
 
         # Final status message
         final_status = f"<b>📊 Broadcast Completed!</b>\n\n"
         final_status += f"Total Users: {total_users}\n"
-        final_status += f"✅ Successful: {total_success} ({success_rate:.1f}%)\n"
+        final_status += f"✅ Successful: {total_success}\n"
         final_status += f"🚫 Blocked: {total_blocked}\n"
         final_status += f"❌ Deleted: {total_deleted}\n"
-        final_status += f"📝 Failed: {total_unsuccessful}\n"
-        final_status += f"⏱ Time Taken: {completion_time.seconds} seconds\n\n"
+        final_status += f"📝 Failed: {total_unsuccessful}"
 
         if failed_users:
-            # Save failed users list to file if there are any
             with open('failed_broadcasts.txt', 'w') as f:
                 f.write('\n'.join(map(str, failed_users)))
             await message.reply_document(
@@ -493,20 +442,10 @@ async def broadcast_handler(client: Bot, message: Message):
                 caption="List of users where broadcast failed"
             )
 
-        # Final status update
-        await edit_message_with_photo(
-            status_msg,
-            photo=random.choice(PICS),
-            caption=final_status
-        )
+        await status_msg.edit_caption(final_status)
 
     except Exception as e:
-        await edit_message_with_photo(
-            status_msg,
-            photo=random.choice(PICS),
-            caption=f"<b>❌ Broadcast Failed!</b>\n\nError: {str(e)}"
-        )
-        # Alert admin about complete failure
+        await status_msg.edit_caption(f"<b>❌ Broadcast Failed!</b>\n\nError: {str(e)}")
         await message.reply(f"⚠️ Broadcast system encountered a critical error: {str(e)}")
 
 # Add this helper function at the top with other utilities
@@ -590,15 +529,3 @@ async def auto_delete_message(message: Message, delay: int):
     except Exception as e:
         print(f"Error in auto-delete: {e}")
         pass
-
-# Add this helper function
-def get_exp_time(seconds: int) -> str:
-    """Convert seconds to human readable time"""
-    if seconds < 60:
-        return f"{seconds} seconds"
-    elif seconds < 3600:
-        return f"{seconds // 60} minutes"
-    elif seconds < 86400:
-        return f"{seconds // 3600} hours"
-    else:
-        return f"{seconds // 86400} days"
