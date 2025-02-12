@@ -7,13 +7,15 @@ from config import ADMINS, PICS
 from database.database import full_userbase, del_user
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 import random
+import math
 
-# Constants
-CHUNK_SIZE = 20  # Smaller chunks for better management
-UPDATE_INTERVAL = 10  # Status update interval in seconds
+# Dynamic Constants
+MIN_CHUNK_SIZE = 20
+MAX_CHUNK_SIZE = 200
+BASE_DELAY = 1.5  # Base delay between messages
+UPDATE_INTERVAL = 5  # Status update interval in seconds
 AUTO_DELETE_TIME = 600  # 10 minutes
 MAX_RETRIES = 3
-MEDIA_DELAY = 2  # Delay between media messages in seconds
 
 class BroadcastStatus:
     def __init__(self):
@@ -28,41 +30,69 @@ class BroadcastStatus:
         self.current_chunk_progress = 0
         self.failed_users = []
         self.last_updated = 0
+        self.chunk_size = MIN_CHUNK_SIZE
+        self.delay = BASE_DELAY
 
     async def initialize(self, client: Bot):
-        """Initialize total users count"""
+        """Initialize with dynamic chunk size based on user count"""
         users = await full_userbase()
         self.total_users = len(users)
+        
+        # Dynamically adjust chunk size based on total users
+        if self.total_users > 1000:
+            self.chunk_size = min(MAX_CHUNK_SIZE, self.total_users // 20)
+        elif self.total_users > 500:
+            self.chunk_size = min(100, self.total_users // 10)
+        else:
+            self.chunk_size = MIN_CHUNK_SIZE
+            
+        # Adjust delay based on chunk size
+        self.delay = max(BASE_DELAY, self.chunk_size / 100)
+        
         return users
 
     def get_progress_text(self, is_final=False):
         elapsed_time = int(time.time() - self.start_time)
         progress = (self.current_chunk / self.total_chunks * 100) if self.total_chunks else 0
+        speed = self.successful / elapsed_time if elapsed_time > 0 else 0
         
         text = f"{'🏁 Final Broadcast Status' if is_final else '📊 Broadcast Status Update'}\n\n"
-        text += f"⏳ Time Elapsed: {elapsed_time} seconds\n"
+        text += f"⏳ Time Elapsed: {get_readable_time(elapsed_time)}\n"
         text += f"👥 Total Users: {self.total_users}\n"
         text += f"📈 Progress: {progress:.1f}%\n"
         text += f"✅ Successful: {self.successful}\n"
         text += f"🚫 Blocked: {self.blocked}\n"
         text += f"❌ Deleted: {self.deleted}\n"
-        text += f"💔 Failed: {self.failed}\n\n"
+        text += f"💔 Failed: {self.failed}\n"
+        text += f"⚡️ Speed: {speed:.1f} messages/second\n\n"
         
         if not is_final:
             text += f"🔄 Processing Chunk: {self.current_chunk}/{self.total_chunks}\n"
-            text += f"📤 Current Chunk Progress: {self.current_chunk_progress}%"
+            text += f"📤 Current Chunk Progress: {self.current_chunk_progress}%\n"
+            text += f"📦 Chunk Size: {self.chunk_size}"
         
         return text
 
 async def process_chunk(client: Bot, message: Message, users: list, status: BroadcastStatus) -> None:
-    """Process a chunk of users for broadcast"""
+    """Process a chunk of users with adaptive delay"""
     chunk_size = len(users)
+    success_streak = 0
+    
     for idx, user_id in enumerate(users, 1):
         try:
             await message.copy(user_id)
             status.successful += 1
-            await asyncio.sleep(MEDIA_DELAY)  # Add delay between messages
+            success_streak += 1
+            
+            # Dynamically adjust delay based on success rate
+            if success_streak > 10:
+                status.delay = max(BASE_DELAY * 0.8, status.delay * 0.95)
+            
+            await asyncio.sleep(status.delay)
+            
         except FloodWait as e:
+            success_streak = 0
+            status.delay = min(status.delay * 1.2, 3)  # Increase delay but cap it
             await asyncio.sleep(e.x)
             try:
                 await message.copy(user_id)
@@ -71,12 +101,15 @@ async def process_chunk(client: Bot, message: Message, users: list, status: Broa
                 status.failed += 1
                 status.failed_users.append(user_id)
         except UserIsBlocked:
+            success_streak = 0
             status.blocked += 1
             await del_user(user_id)
         except InputUserDeactivated:
+            success_streak = 0
             status.deleted += 1
             await del_user(user_id)
         except Exception:
+            success_streak = 0
             status.failed += 1
             status.failed_users.append(user_id)
         
@@ -111,23 +144,33 @@ async def broadcast_handler(client: Bot, message: Message):
     # Send initial status message
     status_msg = await message.reply_photo(
         photo=random.choice(PICS),
-        caption="🚀 Initializing broadcast...",
+        caption="🚀 Initializing broadcast...\n\nCalculating optimal settings based on user count...",
         has_spoiler=True
     )
 
     try:
-        # Initialize total users
+        # Initialize with dynamic chunk size
         all_users = await status.initialize(client)
         
         if status.total_users == 0:
             await status_msg.edit_caption("No users found in database!")
             return
 
-        # Split users into smaller chunks
-        chunks = [all_users[i:i + CHUNK_SIZE] for i in range(0, len(all_users), CHUNK_SIZE)]
+        # Split users into optimally sized chunks
+        chunks = [all_users[i:i + status.chunk_size] for i in range(0, len(all_users), status.chunk_size)]
         status.total_chunks = len(chunks)
 
-        # Process chunks
+        # Update status with initial settings
+        await status_msg.edit_caption(
+            f"🚀 Starting broadcast...\n\n"
+            f"Total Users: {status.total_users}\n"
+            f"Chunk Size: {status.chunk_size}\n"
+            f"Total Chunks: {status.total_chunks}\n"
+            f"Initial Delay: {status.delay:.2f}s"
+        )
+        await asyncio.sleep(2)
+
+        # Process chunks with dynamic handling
         for chunk_idx, chunk in enumerate(chunks, 1):
             status.current_chunk = chunk_idx
             status.current_chunk_progress = 0
@@ -169,7 +212,10 @@ async def broadcast_handler(client: Bot, message: Message):
 
         # Schedule status message deletion
         await asyncio.sleep(AUTO_DELETE_TIME)
-        await status_msg.delete()
+        try:
+            await status_msg.delete()
+        except Exception as e:
+            print(f"Error deleting status message: {e}")
 
     except Exception as e:
         error_text = f"❌ Broadcast Failed!\n\nError: {str(e)}"
@@ -182,4 +228,21 @@ async def broadcast_handler(client: Bot, message: Message):
                 )
             )
         except:
-            await message.reply(error_text) 
+            await message.reply(error_text)
+
+def get_readable_time(seconds: int) -> str:
+    """Convert seconds to readable time format"""
+    minutes, seconds = divmod(int(seconds), 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    
+    time_str = ""
+    if days > 0:
+        time_str += f"{days}d "
+    if hours > 0:
+        time_str += f"{hours}h "
+    if minutes > 0:
+        time_str += f"{minutes}m "
+    time_str += f"{seconds}s"
+    
+    return time_str 

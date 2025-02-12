@@ -116,3 +116,8 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 def LOGGER(name: str) -> logging.Logger:
     return logging.getLogger(name)
    
+
+# Add to config
+MONGODB_MAX_POOL_SIZE = 100
+MONGODB_MIN_POOL_SIZE = 10
+   

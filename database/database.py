@@ -1,6 +1,7 @@
 import motor, asyncio
 import motor.motor_asyncio
 from config import DB_URI, DB_NAME
+from pymongo import IndexModel, ASCENDING
 
 dbclient = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 database = dbclient[DB_NAME]
@@ -51,3 +52,12 @@ async def full_userbase():
 async def del_user(user_id: int):
     await user_data.delete_one({'_id': user_id})
     return
+
+async def setup_indexes(collection):
+    """Setup database indexes for better performance"""
+    indexes = [
+        IndexModel([("user_id", ASCENDING)], unique=True),
+        IndexModel([("join_date", ASCENDING)]),
+        IndexModel([("last_active", ASCENDING)])
+    ]
+    await collection.create_indexes(indexes)

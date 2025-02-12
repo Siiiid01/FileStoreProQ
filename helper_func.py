@@ -1,4 +1,3 @@
-
 import base64
 import re
 import asyncio
@@ -10,6 +9,9 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
 from shortzy import Shortzy
 from database.database import *
+from functools import wraps, lru_cache
+from typing import Callable, Any
+from datetime import datetime, timedelta
 
 
 
@@ -191,3 +193,34 @@ subscribed1 = filters.create(is_subscribed1)
 subscribed2 = filters.create(is_subscribed2)
 subscribed3 = filters.create(is_subscribed3)
 subscribed4 = filters.create(is_subscribed4)
+
+def async_retry(retries: int = 3, delay: float = 1.0):
+    """Retry decorator for async functions"""
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        async def wrapper(*args, **kwargs) -> Any:
+            last_exception = None
+            for attempt in range(retries):
+                try:
+                    return await func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    if attempt < retries - 1:
+                        await asyncio.sleep(delay * (2 ** attempt))
+            raise last_exception
+        return wrapper
+    return decorator
+
+async def safe_delete(message, delay: int = 0):
+    """Safely delete a message after optional delay"""
+    try:
+        if delay > 0:
+            await asyncio.sleep(delay)
+        await message.delete()
+    except Exception as e:
+        print(f"Error deleting message: {e}")
+
+@lru_cache(maxsize=1000)
+def get_user_cache(user_id: int):
+    """Cache user data for 5 minutes"""
+    return user_data

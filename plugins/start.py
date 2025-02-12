@@ -16,6 +16,7 @@ from helper_func import *
 from database.database import *
 from asyncio import sleep
 from datetime import datetime
+from collections import defaultdict
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -30,6 +31,25 @@ ANIMATION_INTERVAL = 0.2  # Speed of animation in seconds
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
 
+# Rate limiting
+RATE_LIMIT = 5  # messages per minute
+rate_limit_dict = defaultdict(list)
+
+def is_rate_limited(user_id: int) -> bool:
+    current_time = time()
+    user_messages = rate_limit_dict[user_id]
+    
+    # Remove old timestamps
+    user_messages = [t for t in user_messages if current_time - t < 60]
+    rate_limit_dict[user_id] = user_messages
+    
+    # Check rate limit
+    if len(user_messages) >= RATE_LIMIT:
+        return True
+        
+    user_messages.append(current_time)
+    return False
+
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
     # Add reaction to start command
@@ -38,7 +58,7 @@ async def start_command(client: Client, message: Message):
     except:
         pass
         
-    # Show loading animation first
+    # Show loading animation
     loading_msg = await show_loading_animation(message)
     
     id = message.from_user.id
@@ -186,7 +206,7 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
-        # Delete the loading animation
+        # Delete the loading message before showing start menu
         await loading_msg.delete()
         
         reply_markup = InlineKeyboardMarkup([
