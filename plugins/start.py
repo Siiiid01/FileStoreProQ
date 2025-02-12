@@ -343,7 +343,8 @@ async def send_broadcast_to_chunk(client: Bot, message: Message, users: List[int
     for chat_id in users:
         try:
             await message.copy(chat_id)
-                successful += 1
+            successful += 1
+            
             await asyncio.sleep(0.1)  # Rate limiting to prevent floods
             except FloodWait as e:
                 await asyncio.sleep(e.x)
