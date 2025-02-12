@@ -14,11 +14,12 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
-from functools import lru_cache
+from functools import lru_cache, wraps
 from typing import List, Tuple
 import math
 from datetime import datetime
 from asyncio import sleep
+from time import time
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -35,6 +36,39 @@ ANIMATION_INTERVAL = 0.3  # Speed of animation in seconds
 # Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
+
+def timed_lru_cache(seconds: int, maxsize: int = 128):
+    def wrapper_decorator(func):
+        func = lru_cache(maxsize=maxsize)(func)
+        func.lifetime = seconds
+        func.expiration = time() + seconds
+
+        @wraps(func)
+        async def wrapped_func(*args, **kwargs):
+            if time() > func.expiration:
+                func.cache_clear()
+                func.expiration = time() + func.lifetime
+            return await func(*args, **kwargs)
+
+        wrapped_func.cache_info = func.cache_info
+        wrapped_func.cache_clear = func.cache_clear
+        return wrapped_func
+    return wrapper_decorator
+
+@timed_lru_cache(seconds=CACHE_TIME)
+async def get_cached_userbase():
+    """Cache the userbase to avoid frequent database hits"""
+    return await full_userbase()
+
+@timed_lru_cache(seconds=CACHE_TIME)
+async def get_cached_verify_status(user_id: int):
+    """Cache verify status to reduce database hits"""
+    return await _get_verify_status(user_id)
+
+@timed_lru_cache(seconds=CACHE_TIME)
+async def get_cached_messages(client: Bot, ids: tuple):
+    """Cache message fetching to reduce API calls. Note: ids must be tuple for caching"""
+    return await _get_messages(client, list(ids))
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -63,7 +97,7 @@ async def start_command(client: Client, message: Message):
             'link': ""
         }
     else:
-        verify_status = await get_verify_status(id)
+        verify_status = await get_cached_verify_status(id)
 
         # If TOKEN is enabled, handle verification logic
         if TOKEN:
@@ -129,7 +163,7 @@ async def start_command(client: Client, message: Message):
 
         temp_msg = await message.reply("Please wait...")
         try:
-            messages = await get_messages(client, ids)
+            messages = await get_cached_messages(client, tuple(ids))
         except Exception as e:
             await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
@@ -198,12 +232,12 @@ async def start_command(client: Client, message: Message):
         reply_markup = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("More", callback_data = "more")
-                ]
-    [
-                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data = "about"),
+                    InlineKeyboardButton("More", callback_data="more")
+                ],
+                [
+                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
                     InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
-    ]
+                ]
             ]
         )
         start_msg = await message.reply_photo(
@@ -321,7 +355,7 @@ REPLY_ERROR = "<code>Use this command as a reply to any telegram message without
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
     msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
-    users = await full_userbase()
+    users = await get_cached_userbase()
     await msg.edit(f"{len(users)} users are using this bot")
 
 # Add these utility functions
@@ -343,10 +377,10 @@ async def send_broadcast_to_chunk(client: Bot, message: Message, users: List[int
     for chat_id in users:
         try:
             await message.copy(chat_id)
-                successful += 1
+            successful += 1
             await asyncio.sleep(0.1)  # Rate limiting to prevent floods
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
             try:
                 await message.copy(chat_id)
                 successful += 1
@@ -556,3 +590,15 @@ async def auto_delete_message(message: Message, delay: int):
     except Exception as e:
         print(f"Error in auto-delete: {e}")
         pass
+
+# Add this helper function
+def get_exp_time(seconds: int) -> str:
+    """Convert seconds to human readable time"""
+    if seconds < 60:
+        return f"{seconds} seconds"
+    elif seconds < 3600:
+        return f"{seconds // 60} minutes"
+    elif seconds < 86400:
+        return f"{seconds // 3600} hours"
+    else:
+        return f"{seconds // 86400} days"
