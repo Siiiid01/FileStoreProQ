@@ -14,7 +14,6 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
-from functools import lru_cache, wraps
 from asyncio import sleep
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
