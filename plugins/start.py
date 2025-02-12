@@ -366,7 +366,33 @@ async def auto_delete_message(message: Message, delay: int):
 
 # Keep these utility functions as they're used by other features
 async def edit_message_with_photo(message: Message, photo, caption, reply_markup=None):
-    # ... keep this function ...
+    """Helper function to edit message with photo while preserving message ID"""
+    try:
+        if getattr(message, 'photo', None):
+            return await message.edit_media(
+                media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
+                reply_markup=reply_markup
+            )
+        await message.delete()
+        return await message.reply_photo(
+            photo=photo,
+            caption=caption,
+            reply_markup=reply_markup,
+            has_spoiler=True
+        )
+    except Exception as e:
+        print(f"Error in edit_message_with_photo: {e}")
+        try:
+            await message.delete()
+            return await message.reply_photo(
+                photo=photo,
+                caption=caption,
+                reply_markup=reply_markup,
+                has_spoiler=True
+            )
+        except Exception as e:
+            print(f"Error in fallback photo send: {e}")
+            return None
 
 @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
 async def stats(client: Bot, message: Message):
