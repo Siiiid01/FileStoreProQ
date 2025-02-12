@@ -1,77 +1,111 @@
-from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+import asyncio
+import os
 import random
-from config import PICS  # Assuming PICS is imported from your config file
+import sys
+import time
+import string
+import humanize
+from pyrogram import Client, filters, __version__
+from pyrogram.enums import ParseMode
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 
-@Client.on_message(filters.command("stickerid") & filters.private)
-async def stickerid(bot, message: Message):
+from bot import Bot
+from config import *
+from helper_func import *
+from database.database import *
+
+# Cache frequently used values
+CACHE_TIME = 3600  # 1 hour cache time
+message_cache = {}
+
+# File auto-delete time in seconds
+FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
+LOADING_ANIMATION = ["○ ○ ○", "• ○ ○", "• • ○", "• • •"]
+
+
+async def show_loading(client, message):
+    """ Show a dynamic loading animation before sending a message. """
+    loading_msg = await message.reply("○ ○ ○")
+    for _ in range(4):
+        for frame in LOADING_ANIMATION:
+            await loading_msg.edit(frame)
+            await asyncio.sleep(0.5)
+    await loading_msg.delete()
+
+
+@Bot.on_message(filters.command('start') & filters.private)
+async def start_command(client: Client, message: Message):
+    await show_loading(client, message)  # Show loading animation
+    
+    reply_markup = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about")],
+            [InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')]
+        ]
+    )
+
+    sent_message = await message.reply_photo(
+        photo=START_PIC,
+        caption=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup
+    )
+
+    # Make bot react to /start
     try:
-        # Delete the command message
-        await message.delete()
+        await client.send_reaction(message.chat.id, message.id, emoji="🔥", big=True)
+    except:
+        pass
 
-        # Send an initial prompt to ask the user to send their sticker
-        welcome_msg = await message.reply_photo(
-            photo=random.choice(PICS),
-            caption="Please send your sticker.",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
-            ])
-        )
-
-        # Prompt the user to send a sticker
-        s_msg = await bot.ask(chat_id=message.from_user.id, text="Now send me your sticker.")
-
-        # Check if the message contains a sticker
-        if s_msg.sticker:
-            sticker = s_msg.sticker
-            info_text = (
-                f"<b>🎯 Sticker Information</b>\n\n"
-                f"<b>🔖 File ID:</b>\n<code>{sticker.file_id}</code>\n\n"
-                f"<b>🎟️ Unique ID:</b>\n<code>{sticker.file_unique_id}</code>\n\n"
-                f"<b>📏 Dimensions:</b> {sticker.width}x{sticker.height}\n"
-                f"<b>📦 File Size:</b> {sticker.file_size} bytes\n"
-                f"<b>🎨 Animated:</b> {'Yes' if sticker.is_animated else 'No'}\n"
-                f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
-            )
-
-            # Create buttons for checking another sticker or closing
-            buttons = [
-                [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
-                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
-            ]
-
-            # Edit the welcome message with the sticker info
-            await welcome_msg.edit_caption(
-                info_text,
-                reply_markup=InlineKeyboardMarkup(buttons)
-            )
-
-        else:
-            await welcome_msg.edit_caption(
-                "Oops! This isn't a sticker. Please send a sticker file.",
-                reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
-                ]])
-            )
-
-    except Exception as e:
-        print(f"Error in stickerid: {e}")
-        await message.reply_text("An error occurred. Please try again later.")
+    # Schedule deletion of the message after 10 minutes
+    await asyncio.sleep(600)
+    await message.delete()
+    await sent_message.delete()
 
 
-# Callback handler for buttons
-@Client.on_callback_query(filters.regex('^(close_sticker|check_another)$'))
-async def sticker_callback(bot, callback_query):
-    data = callback_query.data
+@Bot.on_message(filters.command("broadcast") & filters.private & filters.user(ADMINS))
+async def send_text(client: Bot, message: Message):
+    """ Broadcast optimized for large user bases while keeping formatting intact. """
+    if not message.reply_to_message:
+        msg = await message.reply("<code>Reply to a message to broadcast.</code>")
+        await asyncio.sleep(8)
+        return await msg.delete()
 
-    if data == "close_sticker":
-        await callback_query.message.delete()
+    broadcast_msg = message.reply_to_message
+    query = await full_userbase()
+    total, successful, blocked, deleted, unsuccessful = 0, 0, 0, 0, 0
 
-    elif data == "check_another":
-        await callback_query.message.delete()
-        # Trigger the sticker command again
-        await bot.send_message(
-            callback_query.message.chat.id,
-            "/stickerid",
-            disable_notification=True
-        )
+    pls_wait = await message.reply("<i>Broadcasting...</i>")
+    for chat_id in query:
+        try:
+            await broadcast_msg.copy(chat_id)
+            successful += 1
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+            await broadcast_msg.copy(chat_id)
+            successful += 1
+        except UserIsBlocked:
+            await del_user(chat_id)
+            blocked += 1
+        except InputUserDeactivated:
+            await del_user(chat_id)
+            deleted += 1
+        except:
+            unsuccessful += 1
+        total += 1
+
+    status = f"""<b><u>Broadcast Completed</u>
+
+Total Users: <code>{total}</code>
+Successful: <code>{successful}</code>
+Blocked Users: <code>{blocked}</code>
+Deleted Accounts: <code>{deleted}</code>
+Unsuccessful: <code>{unsuccessful}</code></b>"""
+
+    return await pls_wait.edit(status)
