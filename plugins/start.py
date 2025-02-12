@@ -190,17 +190,15 @@ async def start_command(client: Client, message: Message):
         # Delete the loading animation
         await loading_msg.delete()
         
-        reply_markup = InlineKeyboardMarkup(
+        reply_markup = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton("More", callback_data = "more")
-                ]
-    [
-                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data = "about"),
-                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
-    ]
+                InlineKeyboardButton("More", callback_data="more")
+            ],
+            [
+                InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
+                InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
             ]
-        )
+        ])
         start_msg = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
@@ -324,9 +322,9 @@ async def get_verify_status(user_id: int):
     """Cache verify status to reduce database hits"""
     return await _get_verify_status(user_id)  # Actual database query function
 
-async def get_messages(client: Bot, ids: List[int]):
+async def get_messages(client, ids):
     """Cache message fetching to reduce API calls"""
-    return await _get_messages(client, ids)  # Actual message fetching function
+    return await _get_messages(client, ids)
 
 async def send_broadcast_to_chunk(client: Bot, message: Message, users) -> tuple:
     """Send broadcast to a chunk of users and return statistics"""
