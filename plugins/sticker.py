@@ -1,28 +1,112 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
 import random
-from config import PICS  # Assuming PICS is imported from your config file
+from config import PICS
+import asyncio
+
+# Constants
+WAIT_ANIMATION_TEXT = "○ ○ ○"
+ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
+ANIMATION_INTERVAL = 0.3
+AUTO_DELETE_TIME = 600  # 10 minutes
+
+async def show_loading_animation(message: Message):
+    """Shows an animated loading message"""
+    loading_msg = await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=WAIT_ANIMATION_TEXT,
+        has_spoiler=True
+    )
+    
+    for _ in range(2):  # Run animation 2 times
+        for frame in ANIMATION_FRAMES:
+            await asyncio.sleep(ANIMATION_INTERVAL)
+            try:
+                await loading_msg.edit_caption(frame)
+            except Exception as e:
+                print(f"Error in animation frame update: {e}")
+        await asyncio.sleep(ANIMATION_INTERVAL)
+        try:
+            await loading_msg.edit_caption(WAIT_ANIMATION_TEXT)
+        except Exception as e:
+            print(f"Error in animation reset: {e}")
+    
+    return loading_msg
+
+async def edit_message_with_photo(message: Message, photo, caption, reply_markup=None):
+    """Helper function to edit message with photo while preserving message ID"""
+    try:
+        if getattr(message, 'photo', None):
+            return await message.edit_media(
+                media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
+                reply_markup=reply_markup
+            )
+        await message.delete()
+        return await message.reply_photo(
+            photo=photo,
+            caption=caption,
+            reply_markup=reply_markup,
+            has_spoiler=True
+        )
+    except Exception as e:
+        print(f"Error in edit_message_with_photo: {e}")
+        try:
+            await message.delete()
+            return await message.reply_photo(
+                photo=photo,
+                caption=caption,
+                reply_markup=reply_markup,
+                has_spoiler=True
+            )
+        except Exception as e:
+            print(f"Error in fallback photo send: {e}")
+            return None
 
 @Client.on_message(filters.command("stickerid") & filters.private)
 async def stickerid(bot, message: Message):
     try:
+        # Add reaction to command
+        try:
+            await message.react(emoji=random.choice(REACTIONS), big=True)
+        except:
+            pass
+
         # Delete the command message
         await message.delete()
 
-        # Send an initial "Please wait..." message
-        welcome_msg = await message.reply_photo(
+        # Show loading animation
+        loading_msg = await show_loading_animation(message)
+
+        # Update loading message to prompt for sticker
+        await edit_message_with_photo(
+            loading_msg,
             photo=random.choice(PICS),
-            caption="⏳ Please wait...",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("❌ Close", callback_data="close")]
-            ])
+            caption="📤 Please send me any sticker to get its information...",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("❌ Cancel", callback_data="close_sticker")
+            ]])
         )
 
-        # Prompt the user to send a sticker
-        s_msg = await bot.ask(chat_id=message.from_user.id, text="")
+        # Wait for user's sticker
+        try:
+            s_msg = await bot.wait_for_message(
+                chat_id=message.chat.id,
+                filters=filters.sticker,
+                timeout=60
+            )
+        except TimeoutError:
+            await edit_message_with_photo(
+                loading_msg,
+                photo=random.choice(PICS),
+                caption="⏳ Timeout! Please try again.",
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
+                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
+                ]])
+            )
+            return
 
-        # Check if the message contains a sticker
-        if s_msg.sticker:
+        if s_msg and s_msg.sticker:
             sticker = s_msg.sticker
             info_text = (
                 f"<b>🎯 Sticker Information</b>\n\n"
@@ -34,44 +118,65 @@ async def stickerid(bot, message: Message):
                 f"<b>🎭 Video:</b> {'Yes' if sticker.is_video else 'No'}"
             )
 
-            # Create buttons for checking another sticker or closing
             buttons = [
                 [InlineKeyboardButton("🔄 Check Another", callback_data="check_another")],
-                [InlineKeyboardButton("❌ Close", callback_data="close")]
+                [InlineKeyboardButton("❌ Close", callback_data="close_sticker")]
             ]
 
-            # Edit the welcome message with the sticker info
-            await welcome_msg.edit_caption(
-                info_text,
+            await edit_message_with_photo(
+                loading_msg,
+                photo=random.choice(PICS),
+                caption=info_text,
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
 
+            # Delete the user's sticker message for cleaner chat
+            try:
+                await s_msg.delete()
+            except:
+                pass
+
         else:
-            await welcome_msg.edit_caption(
-                "Oops! This isn't a sticker. Please send a sticker file.",
+            await edit_message_with_photo(
+                loading_msg,
+                photo=random.choice(PICS),
+                caption="❌ This isn't a sticker. Please send a valid sticker.",
                 reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("❌ Close", callback_data="close")
+                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
+                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
                 ]])
             )
 
     except Exception as e:
         print(f"Error in stickerid: {e}")
-        await message.reply_text("An error occurred. Please try again later.")
+        if 'loading_msg' in locals():
+            await edit_message_with_photo(
+                loading_msg,
+                photo=random.choice(PICS),
+                caption="❌ An error occurred. Please try again later.",
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton("🔄 Try Again", callback_data="check_another"),
+                    InlineKeyboardButton("❌ Close", callback_data="close_sticker")
+                ]])
+            )
+        else:
+            await message.reply_text("❌ An error occurred. Please try again later.")
 
-
-# Callback handler for buttons
 @Client.on_callback_query(filters.regex('^(close_sticker|check_another)$'))
 async def sticker_callback(bot, callback_query):
-    data = callback_query.data
-
-    if data == "close_sticker":
-        await callback_query.message.delete()
-
-    elif data == "check_another":
-        await callback_query.message.delete()
-        # Trigger the sticker command again
-        await bot.send_message(
-            callback_query.message.chat.id,
-            "/stickerid",
-            disable_notification=True
-        )
+    try:
+        if callback_query.data == "close_sticker":
+            await callback_query.message.delete()
+        elif callback_query.data == "check_another":
+            # Delete current message
+            await callback_query.message.delete()
+            # Start new sticker ID request
+            new_msg = await bot.send_message(
+                callback_query.message.chat.id,
+                "/stickerid"
+            )
+            # Delete the command message after a short delay
+            await asyncio.sleep(0.5)
+            await new_msg.delete()
+    except Exception as e:
+        print(f"Error in sticker callback: {e}")
