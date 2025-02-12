@@ -10,11 +10,13 @@ from collections import defaultdict
 from time import time
 from typing import Dict, Set, Optional, Union
 import weakref
+from functools import lru_cache  # Use built-in lru_cache instead
 
 # Constants
 ANIMATION_INTERVAL = 0.3
 REFRESH_COOLDOWN = 5  # seconds between refreshes
 DEFAULT_DELETE_DELAY = 600  # 10 minutes
+CACHE_TIME = 600  # 10 minutes cache duration
 
 # Add to imports
 from collections import defaultdict
@@ -25,6 +27,29 @@ refresh_timestamps = defaultdict(float)
 
 # Add after constants
 active_messages: Dict[int, Set[int]] = defaultdict(set)  # user_id -> set of message_ids
+
+# Modify the caching implementation
+def timed_lru_cache(seconds: int, maxsize: int = 128):
+    def wrapper_decorator(func):
+        func = lru_cache(maxsize=maxsize)(func)
+        func.lifetime = seconds
+        func.expiration = time() + seconds
+
+        def wrapped_func(*args, **kwargs):
+            if time() > func.expiration:
+                func.cache_clear()
+                func.expiration = time() + func.lifetime
+            return func(*args, **kwargs)
+
+        wrapped_func.cache_info = func.cache_info
+        wrapped_func.cache_clear = func.cache_clear
+        return wrapped_func
+    return wrapper_decorator
+
+# Apply the custom cache decorator
+@timed_lru_cache(seconds=CACHE_TIME)
+async def get_cached_userbase():
+    return await full_userbase()
 
 async def edit_message_with_photo(
     message: Message,
