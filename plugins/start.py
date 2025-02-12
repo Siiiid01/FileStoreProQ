@@ -340,29 +340,32 @@ async def send_broadcast_to_chunk(client: Bot, message: Message, users: List[int
     successful = blocked = deleted = unsuccessful = 0
     failed_users = []
     
-    for chat_id in users:
+for chat_id in users:
+    try:
+        await message.copy(chat_id)
+        successful += 1
+        await asyncio.sleep(0.1)  # Rate limiting to prevent floods
+
+    except FloodWait as e:
+        await asyncio.sleep(e.x)  # Wait for required time, then retry
         try:
             await message.copy(chat_id)
             successful += 1
-            
-            await asyncio.sleep(0.1)  # Rate limiting to prevent floods
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            try:
-                await message.copy(chat_id)
-                successful += 1
-            except:
-                unsuccessful += 1
-                failed_users.append(chat_id)
-        except UserIsBlocked:
-            blocked += 1
-            await del_user(chat_id)
-        except InputUserDeactivated:
-            deleted += 1
-            await del_user(chat_id)
-        except Exception:
+        except Exception:  # Handle any other error during retry
             unsuccessful += 1
             failed_users.append(chat_id)
+
+    except UserIsBlocked:
+        blocked += 1
+        await del_user(chat_id)
+
+    except InputUserDeactivated:
+        deleted += 1
+        await del_user(chat_id)
+
+    except Exception:  # Catch any other errors
+        unsuccessful += 1
+        failed_users.append(chat_id)
             
     return successful, blocked, deleted, unsuccessful, failed_users
 
