@@ -52,15 +52,20 @@ TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 
 
 HELP_TXT = '''
-<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok</blockquote>
+<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋɪɴɢ ғᴏʀ @Moviess_Ok</blockquote>
 
-<blockquote expandable>ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs
-/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
-/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ
-/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ
-/for more :  sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ See What it does.....!<bloackquote>
+<blockquote expandable>
+ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs:
 
-<blockquote><i>👑Owner ||<a href=https://t.me/Anime106_Request_bot>QuirkySiiiiiid</a>||</i></blockquote></b>'''
+/start - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ  
+/about - ᴏᴜʀ ɪɴғᴏʀᴍᴀᴛɪᴏɴ  
+/help - ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ᴛᴏ ʙᴏᴛ  
+/for more - sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴇᴇ ᴡʜᴀᴛ ɪᴛ ᴅᴏᴇs...!  
+</blockquote>
+
+<blockquote><i>👑 Owner: ||<a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a>||</i></blockquote>
+</b>
+'''
 
 
 ABOUT_TXT = "<b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/otakuflix_network>ᴏᴛᴀᴋᴜғʟɪx ɴᴇᴛᴡᴏʀᴋ</a>\n◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/anime_cruise_netflix>ᴀɴɪᴍᴇ ᴄʀᴜɪsᴇ</a>\n◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/webseries_flix>ᴡᴇʙsᴇʀɪᴇs ғʟɪx</a>\n◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/pornhwa_flix>ᴘᴏʀɴʜᴡᴀs</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>"
