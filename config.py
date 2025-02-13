@@ -62,8 +62,7 @@ HELP_TXT = '''
 /for more - sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴇᴇ ᴡʜᴀᴛ ɪᴛ ᴅᴏᴇs...!  
 </blockquote>
 
-<blockquote><i>👑 Owner: <a href="https://t.me/Anime106_Request_bot">||QuirkySiiiiiid||</a>||<\i></blockquote>
-</b>
+<blockquote><i>👑 Owner: <a href="https://t.me/Anime106_Request_bot"><spoiler>QuirkySiiiiiid</spoiler></a></i></blockquote>
 '''
 
 
