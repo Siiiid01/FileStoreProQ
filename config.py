@@ -54,8 +54,7 @@ TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 HELP_TXT = '''
 <b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋɪɴɢ ғᴏʀ @Moviess_Ok</blockquote>
 
-<blockquote expandable>
-ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs:
+<blockquote expandable>ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs:
 
 /start - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ  
 /about - ᴏᴜʀ ɪɴғᴏʀᴍᴀᴛɪᴏɴ  
@@ -63,7 +62,7 @@ HELP_TXT = '''
 /for more - sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴇᴇ ᴡʜᴀᴛ ɪᴛ ᴅᴏᴇs...!  
 </blockquote>
 
-<blockquote><i>👑 Owner: ||<a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a>||</i></blockquote>
+<blockquote><i>👑 Owner: <a href="https://t.me/Anime106_Request_bot">||QuirkySiiiiiid||</a>||<\i></blockquote>
 </b>
 '''
 
@@ -76,7 +75,7 @@ MORE_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏ�
 
 START_MSG = os.environ.get("START_MESSAGE", "<b><ʙᴀᴋᴋᴀᴀᴀ!! {first}\n\n</blockquote> ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ.</blockquote></b>")
 try:
-    ADMINS=[6376328008]
+    ADMINS=[2090517919]
     for x in (os.environ.get("ADMINS", "2090517919").split()):
         ADMINS.append(int(x))
 except ValueError:
