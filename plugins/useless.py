@@ -11,7 +11,7 @@ from collections import defaultdict
 from time import time
 from typing import Dict, Set, Optional, Union
 import weakref
-from start import EXEMPT_FROM_DELETE
+from plugins.start import EXEMPT_FROM_DELETE
 from functools import lru_cache  # Use built-in lru_cache instead
 
 # Constants
