@@ -7,7 +7,7 @@ from config import *  # For getting BOT_STATS_TEXT and AUTO_DELETE_TIME
 from helper_func import *  # For functions like get_readable_time
 from database.database import *  # Keep this if you're querying the database for user info
 import humanize  # If you're using it to format the uptime
-from start import show_loading_animation, auto_delete_message # For showing a loading animation
+from plugings.start import show_loading_animation, auto_delete_message # For showing a loading animation
 from bot import Bot  # To access the bot client
 
 
