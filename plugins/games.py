@@ -3,7 +3,7 @@ import random
 import asyncio
 
 # Constants
-DELETE_TIMEOUT = 60  # 1 minute in seconds
+DELETE_TIMEOUT = 120  # 1 minute in seconds
 ANIMATION_TIME = 2  # Time to wait for dice animation
 RESULT_DISPLAY_TIME = 5  # Time to show result before deleting
 
@@ -29,7 +29,7 @@ private_filter = filters.private & ~filters.channel & ~filters.group
 async def aesthetic(client, message):
     text = " ".join(message.command[1:])
     if not text:
-        temp_msg = await message.reply_text("⚠ Please provide some text to convert.")
+        temp_msg = await message.reply_text("• ᴘʟᴇᴀꜱᴇ ᴘʀᴏᴠɪᴅᴇ ꜱᴏᴍᴇ ᴛᴇxᴛ ᴛᴏ ᴄᴏɴᴠᴇʀᴛ. •")
         await asyncio.sleep(DELETE_TIMEOUT)
         await temp_msg.delete()
         return
@@ -90,17 +90,17 @@ async def play_game(client, message):
 
 # Random funny responses
 RUN_STRINGS = [
-    "A broken soul filled with darkness... Why have you come to remind it?",
-    "We have become the lost souls of the underwater world...",
-    "You want the bad call ... but you need good thunder ....",
-    "Oh Bloody Grama Virtues!",
-    "Sea MUGGie I Am Going to Pay The Bill.",
-    "You are not a male chaff!!",
-    "Kindi ... Kindi ...!",
-    "Children..",
-    "Your father to Paul...",
-    "Before falling in the 4th pegging, I will arrive there.",
-    "To tell me I love Yo....",
+    "ᴀ ʙʀᴏᴋᴇɴ ꜱᴏᴜʟ ꜰɪʟʟᴇᴅ ᴡɪᴛʜ ᴅᴀʀᴋɴᴇꜱꜱ... ᴡʜʏ ʜᴀᴠᴇ ʏᴏᴜ ᴄᴏᴍᴇ ᴛᴏ ʀᴇᴍɪɴᴅ ɪᴛ?",
+    "ᴡᴇ ʜᴀᴠᴇ ʙᴇᴄᴏᴍᴇ ᴛʜᴇ ʟᴏꜱᴛ ꜱᴏᴜʟꜱ ᴏꜰ ᴛʜᴇ ᴜɴᴅᴇʀᴡᴀᴛᴇʀ ᴡᴏʀʟᴅ...",
+    "ʏᴏᴜ ᴡᴀɴᴛ ᴛʜᴇ ʙᴀᴅ ᴄᴀʟʟ ... ʙᴜᴛ ʏᴏᴜ ɴᴇᴇᴅ ɢᴏᴏᴅ ᴛʜᴜɴᴅᴇʀ ....",
+    "ᴏʜ ʙʟᴏᴏᴅʏ ɢʀᴀᴍᴀ ᴠɪʀᴛᴜᴇꜱ!",
+    "ꜱᴇᴀ ᴍᴜɢɢɪᴇ ɪ ᴀᴍ ɢᴏɪɴɢ ᴛᴏ ᴘᴀʏ ᴛʜᴇ ʙɪʟʟ.",
+    "ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ ᴍᴀʟᴇ ᴄʜᴀꜰꜰ!!",
+    "ᴋɪɴᴅɪ ... ᴋɪɴᴅɪ ...!",
+    "ᴄʜɪʟᴅʀᴇɴ..",
+    "ʏᴏᴜʀ ꜰᴀᴛʜᴇʀ ᴛᴏ ᴘᴀᴜʟ...",
+    "ʙᴇꜰᴏʀᴇ ꜰᴀʟʟɪɴɢ ɪɴ ᴛʜᴇ 4ᴛʜ ᴘᴇɢɢɪɴɢ, ɪ ᴡɪʟʟ ᴀʀʀɪᴠᴇ ᴛʜᴇʀᴇ.",
+    "ᴛᴏ ᴛᴇʟʟ ᴍᴇ ɪ ʟᴏᴠᴇ ʏᴏ...."
 ]
 
 @Client.on_message(filters.command("runs") & private_filter)
@@ -111,7 +111,7 @@ async def runs(_, message):
     except:
         pass
         
-    status_message = await message.reply_text("🏃 Running...")
+    status_message = await message.reply_text("• ʀᴜɴɴɪɴɢ...")
     await asyncio.sleep(1)
     
     effective_string = random.choice(RUN_STRINGS)

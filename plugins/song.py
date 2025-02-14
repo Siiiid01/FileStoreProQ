@@ -16,7 +16,7 @@ async def song(client, message: Message):
     query = " ".join(message.command[1:])
     
     if not query:
-        error_msg = await message.reply("**Usage:** `/song [song name]`")
+        error_msg = await message.reply("• ᴜꜱᴀɢᴇ: `/song [song name]`")
         # Delete command and error message after 10 minutes
         await asyncio.sleep(600)
         try:
@@ -41,7 +41,7 @@ async def song(client, message: Message):
         open(thumb_name, 'wb').write(thumb.content)
         
     except Exception as e:
-        error_msg = await m.edit("⚠ **Song not found!** Try a different name.")
+        error_msg = await m.edit("<b><i>⚠ ꜱᴏɴɢ ɴᴏᴛ ꜰᴏᴜɴᴅ! ᴛʀʏ ᴀ ᴅɪꜰꜰᴇʀᴇɴᴛ ᴏɴᴇ</i></b>")
         # Delete messages after 10 minutes
         await asyncio.sleep(600)
         try:
@@ -51,7 +51,7 @@ async def song(client, message: Message):
             pass
         return
 
-    await m.edit("📥 **Downloading your song...**")
+    await m.edit("• <b><i>🇩​​🇴​​🇼​​🇳​​🇱​​🇴​​🇦​​🇩​​🇮​​🇳​​🇬​ ​🇾​​🇴​​🇺​​🇷​ ​🇸​​🇴​​🇳​​🇬​...</i><b>")
 
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -88,16 +88,16 @@ async def song(client, message: Message):
         # Send audio
         sent_audio = await message.reply_audio(
             audio_name,
-            caption=f"🎧 **{title}**\n[🔗 Join Channel]({CHANNEL_LINK})",
+            caption=f"🎧 **{title}**\n[​• 🇯​​🇴​​🇮​​🇳​ ​🇨​​🇭​​🇦​​🇳​​🇳​​🇪​​🇱 •]({CHANNEL_LINK})",
             thumb=thumb_name,
             duration=duration_sec,
             performer="@Moviess_Ok"
         )
         
         # Send auto-delete notification
-        notification = await message.reply(
-            "⚠️ **This song will be auto-deleted in 10 minutes!**\n"
-            "**Save it to your saved messages or channel before it's deleted.**"
+        notification = await message.reply('''<blockquote expandable><b><i>⚠︎ ᴛʜɪꜱ ꜱᴏɴɢ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇᴅ ɪɴ 10 ᴍɪɴᴜᴛᴇꜱ!
+            ⚠︎ ꜱᴀᴠᴇ ɪᴛ ᴛᴏ ʏᴏᴜʀ ꜱᴀᴠᴇᴅ ᴍᴇꜱꜱᴀɢᴇꜱ ᴏʀ ᴄʜᴀɴɴᴇʟ ʙᴇꜰᴏʀᴇ ɪᴛ'ꜱ ᴅᴇʟᴇᴛᴇᴅ.</i></b></blockquote>
+            '''
         )
         
         await m.delete()
@@ -109,10 +109,10 @@ async def song(client, message: Message):
             await sent_audio.delete()
             await notification.delete()
         except Exception as e:
-            print(f"Error deleting messages: {e}")
+            print(f"⚠︎ ᴇʀʀᴏʀ ᴅᴇʟᴇᴛɪɴɢ ᴍᴇꜱꜱᴀɢᴇꜱ:{e}")
 
     except Exception as e:
-        error_msg = await m.edit(f"🚫 **Download Error!**\nTry another song or contact support.")
+        error_msg = await m.edit(f"⚠︎ ᴅᴏᴡɴʟᴏᴀᴅ ᴇʀʀᴏʀ!\nᴛʀʏ ᴀɴᴏᴛʜᴇʀ ꜱᴏɴɢ ᴏʀ ᴄᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ:\n@Anime106_Request_Bot")
         print(e)  # For debugging
         # Delete messages after 10 minutes even if download failed
         await asyncio.sleep(600)

@@ -54,25 +54,52 @@ TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 HELP_TXT = '''
 <b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋɪɴɢ ғᴏʀ @Moviess_Ok</blockquote>
 
-<blockquote expandable>ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs:
-
-/start - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ  
-/about - ᴏᴜʀ ɪɴғᴏʀᴍᴀᴛɪᴏɴ  
-/help - ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ᴛᴏ ʙᴏᴛ  
-/for more - sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴇᴇ ᴡʜᴀᴛ ɪᴛ ᴅᴏᴇs...!  
-</blockquote>
+<b>ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>
+<blockquote expandable>ᴜꜱᴇʀꜱ ᴄᴏᴍᴍᴀɴᴅs:
+/alive - ᴄʜᴇᴄᴋ ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ ᴏʀ ɴᴏᴛ
+/start - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
+/id - ɢᴇᴛ ʏᴏᴜʀ ɪᴅ  
+/telegraph - ᴜᴘʟᴏᴀᴅ ᴍᴇᴅɪᴀ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ
+/feedback - ꜰᴇᴇᴅʙᴀᴄᴋ ᴛᴏ ᴀᴅᴍɪɴ  
+/ping - ᴄʜᴇᴄᴋ ʙᴏᴛ ʀᴇꜱᴘᴏɴꜱᴇ ᴛɪᴍᴇ
+/stickerid - to get sticker id
+</blockquote></b> 
+<blockquote expandable><b> ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:
+/ae - ᴛᴏ ᴘʟᴀʏ ᴀᴇꜱᴛʜᴇᴛɪᴄ ᴛᴇꜱᴛ
+/dart - ᴛᴏ ᴘʟᴀʏ ᴅᴀʀᴛ ɢᴀᴍᴇ
+/dice - ᴛᴏ ᴘʟᴀʏ ᴅɪᴄᴇ ɢᴀᴍᴇ
+/luck - ᴛᴏ ᴘʟᴀʏ ʟᴜᴄᴋ ɢᴀᴍᴇ
+/goal - ᴛᴏ ᴘʟᴀʏ ɢᴏᴀʟ ɢᴀᴍᴇ
+/basketball - ᴛᴏ ᴘʟᴀʏ ʙᴀꜱᴋᴇᴛʙᴀʟʟ ɢᴀᴍᴇ
+/bowling - ᴛᴏ ɢᴇᴛ ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ
+/runs - ᴛᴏ ʀᴜɴ ᴀ ꜰᴜɴ ᴛᴇxᴛ </b></blockquote>
 
 <blockquote><i>👑 Owner: <a href="https://t.me/Anime106_Request_bot"><spoiler>QuirkySiiiiiid</spoiler></a></i></blockquote>
 '''
 
 
-ABOUT_TXT = "<b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/otakuflix_network>ᴏᴛᴀᴋᴜғʟɪx ɴᴇᴛᴡᴏʀᴋ</a>\n◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/anime_cruise_netflix>ᴀɴɪᴍᴇ ᴄʀᴜɪsᴇ</a>\n◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/webseries_flix>ᴡᴇʙsᴇʀɪᴇs ғʟɪx</a>\n◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/pornhwa_flix>ᴘᴏʀɴʜᴡᴀs</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>"
+ABOUT_TXT = '''
+<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>
+◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴏᴛᴀᴋᴜғʟɪx ɴᴇᴛᴡᴏʀᴋ</a>
+◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/>ᴀɴɪᴍᴇ ᴄʀᴜɪsᴇ</a>
+◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴡᴇʙsᴇʀɪᴇs ғʟɪx</a>
+◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/>ᴘᴏʀɴʜᴡᴀs</a>
+◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>
+'''
 
 
-MORE_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok\n\n❏ ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs\n├/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ\n├/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ\n└/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ\n\n sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ᴊᴏɪɴ ʙᴏᴛʜ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴛʜᴀᴛs ɪᴛ.....!\n\n ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/Anime106_Request_Bot>Siiiiiid</a></blockquote></b>"
+MORE_TXT = '''
+<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok
+❏ ʙᴏᴛ main ᴄᴏᴍᴍᴀɴᴅs: 
+/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
+/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ
+/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ
 
+ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/Anime106_Request_Bot>Siiiiiid</a></blockquote></b>
+'''
 
-START_MSG = os.environ.get("START_MESSAGE", "<b><ʙᴀᴋᴋᴀᴀᴀ!! {first}\n\n</blockquote> ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ.</blockquote></b>")
+START_MSG = os.environ.get("START_MESSAGE", '''<b><ʙᴀᴋᴋᴀᴀᴀ!! {first} </blockquote> 
+                           ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ. </blockquote></b>''')
 try:
     ADMINS=[2090517919]
     for x in (os.environ.get("ADMINS", "2090517919").split()):
@@ -98,9 +125,10 @@ DISABLE_CHANNEL_BUTTON = os.environ.get("DISABLE_CHANNEL_BUTTON", None) == 'True
 BOT_STATS_TEXT = """
 <b>📊 Bot Statistics</b>
 
-👥 Total Users: {total_users}
 ⏱ Uptime: {uptime}
 """
+
+
 
 USER_REPLY_TEXT = "ʙᴀᴋᴋᴀ ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴍʏ ꜱᴇɴᴘᴀɪ!!"
 

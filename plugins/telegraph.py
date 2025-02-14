@@ -23,15 +23,15 @@ def upload_image_requests(image_path):
 
 @Client.on_message(filters.command("telegraph") & filters.private)
 async def telegraph_upload(bot, update):
-    t_msg = await bot.ask(chat_id = update.from_user.id, text = "Now Send Me Your Photo Or Video Under 5MB To Get Media Link.")
+    t_msg = await bot.ask(chat_id = update.from_user.id, text = "• ɴᴏᴡ ꜱᴇɴᴅ ᴍᴇ ʏᴏᴜʀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ 5ᴍʙ ᴛᴏ ɢᴇᴛ ᴍᴇᴅɪᴀ ʟɪɴᴋ.")
     if not t_msg.media:
-        return await update.reply_text("**Only Media Supported.**")
+        return await update.reply_text("​⚠︎ 🇴​​🇳​​🇱​​🇾​ ​🇲​​🇪​​🇩​​🇮​​🇦​ ​🇸​​🇺​​🇵​​🇵​​🇴​​🇷​​🇹​​🇪​​🇩​.")
     path = await t_msg.download()
     uploading_message = await update.reply_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")
     try:
         image_url = upload_image_requests(path)
         if not image_url:
-            return await uploading_message.edit_text("**Failed to upload file.**")
+            return await uploading_message.edit_text("​⚠︎ 🇫​​🇦​​🇮​​🇱​​🇪​​🇩​ ​🇹​​🇴​ ​🇺​​🇵​​🇱​​🇴​​🇦​​🇩​ ​🇫​​🇮​​🇱​​🇪​.")
     except Exception as error:
         await uploading_message.edit_text(f"**Upload failed: {error}**")
         return
@@ -39,9 +39,9 @@ async def telegraph_upload(bot, update):
         text=f"<b>Link :-</b>\n\n<code>{image_url}</code>",
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup( [[
-            InlineKeyboardButton(text="Open Link", url=image_url),
-            InlineKeyboardButton(text="Share Link", url=f"https://telegram.me/share/url?url={image_url}")
+            InlineKeyboardButton(text="• ᴏᴘᴇɴ ʟɪɴᴋ •", url=image_url),
+            InlineKeyboardButton(text="• ꜱʜᴀʀᴇ ʟɪɴᴋ •", url=f"https://telegram.me/share/url?url={image_url}")
             ],[
-            InlineKeyboardButton(text="✗ Close ✗", callback_data="close")
+            InlineKeyboardButton(text="• ᴄʟᴏꜱᴇ •", callback_data="close")
             ]])
         )

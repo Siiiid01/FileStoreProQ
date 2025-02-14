@@ -24,7 +24,7 @@ TUT_VID = f"{TUT_VID}"
 # Add these constants at the top
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.2  # Speed of animation in seconds
+ANIMATION_INTERVAL = 0.13  # Speed of animation in seconds
 
 # Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
@@ -67,12 +67,12 @@ async def start_command(client: Client, message: Message):
             if "verify_" in message.text:
                 _, token = message.text.split("_", 1)
                 if verify_status['verify_token'] != token:
-                    return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
+                    return await message.reply("• ʏᴏᴜʀ ᴛᴏᴋᴇɴ ɪꜱ ɪɴᴠᴀʟɪᴅ ᴏʀ ᴇxᴘɪʀᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʙʏ ᴄʟɪᴄᴋɪɴɢ /ꜱᴛᴀʀᴛ.")
                 await update_verify_status(id, is_verified=True, verified_time=time.time())
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
-                    f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
+                    f"• 🇾​​🇴​​🇺​​🇷​ ​🇹​​🇴​​🇰​​🇪​​🇳​ ​🇭​​🇦​​🇸​ ​🇧​​🇪​​🇪​​🇳​ ​🇸​​🇺​​🇨​​🇨​​🇪​​🇸​​🇸​​🇫​​🇺​​🇱​​🇱​​🇾​ ​🇻​​🇪​​🇷​​🇮​​🇫​​🇮​​🇪​​🇩​ ​🇦​​🇳​​🇩​ ​🇮​​🇸​ ​🇻​​🇦​​🇱​​🇮​​🇩​ ​🇫​​🇴​​🇷​ {get_exp_time(VERIFY_EXPIRE)}",
                     reply_markup=reply_markup,
                     protect_content=False,
                     quote=True
@@ -87,7 +87,7 @@ async def start_command(client: Client, message: Message):
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
+                    f"<b>ʏᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀꜱ ᴇxᴘɪʀᴇᴅ. ᴘʟᴇᴀꜱᴇ ʀᴇꜰʀᴇꜱʜ ʏᴏᴜʀ ᴛᴏᴋᴇɴ ᴛᴏ ᴄᴏɴᴛɪɴᴜᴇ.\n\nᴛᴏᴋᴇɴ ᴛɪᴍᴇᴏᴜᴛ {get_exp_time(VERIFY_EXPIRE)}\n\n​🇼​​🇭​​🇦​​🇹​ ​🇮​​🇸​ ​🇹​​🇭​​🇪​ ​🇹​​🇴​​🇰​​🇪​​🇳​?\n\n🇹​​🇭​​🇮​​🇸​ ​🇮​​🇸​ ​🇦​​🇳​ ​🇦​​🇩​​🇸​ ​🇹​​🇴​​🇰​​🇪​​🇳​. ​🇵​​🇦​​🇸​​🇸​​🇮​​🇳​​🇬​ ​🇴​​🇳​​🇪​ ​🇦​​🇩​ ​🇦​​🇱​​🇱​​🇴​​🇼​​🇸​ ​🇾​​🇴​​🇺​ ​🇹​​🇴​ ​🇺​​🇸​​🇪​ ​🇹​​🇭​​🇪​ ​🇧​​🇴​​🇹​ ​🇫​​🇴​​🇷​ {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -111,22 +111,22 @@ async def start_command(client: Client, message: Message):
                 end = int(int(argument[2]) / abs(client.db_channel.id))
                 ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
             except Exception as e:
-                print(f"Error decoding IDs: {e}")
+                print(f"⚠︎ Error Decoding Id's: {e}")
                 return
 
         elif len(argument) == 2:
             try:
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
             except Exception as e:
-                print(f"Error decoding ID: {e}")
+                print(f"⚠︎ Error Decoding Id's: {e}")
                 return
 
-        temp_msg = await message.reply("Please wait...")
+        temp_msg = await message.reply("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...")
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            await message.reply_text("Something went wrong!")
-            print(f"Error getting messages: {e}")
+            await message.reply_text("⚠︎ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
+            print(f"⚠︎ Error Getting Messages: {e}")
             return
         finally:
             await temp_msg.delete()
@@ -149,12 +149,12 @@ async def start_command(client: Client, message: Message):
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 sent_messages.append(copied_msg)
             except Exception as e:
-                print(f"Failed to send message: {e}")
+                print(f"⚠︎ Failed to send message {e}")
                 pass
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
-                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
+                f"<b>ᴛʜɪꜱ ꜰɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ {get_exp_time(FILE_AUTO_DELETE)}. ᴘʟᴇᴀꜱᴇ ꜱᴀᴠᴇ ᴏʀ ꜰᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ ꜱᴀᴠᴇᴅ ᴍᴇꜱꜱᴀɢᴇꜱ ʙᴇꜰᴏʀᴇ ɪᴛ ɢᴇᴛꜱ ᴅᴇʟᴇᴛᴇᴅ.</b>"
             )
 
             await asyncio.sleep(FILE_AUTO_DELETE)
@@ -164,7 +164,7 @@ async def start_command(client: Client, message: Message):
                     try:    
                         await snt_msg.delete()  
                     except Exception as e:
-                        print(f"Error deleting message {snt_msg.id}: {e}")
+                        print(f"⚠︎ Error Deleting Message {snt_msg.id}: {e}")
 
             try:
                 reload_url = (
@@ -173,29 +173,29 @@ async def start_command(client: Client, message: Message):
                     else None
                 )
                 keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Get File Again!", url=reload_url)]]
+                    [[InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url)]]
                 ) if reload_url else None
 
                 # Edit the notification message instead of deleting and sending new
                 await edit_message_with_photo(
                     notification_msg,
                     photo=random.choice(PICS),
-                    caption="<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                    caption="<b>• ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\n• ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"Error updating notification with 'Get File Again' button: {e}")
+                print(f"⚠︎ Error Updating Notification With 'get file again' Button: {e}")
     else:
         # Delete the loading message before showing start menu
         await loading_msg.delete()
         
         reply_markup = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("More", callback_data="more")
+                InlineKeyboardButton("• ᴍᴏʀᴇ •", callback_data="more")
             ],
     [
-                InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+                InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about"),
+                InlineKeyboardButton('• sᴇʀɪᴇsғʟɪx •', url='https://t.me/Moviess_Ok')
             ]
         ])
         start_msg = await message.reply_photo(
@@ -273,7 +273,7 @@ async def not_joined(client: Client, message: Message):
     try:
         buttons.append([
             InlineKeyboardButton(
-                text="ʀᴇʟᴏᴀᴅ",
+                text="• ʀᴇʟᴏᴀᴅ •",
                 url=f"https://t.me/{client.username}?start={message.command[1]}"
             )
         ])
@@ -303,9 +303,9 @@ async def not_joined(client: Client, message: Message):
 
 #=====================================================================================##
 
-WAIT_MSG = "<b>Working....</b>"
+WAIT_MSG = "<b>• ​🇼​​🇴​​🇷​​🇰​​🇮​​🇳​​🇬​....</b>"
 
-REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
+REPLY_ERROR = "<code>• ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴀꜱ ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇꜱꜱᴀɢᴇ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ ꜱᴘᴀᴄᴇꜱ.</code>"
 
 #=====================================================================================##
 
@@ -314,7 +314,7 @@ REPLY_ERROR = "<code>Use this command as a reply to any telegram message without
 async def get_users(client: Bot, message: Message):
     msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
     users = await full_userbase()
-    await msg.edit(f"{len(users)} users are using this bot")
+    await msg.edit(f"{len(users)} ᴜꜱᴇʀꜱ ᴀʀᴇ ᴜꜱɪɴɢ ᴛʜɪꜱ ʙᴏᴛ")
 
 # Modify the loading animation function to use edit
 async def show_loading_animation(message: Message):
@@ -337,7 +337,7 @@ async def show_loading_animation(message: Message):
             if WAIT_ANIMATION_TEXT != loading_msg.caption:  # Only edit if content is different
                 await loading_msg.edit_caption(WAIT_ANIMATION_TEXT)
     except Exception as e:
-        print(f"Error in animation: {e}")
+        print(f"⚠︎ Error In Animation {e}")
         
     return loading_msg
 
@@ -361,7 +361,7 @@ async def auto_delete_message(message: Message, delay: int):
                         
         await message.delete()
     except Exception as e:
-        print(f"Error in auto-delete: {e}")
+        print(f"⚠︎ Error In Auto Delete: {e}")
         pass
 
 # Keep these utility functions as they're used by other features
@@ -402,44 +402,44 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
             print(f"Error in fallback photo send: {e}")
             return None
 
-@Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
-async def stats(client: Bot, message: Message):
-    try:
-        # Add reaction to command
-        try:
-            await message.react(emoji=random.choice(REACTIONS), big=True)
-        except:
-            pass
+# @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
+# async def stats(client: Bot, message: Message):
+#     try:
+#         # Add reaction to command
+#         try:
+#             await message.react(emoji=random.choice(REACTIONS), big=True)
+#         except:
+#             pass
 
-        # Show loading animation
-        loading_msg = await show_loading_animation(message)
+#         # Show loading animation
+#         loading_msg = await show_loading_animation(message)
 
-        # Get user count
-        users = await full_userbase()
-        total_users = len(users)
+#         # Get user count
+#         users = await full_userbase()
+#         total_users = len(users)
 
-        # Calculate uptime
-        current_time = datetime.now()
-        uptime = current_time - client.start_time
-        uptime_str = get_readable_time(uptime.total_seconds())
+#         # Calculate uptime
+#         current_time = datetime.now()
+#         uptime = current_time - client.start_time
+#         uptime_str = get_readable_time(uptime.total_seconds())
 
-        # Format stats text
-        stats_text = BOT_STATS_TEXT.format(
-            total_users=total_users,
-            uptime=uptime_str
-        )
+#         # Format stats text
+#         stats_text = BOT_STATS_TEXT.format(
+#             total_users=total_users,
+#             uptime=uptime_str
+#         )
 
-        # Update loading message with stats
-        await edit_message_with_photo(
-            loading_msg,
-            photo=random.choice(PICS),
-            caption=stats_text,
-            has_spoiler=True
-        )
+#         # Update loading message with stats
+#         await edit_message_with_photo(
+#             loading_msg,
+#             photo=random.choice(PICS),
+#             caption=stats_text,
+#             has_spoiler=True
+#         )
 
-        # Schedule message for auto-deletion
-        asyncio.create_task(auto_delete_message(loading_msg, AUTO_DELETE_TIME))
+#         # Schedule message for auto-deletion
+#         asyncio.create_task(auto_delete_message(loading_msg, AUTO_DELETE_TIME))
 
-    except Exception as e:
-        print(f"Error in stats command: {e}")
-        await message.reply("❌ An error occurred while fetching stats.")
+#     except Exception as e:
+#         print(f"Error in stats command: {e}")
+#         await message.reply("❌ An error occurred while fetching stats.")
