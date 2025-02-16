@@ -19,7 +19,7 @@ from helper_func import encode
 )
 
 async def channel_post(client: Client, message: Message):
-    reply_text = await message.reply_text("Please Wait...!", quote = True)
+    reply_text = await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...!", quote = True)
     try:
         post_message = await message.copy(chat_id = client.db_channel.id, disable_notification=True)
     except FloodWait as e:
@@ -34,9 +34,9 @@ async def channel_post(client: Client, message: Message):
     base64_string = await encode(string)
     link = f"https://t.me/{client.username}?start={base64_string}"
 
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ꜱʜᴀʀᴇ ᴜʀʟ •", url=f'https://telegram.me/share/url?url={link}')]])
 
-    await reply_text.edit(f"<b><i>​🇭​​🇪​​🇷​​🇪​ ​🇮​​🇸​ ​🇾​​🇴​​🇺​​🇷​ ​🇱​​🇮​​🇳​​🇰​</i></b>\n\n{link}",reply_markup=reply_markup, disable_web_page_preview = True)
+    await reply_text.edit(f"<b><i>​• 🇭​​🇪​​🇷​​🇪​ ​🇮​​🇸​ ​🇾​​🇴​​🇺​​🇷​ ​🇱​​🇮​​🇳​​🇰​</i></b>\n\n{link}",reply_markup=reply_markup, disable_web_page_preview = True)
 
     if not DISABLE_CHANNEL_BUTTON:
         await post_message.edit_reply_markup(reply_markup)

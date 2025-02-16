@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import asyncio
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+import asyncio 
+from bot import Bot
 
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.1  # 100ms
@@ -52,10 +53,10 @@ async def stickerid(bot, message):
     except asyncio.TimeoutError:
         await ask_msg.edit("⏳<b><i>ᴛɪᴍᴇᴏᴜᴛ! ʏᴏᴜ ᴅɪᴅɴ’ᴛ ꜱᴇɴᴅ ᴀ ꜱᴛɪᴄᴋᴇʀ ɪɴ ᴛɪᴍᴇ.</i></b>")
 
-@Client.on_callback_query(filters.regex("^close_sticker$"))
-async def close_sticker_callback(bot, callback_query):
-    """Handle close button callback."""
+@Bot.on_callback_query(filters.regex("^close_sticker$"))
+async def close_callback(client, callback_query: CallbackQuery):
     try:
         await callback_query.message.delete()
     except Exception as e:
-        print(f"Error closing sticker message: {e}")
+        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
+

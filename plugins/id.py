@@ -25,21 +25,21 @@ async def showid(client, message: Message):
 
     # All info in one message with improved formatting
     info_text = (
-        f"<blockquote><b>🔥 𝚄𝚂𝙴𝚁 𝙸𝙽𝙵𝙾𝚁𝙼𝙰𝚃𝙸𝙾𝙽</b></blockquote>\n\n"
-        f"<blockquote><b>"
-        f"🆔 𝚄𝚂𝙴𝚁 𝙸𝙳: <code>{user_id}</code>\n"
-        f"📛 𝙵𝙸𝚁𝚂𝚃 𝙽𝙰𝙼𝙴: <code>{first_name}</code>\n"
-        f"📝 𝙻𝙰𝚂𝚃 𝙽𝙰𝙼𝙴: <code>{last_name}</code>\n"
-        f"🔗 𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴: <code>{username}</code>\n"
-        f"🌍 𝙻𝙰𝙽𝙶𝚄𝙰𝙶𝙴: <code>{language}</code>\n"
-        f"📝 𝙱𝙸𝙾: <code>{about}</code>\n"
-        f"🤖 𝙱𝙾𝚃 𝙻𝙰𝙽𝙶𝚄𝙰𝙶𝙴: <code>{bot_lang_code}</code></b></blockquote>\n\n"
-        f"<blockquote><i>👑 𝙱𝙾𝚃 𝙾𝚆𝙽𝙴𝚁: @Anime106_Request_Bot</i></blockquote>"
+        f"<blockquote><b>🔥 ᴜꜱᴇʀ ɪɴꜰᴏ</b></blockquote>\n\n"
+        f"<blockquote expandable><b>"
+        f"🆔 ᴜꜱᴇʀ ɪᴅ: <code>{user_id}</code>\n"
+        f"📛 ꜰɪʀꜱᴛ ɴᴀᴍᴇ: <code>{first_name}</code>\n"
+        f"📝 ʟᴀꜱᴛ ɴᴀᴍᴇ: <code>{last_name}</code>\n"
+        f"🔗 ᴜꜱᴇʀɴᴀᴍᴇ: <code>{username}</code>\n"
+        f"🌍 ʟᴀɴɢᴜᴀɢᴇ: <code>{language}</code>\n"
+        f"📝 ʙɪᴏ: <code>{about}</code>\n"
+        f"🤖 ʙᴏᴛ ʟᴀɴɢᴜᴀɢᴇ: <code>{bot_lang_code}</code></b></blockquote>\n\n"
+        f"<blockquote><i>👑 ʙᴏᴛ ᴏᴡɴᴇʀ @Anime106_Request_Bot</i></blockquote>"
     )
     
     # Create button with improved style
     buttons = InlineKeyboardMarkup([[
-        InlineKeyboardButton("✯ 𝙲𝙻𝙾𝚂𝙴 ✯", callback_data="close")
+        InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close")
     ]])
 
     # Send message with all info

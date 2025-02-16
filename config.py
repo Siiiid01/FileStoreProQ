@@ -74,28 +74,24 @@ HELP_TXT = '''
 /bowling - ᴛᴏ ɢᴇᴛ ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ
 /runs - ᴛᴏ ʀᴜɴ ᴀ ꜰᴜɴ ᴛᴇxᴛ </b></blockquote>
 
-<blockquote><i>👑 Owner: <a href="https://t.me/Anime106_Request_bot"><spoiler>QuirkySiiiiiid</spoiler></a></i></blockquote>
+<blockquote><i>👑 ᴏᴡɴᴇʀ: <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a></i></blockquote>
 '''
 
 
 ABOUT_TXT = '''
 <b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>
-◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴏᴛᴀᴋᴜғʟɪx ɴᴇᴛᴡᴏʀᴋ</a>
-◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/>ᴀɴɪᴍᴇ ᴄʀᴜɪsᴇ</a>
-◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴡᴇʙsᴇʀɪᴇs ғʟɪx</a>
-◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/>ᴘᴏʀɴʜᴡᴀs</a>
-◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>
+◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴍᴏᴠɪᴇꜱ ᴏᴋ</a>
+◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/AnnimeMoviessok>ᴀɴɪᴍᴇ'ꜱ ᴏᴋ</a>
+◈ ᴏɴᴇ ᴘɪᴇᴄᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴏɴᴇ ᴘɪᴇᴄᴇ</a>
+◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/>ᴀᴅ*ʟᴛ ᴏᴋ</a>
+◈ ᴍᴀɴɢᴀ/ᴍᴀɴʜᴡᴀ ᴄʜᴀɴɴᴇʟ: <a href=https://t.me/>ᴇᴛᴇʀɴᴀʟᴍᴀɴɢᴀ</a>
+♏︎ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>
 '''
 
 
 MORE_TXT = '''
-<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok
-❏ ʙᴏᴛ main ᴄᴏᴍᴍᴀɴᴅs: 
-/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
-/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ
-/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ
+<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok </blockquote></b>
 
-ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/Anime106_Request_Bot>Siiiiiid</a></blockquote></b>
 '''
 
 START_MSG = os.environ.get("START_MESSAGE", '''<b><ʙᴀᴋᴋᴀᴀᴀ!! {first} </blockquote> 

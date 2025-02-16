@@ -3,6 +3,7 @@ import requests
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
+from bot import Bot
 
 def upload_image_requests(image_path):
     upload_url = "https://envs.sh"
@@ -25,13 +26,13 @@ def upload_image_requests(image_path):
 async def telegraph_upload(bot, update):
     t_msg = await bot.ask(chat_id = update.from_user.id, text = "• ɴᴏᴡ ꜱᴇɴᴅ ᴍᴇ ʏᴏᴜʀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ 5ᴍʙ ᴛᴏ ɢᴇᴛ ᴍᴇᴅɪᴀ ʟɪɴᴋ.")
     if not t_msg.media:
-        return await update.reply_text("​⚠︎ 🇴​​🇳​​🇱​​🇾​ ​🇲​​🇪​​🇩​​🇮​​🇦​ ​🇸​​🇺​​🇵​​🇵​​🇴​​🇷​​🇹​​🇪​​🇩​.")
+        return await update.reply_text("​⚠︎ ᴏɴʟʏ ᴍᴇᴅɪᴀ ꜱᴜᴘᴘᴏʀᴛᴇᴅ.")
     path = await t_msg.download()
     uploading_message = await update.reply_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")
     try:
         image_url = upload_image_requests(path)
         if not image_url:
-            return await uploading_message.edit_text("​⚠︎ 🇫​​🇦​​🇮​​🇱​​🇪​​🇩​ ​🇹​​🇴​ ​🇺​​🇵​​🇱​​🇴​​🇦​​🇩​ ​🇫​​🇮​​🇱​​🇪​.")
+            return await uploading_message.edit_text("​⚠︎ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴜᴘʟᴏᴀᴅ ꜰɪʟᴇ.")
     except Exception as error:
         await uploading_message.edit_text(f"**Upload failed: {error}**")
         return
@@ -45,3 +46,10 @@ async def telegraph_upload(bot, update):
             InlineKeyboardButton(text="• ᴄʟᴏꜱᴇ •", callback_data="close")
             ]])
         )
+    
+@Bot.on_callback_query(filters.regex("^close$"))
+async def close_callback(client, callback_query: CallbackQuery):
+    try:
+        await callback_query.message.delete()
+    except Exception as e:
+        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
