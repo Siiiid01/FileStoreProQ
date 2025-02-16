@@ -30,7 +30,7 @@ TIME = int(os.environ.get("TIME", "300"))
 #force sub channel id, if you want enable force sub
 FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "-1001712434868"))
 #put 0 to disable
-FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002367372834"))#put 0 to disable
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "0"))#put 0 to disable
 FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCE_SUB_CHANNEL3", "0"))#put 0 to disable
 FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to disable
 
@@ -51,30 +51,39 @@ IS_VERIFY = os.environ.get("IS_VERIFY", "True")
 TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 
 
-HELP_TXT = '''
-<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋɪɴɢ ғᴏʀ @Moviess_Ok</blockquote>
+HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ 〕──╮</b>  
+<blockquote>  
+• ᴡᴏʀᴋɪɴɢ ғᴏʀ <b>@Moviess_Ok</b> 🚀  
+</blockquote>  
 
-<b>ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>
-<blockquote expandable>ᴜꜱᴇʀꜱ ᴄᴏᴍᴍᴀɴᴅs:
-/alive - ᴄʜᴇᴄᴋ ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ ᴏʀ ɴᴏᴛ
-/start - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
-/id - ɢᴇᴛ ʏᴏᴜʀ ɪᴅ  
-/telegraph - ᴜᴘʟᴏᴀᴅ ᴍᴇᴅɪᴀ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ
-/feedback - ꜰᴇᴇᴅʙᴀᴄᴋ ᴛᴏ ᴀᴅᴍɪɴ  
-/ping - ᴄʜᴇᴄᴋ ʙᴏᴛ ʀᴇꜱᴘᴏɴꜱᴇ ᴛɪᴍᴇ
-/stickerid - to get sticker id
-</blockquote></b> 
-<blockquote expandable><b> ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:
-/ae - ᴛᴏ ᴘʟᴀʏ ᴀᴇꜱᴛʜᴇᴛɪᴄ ᴛᴇꜱᴛ
-/dart - ᴛᴏ ᴘʟᴀʏ ᴅᴀʀᴛ ɢᴀᴍᴇ
-/dice - ᴛᴏ ᴘʟᴀʏ ᴅɪᴄᴇ ɢᴀᴍᴇ
-/luck - ᴛᴏ ᴘʟᴀʏ ʟᴜᴄᴋ ɢᴀᴍᴇ
-/goal - ᴛᴏ ᴘʟᴀʏ ɢᴏᴀʟ ɢᴀᴍᴇ
-/basketball - ᴛᴏ ᴘʟᴀʏ ʙᴀꜱᴋᴇᴛʙᴀʟʟ ɢᴀᴍᴇ
-/bowling - ᴛᴏ ɢᴇᴛ ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ
-/runs - ᴛᴏ ʀᴜɴ ᴀ ꜰᴜɴ ᴛᴇxᴛ </b></blockquote>
+<b>• ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
+<blockquote expandable>  
+<b>• ᴜꜱᴇʀꜱ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
+📌 /alive – ᴄʜᴇᴄᴋ ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ  
+📌 /start – ꜱᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ  
+📌 /id – ɢᴇᴛ ʏᴏᴜʀ ᴜꜱᴇʀ ɪᴅ  
+📌 /telegraph – ᴜᴘʟᴏᴀᴅ ᴍᴇᴅɪᴀ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ  
+📌 /feedback – ꜱᴇɴᴅ ꜰᴇᴇᴅʙᴀᴄᴋ ᴛᴏ ᴀᴅᴍɪɴ  
+📌 /ping – ᴛᴇꜱᴛ ʙᴏᴛ ʀᴇꜱᴘᴏɴꜱᴇ ᴛɪᴍᴇ  
+📌 /stickerid – ɢᴇᴛ ꜱᴛɪᴄᴋᴇʀ ɪᴅ  
+</blockquote>  
 
-<blockquote><i>👑 ᴏᴡɴᴇʀ: <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a></i></blockquote>
+<blockquote expandable>  
+<b>• ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
+🎭 /ae – ᴘʟᴀʏ <i>ᴀᴇꜱᴛʜᴇᴛɪᴄ ᴛᴇꜱᴛ</i>  
+🎯 /dart – ᴘʟᴀʏ <i>ᴅᴀʀᴛ ɢᴀᴍᴇ</i>  
+🎲 /dice – ᴘʟᴀʏ <i>ᴅɪᴄᴇ ɢᴀᴍᴇ</i>  
+🍀 /luck – ᴘʟᴀʏ <i>ʟᴜᴄᴋ ɢᴀᴍᴇ</i>  
+⚽ /goal – ᴘʟᴀʏ <i>ɢᴏᴀʟ ɢᴀᴍᴇ</i>  
+🏀 /basketball – ᴘʟᴀʏ <i>ʙᴀꜱᴋᴇᴛʙᴀʟʟ ɢᴀᴍᴇ</i>  
+🎳 /bowling – ᴘʟᴀʏ <i>ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ</i>  
+💨 /runs – ʀᴜɴ <i>ꜰᴜɴ ᴛᴇxᴛ</i>  
+</blockquote>  
+
+<blockquote>  
+• <i>ᴏᴡɴᴇʀ:</i> <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a>  
+</blockquote>
+
 '''
 
 
@@ -94,8 +103,19 @@ MORE_TXT = '''
 
 '''
 
-START_MSG = os.environ.get("START_MESSAGE", '''<b><ʙᴀᴋᴋᴀᴀᴀ!! {first} </blockquote> 
-                           ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ. </blockquote></b>''')
+START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {username} ⚡🔥 ◂─╮</b>  
+<blockquote expandable>  
+╔════════════════════════════╗  
+  🚀 <b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ғɪʟᴇ ʙᴏᴛ!</b>  
+  🛡️ <i>ᴘʀɪᴠᴀᴛᴇ & sᴇᴄᴜʀᴇ ғɪʟᴇ sᴛᴏʀᴀɢᴇ.</i>  
+  🎮 <b>ᴍɪɴɪ-ɢᴀᴍᴇs ᴍᴏᴅᴇ:</b> <i>ғᴜɴ ᴀᴡᴀɪᴛs!</i>  
+  🔗 <b>ɢᴇɴᴇʀᴀᴛᴇ ᴜɴɪǫᴜᴇ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋs!</b>  
+  ⚡ <i>ʙʟᴀᴢɪɴɢ ғᴀsᴛ ғɪʟᴇ ʀᴇᴛʀɪᴇᴠᴀʟ.</i>  
+  🕹️ <b>ʀᴇᴛʀᴏ-ɢᴀᴍɪɴɢ ᴠɪʙᴇs ᴜɴʟᴏᴄᴋᴇᴅ!</b>  
+  💠 <i>ᴜɴʙʀᴇᴀᴋᴀʙʟᴇ, ᴜʟᴛʀᴀ-ᴇʟɪᴛᴇ, ᴄʟᴀssɪᴄ.</i>  
+╚════════════════════════════╝  
+</blockquote>
+''')
 try:
     ADMINS=[2090517919]
     for x in (os.environ.get("ADMINS", "2090517919").split()):
@@ -104,7 +124,12 @@ except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
 
 #Force sub message 
-FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "<blockquote>ʜᴇʟʟᴏ {first} </blockquote>\n\n<blockquote><b><i>ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʜᴇɴ ᴄʟɪᴄᴋ ᴏɴ ʀᴇʟᴏᴀᴅ button ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛᴇᴅ ꜰɪʟᴇ.</i></b></blockquote>")
+FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "<blockquote>🌟 ʜᴇʟʟᴏ, <b>{first}</b>! 🌟</blockquote>  
+
+<blockquote>  
+<b><i>🔹 ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟꜱ, ᴛʜᴇɴ ᴛᴀᴘ ᴛʜᴇ <u>ʀᴇʟᴏᴀᴅ</u> ʙᴜᴛᴛᴏɴ  
+ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛᴇᴅ ꜰɪʟᴇ! 🚀</i></b>  
+</blockquote>")
 
 #set your Custom Caption here, Keep None for Disable Custom Caption
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<<blockquote><i><b>• ʙʏ @Moviess_Ok</b></i></blockquote>")
