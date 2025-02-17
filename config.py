@@ -52,24 +52,19 @@ TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 
 
 HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ 〕──╮</b>  
-<blockquote>  
-• ᴡᴏʀᴋɪɴɢ ғᴏʀ <b>@Moviess_Ok</b> 🚀  
-</blockquote>  
+<blockquote>• ᴡᴏʀᴋɪɴɢ ғᴏʀ <b>@Moviess_Ok</b> 🚀  </blockquote>  
 
 <b>• ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
-<blockquote expandable>  
-<b>• ᴜꜱᴇʀꜱ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
+<blockquote expandable><b>• ᴜꜱᴇʀꜱ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
 📌 /alive – ᴄʜᴇᴄᴋ ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ  
 📌 /start – ꜱᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ  
 📌 /id – ɢᴇᴛ ʏᴏᴜʀ ᴜꜱᴇʀ ɪᴅ  
 📌 /telegraph – ᴜᴘʟᴏᴀᴅ ᴍᴇᴅɪᴀ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ  
 📌 /feedback – ꜱᴇɴᴅ ꜰᴇᴇᴅʙᴀᴄᴋ ᴛᴏ ᴀᴅᴍɪɴ  
 📌 /ping – ᴛᴇꜱᴛ ʙᴏᴛ ʀᴇꜱᴘᴏɴꜱᴇ ᴛɪᴍᴇ  
-📌 /stickerid – ɢᴇᴛ ꜱᴛɪᴄᴋᴇʀ ɪᴅ  
-</blockquote>  
+📌 /stickerid – ɢᴇᴛ ꜱᴛɪᴄᴋᴇʀ ɪᴅ </blockquote>  
 
-<blockquote expandable>  
-<b>• ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
+<blockquote expandable><b>• ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
 🎭 /ae – ᴘʟᴀʏ <i>ᴀᴇꜱᴛʜᴇᴛɪᴄ ᴛᴇꜱᴛ</i>  
 🎯 /dart – ᴘʟᴀʏ <i>ᴅᴀʀᴛ ɢᴀᴍᴇ</i>  
 🎲 /dice – ᴘʟᴀʏ <i>ᴅɪᴄᴇ ɢᴀᴍᴇ</i>  
@@ -77,35 +72,24 @@ HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ 〕──
 ⚽ /goal – ᴘʟᴀʏ <i>ɢᴏᴀʟ ɢᴀᴍᴇ</i>  
 🏀 /basketball – ᴘʟᴀʏ <i>ʙᴀꜱᴋᴇᴛʙᴀʟʟ ɢᴀᴍᴇ</i>  
 🎳 /bowling – ᴘʟᴀʏ <i>ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ</i>  
-💨 /runs – ʀᴜɴ <i>ꜰᴜɴ ᴛᴇxᴛ</i>  
-</blockquote>  
+💨 /runs – ʀᴜɴ <i>ꜰᴜɴ ᴛᴇxᴛ</i></blockquote>  
 
-<blockquote>  
-• <i>ᴏᴡɴᴇʀ:</i> <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a>  
-</blockquote>
-
-'''
+<blockquote>• <i>ᴏᴡɴᴇʀ:</i> <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a></blockquote>'''
 
 
-ABOUT_TXT = '''
-<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>
+ABOUT_TXT = '''<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>
 ◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴍᴏᴠɪᴇꜱ ᴏᴋ</a>
 ◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/AnnimeMoviessok>ᴀɴɪᴍᴇ'ꜱ ᴏᴋ</a>
 ◈ ᴏɴᴇ ᴘɪᴇᴄᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴏɴᴇ ᴘɪᴇᴄᴇ</a>
 ◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/>ᴀᴅ*ʟᴛ ᴏᴋ</a>
 ◈ ᴍᴀɴɢᴀ/ᴍᴀɴʜᴡᴀ ᴄʜᴀɴɴᴇʟ: <a href=https://t.me/>ᴇᴛᴇʀɴᴀʟᴍᴀɴɢᴀ</a>
-♏︎ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>
-'''
+♏︎ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>'''
 
 
-MORE_TXT = '''
-<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok </blockquote></b>
-
-'''
+MORE_TXT = '''<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok </blockquote></b>'''
 
 START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {username} ⚡🔥 ◂─╮</b>  
-<blockquote expandable>  
-╔════════════════════════════╗  
+<blockquote expandable>╔════════════════════════════╗  
   🚀 <b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ғɪʟᴇ ʙᴏᴛ!</b>  
   🛡️ <i>ᴘʀɪᴠᴀᴛᴇ & sᴇᴄᴜʀᴇ ғɪʟᴇ sᴛᴏʀᴀɢᴇ.</i>  
   🎮 <b>ᴍɪɴɪ-ɢᴀᴍᴇs ᴍᴏᴅᴇ:</b> <i>ғᴜɴ ᴀᴡᴀɪᴛs!</i>  
@@ -113,9 +97,7 @@ START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ
   ⚡ <i>ʙʟᴀᴢɪɴɢ ғᴀsᴛ ғɪʟᴇ ʀᴇᴛʀɪᴇᴠᴀʟ.</i>  
   🕹️ <b>ʀᴇᴛʀᴏ-ɢᴀᴍɪɴɢ ᴠɪʙᴇs ᴜɴʟᴏᴄᴋᴇᴅ!</b>  
   💠 <i>ᴜɴʙʀᴇᴀᴋᴀʙʟᴇ, ᴜʟᴛʀᴀ-ᴇʟɪᴛᴇ, ᴄʟᴀssɪᴄ.</i>  
-╚════════════════════════════╝  
-</blockquote>
-''')
+╚════════════════════════════╝</blockquote>''')
 try:
     ADMINS=[2090517919]
     for x in (os.environ.get("ADMINS", "2090517919").split()):
