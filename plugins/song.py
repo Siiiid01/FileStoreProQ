@@ -51,7 +51,7 @@ async def song(client, message: Message):
             pass
         return
 
-    await m.edit("• <b><i>🇩​​🇴​​🇼​​🇳​​🇱​​🇴​​🇦​​🇩​​🇮​​🇳​​🇬​ ​🇾​​🇴​​🇺​​🇷​ ​🇸​​🇴​​🇳​​🇬​...</i><b>")
+    await m.edit("• <b><i>ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ sᴏɴɢ...</i><b>")
 
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -88,7 +88,7 @@ async def song(client, message: Message):
         # Send audio
         sent_audio = await message.reply_audio(
             audio_name,
-            caption=f"🎧 **{title}**\n[​• 🇯​​🇴​​🇮​​🇳​ ​🇨​​🇭​​🇦​​🇳​​🇳​​🇪​​🇱 •]({CHANNEL_LINK})",
+            caption=f"🎧 <b>{title}</b>\n[​• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •]({CHANNEL_LINK})",
             thumb=thumb_name,
             duration=duration_sec,
             performer="@Moviess_Ok"

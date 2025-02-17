@@ -50,7 +50,7 @@ async def showid(client, message: Message):
             reply_markup=buttons,
             parse_mode=enums.ParseMode.HTML
         )
-        await bot_msg.react("🔥")
+        await bot_msg.react("😍", big=True)
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
 
