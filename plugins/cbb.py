@@ -43,9 +43,11 @@ async def cb_handler(client: Bot, query: CallbackQuery):
                 InlineKeyboardButton('• Mᴏᴠɪᴇs/sᴇʀɪᴇs •', url='https://t.me/Moviess_Ok')
             ]
         ]
-        await query.message.edit_photo(
-            photo=random.choice(PICS),
-            caption=START_MSG.format(mention=query.from_user.mention),
+        await query.message.edit_media(
+            media=InputMediaPhoto(
+                random.choice(PICS),
+                caption=START_MSG.format(mention=query.from_user.mention)
+            ),
             reply_markup=InlineKeyboardMarkup(buttons)
         )
 
