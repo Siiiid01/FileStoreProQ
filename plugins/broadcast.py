@@ -25,7 +25,7 @@ async def broadcast_handler(client: Bot, message: Message):
     deleted = 0
     failed = 0
     
-    status_msg = await message.reply("ʙʀᴏᴀᴅᴄᴀꜱᴛ ꜱᴛᴀʀᴛᴇᴅ... ᴘʀᴏᴄᴇꜱꜱɪɴɢ ᴜꜱᴇʀꜱ...")
+    status_msg = await message.reply("• ʙʀᴏᴀᴅᴄᴀꜱᴛ ꜱᴛᴀʀᴛᴇᴅ...\n• ᴘʀᴏᴄᴇꜱꜱɪɴɢ ᴜꜱᴇʀꜱ...")
     
     for user_id in users:
         try:

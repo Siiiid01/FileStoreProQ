@@ -49,7 +49,8 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         await query.message.edit_media(
             media=InputMediaPhoto(
                 random.choice(PICS),  # New random image every time
-                caption=MORE_TXT.format(first=query.from_user.first_name)
+                caption=MORE_TXT.format(first=query.from_user.first_name),
+                 parse_mode="html"  # Ensure proper formatting
             ),
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ʜᴇʟᴘ •", callback_data='help'),
