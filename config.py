@@ -91,7 +91,7 @@ MORE_TXT = '''<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪ
 
 
 
-START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {username} ⚡🔥 ◂─╮</b>  
+START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {mention} ⚡🔥 ◂─╮</b>  
 <blockquote expandable>╔════════════════════════════╗  
   🚀 <b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ғɪʟᴇ ʙᴏᴛ!</b>  
   🛡️ <i>ᴘʀɪᴠᴀᴛᴇ & sᴇᴄᴜʀᴇ ғɪʟᴇ sᴛᴏʀᴀɢᴇ.</i>  

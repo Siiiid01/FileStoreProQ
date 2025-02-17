@@ -34,15 +34,19 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         )
 
     elif data == "start":
-        await query.message.edit_media(
-            media=InputMediaPhoto(
-                random.choice(PICS),  # New random image every time
-                caption=START_MSG.format(first=query.from_user.first_name)
-            ),
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʜᴇʟᴘ •", callback_data='help'),
-                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data='about')]
-            ])
+        buttons = [
+            [
+                InlineKeyboardButton("• ᴍᴏʀᴇ •", callback_data="more")
+            ],
+            [
+                InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about"),
+                InlineKeyboardButton('• Mᴏᴠɪᴇs/sᴇʀɪᴇs •', url='https://t.me/Moviess_Ok')
+            ]
+        ]
+        await query.message.edit_photo(
+            photo=random.choice(PICS),
+            caption=START_MSG.format(mention=query.from_user.mention),
+            reply_markup=InlineKeyboardMarkup(buttons)
         )
 
     elif data == "more":
