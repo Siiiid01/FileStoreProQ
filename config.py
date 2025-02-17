@@ -51,7 +51,7 @@ IS_VERIFY = os.environ.get("IS_VERIFY", "True")
 TUT_VID = os.environ.get("TUT_VID","https://t.me/Moviess_Ok/43")
 
 
-HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ 〕──╮</b>  
+HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ 〕──╮</b>  
 <blockquote>• ᴡᴏʀᴋɪɴɢ ғᴏʀ <b>@Moviess_Ok</b> 🚀  </blockquote>  
 
 <b>• ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  

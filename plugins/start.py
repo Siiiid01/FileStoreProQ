@@ -210,8 +210,8 @@ async def start_command(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=reply_markup,
-            has_spoiler=True
+            reply_markup=reply_markup
+            # has_spoiler=True
             #message_effect_id=5104841245755180586  # 🔥
         )
         
@@ -300,9 +300,9 @@ async def not_joined(client: Client, message: Message):
         mention=message.from_user.mention,
         id=message.from_user.id
     ),
-    reply_markup=InlineKeyboardMarkup(buttons),
+    reply_markup=InlineKeyboardMarkup(buttons)
     #message_effect_id=5104841245755180586  # 🔥
-    has_spoiler=True
+    # has_spoiler=True
 )
     
     # Schedule force message for deletion
@@ -330,8 +330,8 @@ async def show_loading_animation(message: Message):
     # First animation cycle
     loading_msg = await message.reply_photo(
         photo=random.choice(PICS),
-        caption=WAIT_ANIMATION_TEXT,
-        has_spoiler=True
+        caption=WAIT_ANIMATION_TEXT
+        # has_spoiler=True
     )
     
     try:
@@ -384,7 +384,7 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
             if (current_caption != caption or 
                 str(current_markup) != str(reply_markup)):
                 return await message.edit_media(
-                    media=InputMediaPhoto(photo, caption=caption, has_spoiler=True),
+                    media=InputMediaPhoto(photo, caption=caption ), #, has_spoiler=True
                     reply_markup=reply_markup
                 )
             return message  # Return existing message if no changes needed
@@ -393,8 +393,8 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
         return await message.reply_photo(
             photo=photo,
             caption=caption,
-            reply_markup=reply_markup,
-            has_spoiler=True
+            reply_markup=reply_markup
+            # has_spoiler=True
         )
     except Exception as e:
         print(f"Error in edit_message_with_photo: {e}")
@@ -403,8 +403,8 @@ async def edit_message_with_photo(message: Message, photo, caption, reply_markup
             return await message.reply_photo(
                 photo=photo,
                 caption=caption,
-                reply_markup=reply_markup,
-                has_spoiler=True
+                reply_markup=reply_markup
+                # has_spoiler=True
             )
         except Exception as e:
             print(f"Error in fallback photo send: {e}")

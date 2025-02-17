@@ -38,8 +38,8 @@ async def useless(_, message: Message):
             await message.reply_photo(
                 photo=random.choice(PICS),
                 caption=USER_REPLY_TEXT,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Close", callback_data="close")]]),
-                has_spoiler=True
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Close", callback_data="close")]])
+                # has_spoiler=True
             )
         except Exception as e:
             print(f"Error in useless handler: {e}")
@@ -59,8 +59,8 @@ async def close_message(bot: Bot, message: Message):
             try:
                 temp_msg = await message.reply_photo(
                     photo=random.choice(PICS),
-                    caption="🗑️ Deleting messages...",
-                    has_spoiler=True
+                    caption="🗑️ Deleting messages..."
+                    # has_spoiler=True
                 )
                 await asyncio.sleep(1)  # Brief delay for visual feedback
                 await message.reply_to_message.delete()
