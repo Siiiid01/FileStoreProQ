@@ -173,7 +173,10 @@ async def start_command(client: Client, message: Message):
                     else None
                 )
                 keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url)]]
+                    [
+                        [InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url)],
+                        [InlineKeyboardButton("• Dᴏɴ'ᴛ ɴᴇᴇᴅ ᴄʟᴏsᴇ •", callback_data="close_fileagain")],
+                    ]
                 ) if reload_url else None
 
                 # Edit the notification message instead of deleting and sending new
@@ -195,7 +198,7 @@ async def start_command(client: Client, message: Message):
             ],
     [
                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about"),
-                InlineKeyboardButton('• sᴇʀɪᴇsғʟɪx •', url='https://t.me/Moviess_Ok')
+                InlineKeyboardButton('• Mᴏᴠɪᴇs/sᴇʀɪᴇs •', url='https://t.me/Moviess_Ok')
             ]
         ])
         start_msg = await message.reply_photo(
@@ -216,7 +219,12 @@ async def start_command(client: Client, message: Message):
         asyncio.create_task(auto_delete_message(start_msg, AUTO_DELETE_TIME))
         return
 
-
+@Bot.on_callback_query(filters.regex("^close_fileagain$"))
+async def close_callback(client, callback_query: CallbackQuery):
+    try:
+        await callback_query.message.delete()
+    except Exception as e:
+        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
 
 #=====================================================================================##
 

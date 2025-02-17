@@ -81,8 +81,8 @@ ABOUT_TXT = '''<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https:
 ◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴍᴏᴠɪᴇꜱ ᴏᴋ</a>
 ◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/AnnimeMoviessok>ᴀɴɪᴍᴇ'ꜱ ᴏᴋ</a>
 ◈ ᴏɴᴇ ᴘɪᴇᴄᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴏɴᴇ ᴘɪᴇᴄᴇ</a>
-◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/>ᴀᴅ*ʟᴛ ᴏᴋ</a>
-◈ ᴍᴀɴɢᴀ/ᴍᴀɴʜᴡᴀ ᴄʜᴀɴɴᴇʟ: <a href=https://t.me/>ᴇᴛᴇʀɴᴀʟᴍᴀɴɢᴀ</a>
+◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/H_Anime_and_popular_videos>ᴀᴅ*ʟᴛ</a>
+◈ ᴍᴀɴɢᴀ/ᴍᴀɴʜᴡᴀ ᴄʜᴀɴɴᴇʟ: <a href=https://telegram.me/+KA9OYVhJXptiYzll>ᴇᴛᴇʀɴᴀʟᴍᴀɴɢᴀ</a>
 ♏︎ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>'''
 
 

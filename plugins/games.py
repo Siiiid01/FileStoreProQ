@@ -65,7 +65,7 @@ async def play_game(client, message):
         pass  # Ignore if the bot doesn't have delete permissions
 
     # Send a status message indicating the game is starting
-    status_message = await message.reply_text(f"🎮 Playing {game.capitalize()}...")
+    status_message = await message.reply_text(f"🎮 Pʟᴀʏɪɴɢ {game.capitalize()}...")
 
     # Send dice with the respective emoji
     dice_msg = await client.send_dice(
@@ -78,7 +78,7 @@ async def play_game(client, message):
     await asyncio.sleep(ANIMATION_TIME)
 
     # Edit the status message to indicate the game result
-    result_msg = await status_message.edit(f"🎮 {game.capitalize()} Over! Your result: {dice_msg.dice.value} 🎲")
+    result_msg = await status_message.edit(f"🎮 {game.capitalize()} Oᴠᴇʀ! yᴏᴜʀ ʀᴇsᴜʟᴛ: {dice_msg.dice.value} 🎲")
 
     # Wait for specified time before deleting messages
     await asyncio.sleep(DELETE_TIMEOUT)
@@ -117,7 +117,11 @@ async def runs(_, message):
     effective_string = random.choice(RUN_STRINGS)
     await status_message.edit(effective_string)
 
-
+    await asyncio.sleep(DELETE_TIMEOUT)
+    try:
+        await status_message.delete()
+    except Exception as e:
+        print(f"Error deleting run message: {e}")
 
 
 
@@ -217,8 +221,4 @@ async def runs(_, message):
 #     await status_message.edit(effective_string)
     
     # Delete after timeout
-    await asyncio.sleep(DELETE_TIMEOUT)
-    try:
-        await status_message.delete()
-    except Exception as e:
-        print(f"Error deleting run message: {e}")
+
