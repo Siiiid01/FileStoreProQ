@@ -86,8 +86,8 @@ ABOUT_TXT = '''<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https:
 ♏︎ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a></blockquote></b>'''
 
 
-# MORE_TXT = '''<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok </blockquote></b>'''
-MORE_TXT = '''**> ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok [🎬](tg://emoji?id=5780464752744468119)**'''
+MORE_TXT = '''<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok </blockquote></b>'''
+# MORE_TXT = '''**> ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @Moviess_Ok [🎬](tg://emoji?id=5780464752744468119)**'''
 
 
 
