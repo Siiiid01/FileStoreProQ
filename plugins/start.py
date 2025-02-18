@@ -72,7 +72,7 @@ async def start_command(client: Client, message: Message):
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
-                    f"ʏᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀꜱ ʙᴇᴇɴ ꜱᴜᴄᴇꜱꜱꜰᴜʟʟʏ ᴠᴇʀɪꜰɪᴇᴅ ᴀɴᴅ ɪꜱ ᴠᴀʟɪᴅ ꜰᴏʀ ​ {get_exp_time(VERIFY_EXPIRE)}",
+                    f"ʏᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀꜱ ʙᴇᴇɴ ꜱᴜᴄᴇꜱꜱꜰᴜʟʟʏ ᴠᴇʀɪꜰɪᴇᴅ ᴀɴᴅ ɪꜱ ᴠᴀʟɪᴅ ꜰᴏʀ​ {get_exp_time(VERIFY_EXPIRE)}",
                     reply_markup=reply_markup,
                     protect_content=False,
                     quote=True
@@ -172,22 +172,25 @@ async def start_command(client: Client, message: Message):
                     if message.command and len(message.command) > 1
                     else None
                 )
-                keyboard = InlineKeyboardMarkup(
+                keyboard = InlineKeyboardMarkup([
                     [
-                        [InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url)],
-                        [InlineKeyboardButton("• Dᴏɴ'ᴛ ɴᴇᴇᴅ ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
+                        InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url),
+                        InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")
                     ]
-                ) if reload_url else None
+                ]) if reload_url else None
 
-                # Edit the notification message instead of deleting and sending new
-                await edit_message_with_photo(
+                # Edit the notification message and schedule it for deletion
+                notification_msg = await edit_message_with_photo(
                     notification_msg,
                     photo=random.choice(PICS),
                     caption="<b>• ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\n• ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
+                
+                # Schedule auto-deletion after 60 seconds (adjust time as needed)
+                asyncio.create_task(auto_delete_message(notification_msg, 60))
             except Exception as e:
-                print(f"⚠︎ Error Updating Notification With 'get file again' Button: {e}")
+                print(f"⚠︎ Error updating notification with 'get file again' button: {e}")
     else:
         # Delete the loading message before showing start menu
         await loading_msg.delete()
@@ -219,12 +222,7 @@ async def start_command(client: Client, message: Message):
         asyncio.create_task(auto_delete_message(start_msg, AUTO_DELETE_TIME))
         return
 
-@Bot.on_callback_query(filters.regex("^close_fileagain$"))
-async def close_callback(client, callback_query: CallbackQuery):
-    try:
-        await callback_query.message.delete()
-    except Exception as e:
-        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
+
 
 #=====================================================================================##
 

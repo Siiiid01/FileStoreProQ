@@ -71,6 +71,15 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         except:
             pass
 
+    elif data == "close_fileagain":
+        try:
+            await query.message.delete()
+            if query.message.reply_to_message:
+                await query.message.reply_to_message.delete()
+        except Exception as e:
+            print(f"Error in close_fileagain: {e}")
+            pass
+
 
 
 
