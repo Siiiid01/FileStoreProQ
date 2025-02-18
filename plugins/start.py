@@ -165,9 +165,12 @@ async def start_command(client: Client, message: Message):
 
             try:
                 reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
-                keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
-                ) if reload_url else None
+                keyboard = InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url),
+                        InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")
+                    ]
+                ]) if reload_url else None
 
                 await notification_msg.edit(
                     "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
@@ -244,14 +247,17 @@ async def not_joined(client: Client, message: Message):
             InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)
         ])
 
-    # Always add reload button if there's a command argument
-    if len(message.command) > 1:
-        buttons.append([
-            InlineKeyboardButton(
-                text="ʀᴇʟᴏᴀᴅ",
-                url=f"https://t.me/{client.username}?start={message.command[1]}"
-            )
-        ])
+    # Always add reload button
+    try:
+        if len(message.command) > 1:
+            buttons.append([
+                InlineKeyboardButton(
+                    text="• ʀᴇʟᴏᴀᴅ •",
+                    url=f"https://t.me/{client.me.username}?start={message.command[1]}"
+                )
+            ])
+    except:
+        pass
 
     await message.reply_photo(
         photo=random.choice(PICS),
