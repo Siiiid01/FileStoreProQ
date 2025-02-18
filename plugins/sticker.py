@@ -23,7 +23,7 @@ async def show_loading_animation(message: Message):
     except Exception as e:
         print(f"Error in animation: {e}")
     
-@Client.on_message(filters.command("stickerid") & filters.private)
+@Bot.on_message(filters.command("stickerid") & filters.private)
 async def stickerid(bot, message):
     """Handle /stickerid command with animation and sticker request."""
     await show_loading_animation(message)
@@ -46,12 +46,12 @@ async def stickerid(bot, message):
                 f"<b><i>🎭 Video:</b></i> {'Yes' if s_msg.sticker.is_video else 'No'}<blockquote>"
             )
             
-            buttons = [[InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close_sticker")]]
+            buttons = [[InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close")]]
             await s_msg.reply_text(info_text, reply_markup=InlineKeyboardMarkup(buttons))
         else:
-            await s_msg.reply_text("<b><i>ᴏᴏᴘꜱ! ᴛʜᴀᴛ’ꜱ ɴᴏᴛ ᴀ ꜱᴛɪᴄᴋᴇʀ ꜰɪʟᴇ.</i></b>")
+            await s_msg.reply_text("<b><i>ᴏᴏᴘꜱ! ᴛʜᴀᴛ'ꜱ ɴᴏᴛ ᴀ ꜱᴛɪᴄᴋᴇʀ ꜰɪʟᴇ.</i></b>")
     except asyncio.TimeoutError:
-        await ask_msg.edit("⏳<b><i>ᴛɪᴍᴇᴏᴜᴛ! ʏᴏᴜ ᴅɪᴅɴ’ᴛ ꜱᴇɴᴅ ᴀ ꜱᴛɪᴄᴋᴇʀ ɪɴ ᴛɪᴍᴇ.</i></b>")
+        await ask_msg.edit("⏳<b><i>ᴛɪᴍᴇᴏᴜᴛ! ʏᴏᴜ ᴅɪᴅɴ'ᴛ ꜱᴇɴᴅ ᴀ ꜱᴛɪᴄᴋᴇʀ ɪɴ ᴛɪᴍᴇ.</i></b>")
 
 @Bot.on_callback_query(filters.regex("^close_sticker$"))
 async def close_callback(client, callback_query: CallbackQuery):

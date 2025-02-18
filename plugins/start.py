@@ -121,17 +121,11 @@ async def start_command(client: Client, message: Message):
                 print(f"⚠︎ Error Decoding Id's: {e}")
                 return
 
-        temp_msg = await message.reply("○ ○ ○")
-        for _ in range(2):
-            for frame in ["● ○ ○", "● ● ○", "● ● ●"]:
-                await asyncio.sleep(0.15)
-                await temp_msg.edit(frame)
-
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            await message.reply_text("⚠︎ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
-            print(f"⚠︎ Error Getting Messages: {e}")
+            await message.reply_text("Something went wrong!")
+            print(f"Error getting messages: {e}")
             return
 
         sent_messages = []
@@ -167,24 +161,20 @@ async def start_command(client: Client, message: Message):
                     try:    
                         await snt_msg.delete()  
                     except Exception as e:
-                        print(f"⚠︎ Error Deleting Message {snt_msg.id}: {e}")
+                        print(f"Error deleting message {snt_msg.id}: {e}")
 
             try:
                 reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
-                keyboard = InlineKeyboardMarkup([
-                    [
-                        InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url),
-                        InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")
-                    ]
-                ]) if reload_url else None
+                keyboard = InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
+                ) if reload_url else None
 
-                await notification_msg.edit_photo(
-                    photo=random.choice(PICS),
-                    caption="<b>• ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\n• ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                await notification_msg.edit(
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"⚠︎ Error updating notification with 'get file again' button: {e}")
+                print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
         # Delete the loading message before showing start menu
         await loading_msg.delete()
@@ -224,48 +214,46 @@ async def start_command(client: Client, message: Message):
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
     buttons = []
-    try:
-        # Add channel buttons
-        if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1),
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
-            ])
-        elif FORCE_SUB_CHANNEL1:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1)
-            ])
-        elif FORCE_SUB_CHANNEL2:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2)
-            ])
+    
+    # Add channel buttons
+    if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
+        buttons.append([
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink1),
+            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
+        ])
+    elif FORCE_SUB_CHANNEL1:
+        buttons.append([
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink1)
+        ])
+    elif FORCE_SUB_CHANNEL2:
+        buttons.append([
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink2)
+        ])
 
-        if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3),
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
-            ])
-        elif FORCE_SUB_CHANNEL3:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)
-            ])
-        elif FORCE_SUB_CHANNEL4:
-            buttons.append([
-                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)
-            ])
+    if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
+        buttons.append([
+            InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3),
+            InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
+        ])
+    elif FORCE_SUB_CHANNEL3:
+        buttons.append([
+            InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)
+        ])
+    elif FORCE_SUB_CHANNEL4:
+        buttons.append([
+            InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)
+        ])
 
-        # Always add reload button if there's a command argument
-        if len(message.command) > 1:
-            buttons.append([
-                InlineKeyboardButton(
-                    "• ʀᴇʟᴏᴀᴅ •",
-                    url=f"https://t.me/{client.username}?start={message.command[1]}"
-                )
-            ])
-    except Exception as e:
-        print(f"Error creating buttons: {e}")
+    # Always add reload button if there's a command argument
+    if len(message.command) > 1:
+        buttons.append([
+            InlineKeyboardButton(
+                text="ʀᴇʟᴏᴀᴅ",
+                url=f"https://t.me/{client.username}?start={message.command[1]}"
+            )
+        ])
 
-    force_msg = await message.reply_photo(
+    await message.reply_photo(
         photo=random.choice(PICS),
         caption=FORCE_MSG.format(
             first=message.from_user.first_name,
@@ -276,9 +264,6 @@ async def not_joined(client: Client, message: Message):
         ),
         reply_markup=InlineKeyboardMarkup(buttons)
     )
-    
-    # Schedule force message for deletion
-    asyncio.create_task(auto_delete_message(force_msg, AUTO_DELETE_TIME))
 
 
 #=====================================================================================##
