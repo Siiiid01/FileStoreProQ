@@ -1,4 +1,3 @@
-
 import asyncio
 import random
 import time
@@ -77,7 +76,7 @@ async def start_command(client: Client, message: Message):
             messages = await get_messages(client, ids)
             sent_msgs = []
             for msg in messages:
-                caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
+                caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html,
                                                  filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
                            else ("" if not msg.caption else msg.caption.html))
                 reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
@@ -116,7 +115,16 @@ async def start_command(client: Client, message: Message):
                     "<b>Your file has been deleted! Click below to retrieve it again.</b>",
                     reply_markup=keyboard
                 )
-            return
+        except Exception as e:  # ADDED THIS EXCEPT BLOCK
+            print(f"Error processing /start with URL: {e}")
+            if loading_msg:
+                try: # Added try-except to avoid error if loading_msg is already deleted or None
+                    await loading_msg.delete()
+                except:
+                    pass
+            await message.reply_text("Sorry, there was an error processing your request from the URL.") # Inform user of the error
+            return # Stop further execution in this branch
+
 
     # If not starting via URL button, show normal start message
     if loading_msg:
@@ -177,16 +185,13 @@ async def not_joined(client: Client, message: Message):
         caption=FORCE_MSG.format(
             first=message.from_user.first_name,
             last=message.from_user.last_name,
-            username=None if not message.from_user.username else '@' + message.from_user.username,
+            username=None if not message.from_user.username else '@' + m
+essage.from_user.username,
             mention=message.from_user.mention,
             id=message.from_user.id
         ),
         reply_markup=InlineKeyboardMarkup(buttons)
     )
-
-
-
-
 
 # @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
 # async def stats(client: Bot, message: Message):
