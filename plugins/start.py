@@ -121,15 +121,18 @@ async def start_command(client: Client, message: Message):
                 print(f"⚠︎ Error Decoding Id's: {e}")
                 return
 
-        temp_msg = await message.reply("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...")
+        temp_msg = await message.reply("○ ○ ○")
+        for _ in range(2):
+            for frame in ["● ○ ○", "● ● ○", "● ● ●"]:
+                await asyncio.sleep(0.15)
+                await temp_msg.edit(frame)
+
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
             await message.reply_text("⚠︎ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
             print(f"⚠︎ Error Getting Messages: {e}")
             return
-        finally:
-            await temp_msg.delete()
 
         sent_messages = []
         for msg in messages:
@@ -167,11 +170,7 @@ async def start_command(client: Client, message: Message):
                         print(f"⚠︎ Error Deleting Message {snt_msg.id}: {e}")
 
             try:
-                reload_url = (
-                    f"https://t.me/{client.username}?start={message.command[1]}"
-                    if message.command and len(message.command) > 1
-                    else None
-                )
+                reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
                 keyboard = InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url),
@@ -179,16 +178,11 @@ async def start_command(client: Client, message: Message):
                     ]
                 ]) if reload_url else None
 
-                # Edit the notification message and schedule it for deletion
-                notification_msg = await edit_message_with_photo(
-                    notification_msg,
+                await notification_msg.edit_photo(
                     photo=random.choice(PICS),
                     caption="<b>• ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\n• ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
-                
-                # Schedule auto-deletion after 60 seconds (adjust time as needed)
-                asyncio.create_task(auto_delete_message(notification_msg, 60))
             except Exception as e:
                 print(f"⚠︎ Error updating notification with 'get file again' button: {e}")
     else:
@@ -229,79 +223,59 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
-    # Add reaction to start command
-    try:
-        await message.react(emoji=random.choice(REACTIONS), big=True)
-    except:
-        pass
-        
-    # Show loading animation first
-    # loading_msg = await show_loading_animation(message)
-    
-    # Initialize buttons list
     buttons = []
-
-    # Check if the first and second channels are both set
-    if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1),
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
-        ])
-    # Check if only the first channel is set
-    elif FORCE_SUB_CHANNEL1:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1)
-        ])
-    # Check if only the second channel is set
-    elif FORCE_SUB_CHANNEL2:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2)
-        ])
-
-    # Check if the third and fourth channels are set
-    if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3),
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
-        ])
-    # Check if only the first channel is set
-    elif FORCE_SUB_CHANNEL3:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)
-        ])
-    # Check if only the second channel is set
-    elif FORCE_SUB_CHANNEL4:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)
-        ])
-
-    # Append "Try Again" button if the command has a second argument
     try:
-        buttons.append([
-            InlineKeyboardButton(
-                text="• ʀᴇʟᴏᴀᴅ •",
-                url=f"https://t.me/{client.username}?start={message.command[1]}"
-            )
-        ])
-    except IndexError:
-        pass  # Ignore if no second argument is present
+        # Add channel buttons
+        if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1),
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
+            ])
+        elif FORCE_SUB_CHANNEL1:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1)
+            ])
+        elif FORCE_SUB_CHANNEL2:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2)
+            ])
 
-    # Delete loading animation before sending final message
-    await show_loading_animation.delete()
-    
+        if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3),
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
+            ])
+        elif FORCE_SUB_CHANNEL3:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)
+            ])
+        elif FORCE_SUB_CHANNEL4:
+            buttons.append([
+                InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)
+            ])
+
+        # Always add reload button if there's a command argument
+        if len(message.command) > 1:
+            buttons.append([
+                InlineKeyboardButton(
+                    "• ʀᴇʟᴏᴀᴅ •",
+                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+            ])
+    except Exception as e:
+        print(f"Error creating buttons: {e}")
+
     force_msg = await message.reply_photo(
         photo=random.choice(PICS),
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons)
-    #message_effect_id=5104841245755180586  # 🔥
-    # has_spoiler=True
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
     
     # Schedule force message for deletion
     asyncio.create_task(auto_delete_message(force_msg, AUTO_DELETE_TIME))
