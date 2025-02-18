@@ -4,7 +4,6 @@ import random
 import sys
 import time
 import string
-import string as rohit
 import humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
@@ -19,6 +18,37 @@ from database.database import *
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
+
+# Animation constants
+WAIT_ANIMATION_TEXT = "○ ○ ○"
+ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
+ANIMATION_INTERVAL = 0.15  # Speed of animation in seconds
+
+# Auto-delete settings
+AUTO_DELETE_TIME = 600  # 10 minutes in seconds
+EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
+
+async def show_loading_animation(message):
+    """Shows an animated loading message"""
+    try:
+        loading_msg = await message.reply(WAIT_ANIMATION_TEXT)
+        for _ in range(2):  # Run animation twice
+            for frame in ANIMATION_FRAMES:
+                await asyncio.sleep(ANIMATION_INTERVAL)
+                await loading_msg.edit(frame)
+        return loading_msg
+    except Exception as e:
+        print(f"Error in loading animation: {e}")
+        return None
+
+async def auto_delete_message(message, delay):
+    """Delete message after delay if not exempt"""
+    if not any(text in message.text for text in EXEMPT_FROM_DELETE):
+        try:
+            await asyncio.sleep(delay)
+            await message.delete()
+        except Exception as e:
+            print(f"Error in auto delete: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -60,7 +90,7 @@ async def start_command(client: Client, message: Message):
                 )
 
             if not verify_status['is_verified']:
-                token = ''.join(random.choices(rohit.ascii_letters + rohit.digits, k=10))
+                token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                 await update_verify_status(id, verify_token=token, link="")
                 link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
                 btn = [
@@ -112,7 +142,7 @@ async def start_command(client: Client, message: Message):
         finally:
             await temp_msg.delete()
 
-        codeflix_msgs = []
+        sent_messages = []
         for msg in messages:
             caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
                                              filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
@@ -123,12 +153,12 @@ async def start_command(client: Client, message: Message):
             try:
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                codeflix_msgs.append(copied_msg)
+                sent_messages.append(copied_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                codeflix_msgs.append(copied_msg)
+                sent_messages.append(copied_msg)
             except Exception as e:
                 print(f"Failed to send message: {e}")
                 pass
@@ -140,12 +170,12 @@ async def start_command(client: Client, message: Message):
 
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for snt_msg in codeflix_msgs:    
-                if snt_msg:
+            for sent_msg in sent_messages:    
+                if sent_msg:
                     try:    
-                        await snt_msg.delete()  
+                        await sent_msg.delete()  
                     except Exception as e:
-                        print(f"Error deleting message {snt_msg.id}: {e}")
+                        print(f"Error deleting message {sent_msg.id}: {e}")
 
             try:
                 reload_url = (
