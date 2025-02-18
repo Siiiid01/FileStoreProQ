@@ -40,7 +40,7 @@ async def stats(client: Bot, message: Message):
 
         # 6. Update the loading message with the stats information (no image included).
         await loading_msg.edit_text(
-            caption=stats_text  # Updated stats text (uptime)
+            text=stats_text  # Updated stats text (uptime)
         )
 
         # 7. Schedule the auto-deletion of the loading message after a predefined time (10 minutes).

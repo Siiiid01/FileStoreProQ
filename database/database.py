@@ -1,12 +1,13 @@
 import motor, asyncio
 import motor.motor_asyncio
-from config import DB_URI, DB_NAME
+from config import DB_URI, DB_NAME, COLLECTION_NAME
 from pymongo import IndexModel, ASCENDING
 
 dbclient = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 database = dbclient[DB_NAME]
 
-user_data = database['users']
+user_data = database[COLLECTION_NAME]
+
 
 default_verify = {
     'is_verified': False,

@@ -22,6 +22,7 @@ PORT = os.environ.get("PORT", "8080")
 #Database
 DB_URI = os.environ.get("DATABASE_URL", "")
 DB_NAME = os.environ.get("DATABASE_NAME", "Cluster99")
+COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "zoro")
 
 #Time in seconds for message delete, put 0 to never delete
 TIME = int(os.environ.get("TIME", "300"))
