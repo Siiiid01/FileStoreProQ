@@ -175,7 +175,7 @@ async def start_command(client: Client, message: Message):
                 keyboard = InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton("• ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ! •", url=reload_url)],
-                        [InlineKeyboardButton("• Dᴏɴ'ᴛ ɴᴇᴇᴅ ᴄʟᴏsᴇ •", callback_data="close_fileagain")],
+                        [InlineKeyboardButton("• Dᴏɴ'ᴛ ɴᴇᴇᴅ ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
                     ]
                 ) if reload_url else None
 
