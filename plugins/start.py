@@ -4,6 +4,7 @@ import random
 import sys
 import time
 import string
+import string
 import humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
@@ -19,36 +20,14 @@ from database.database import *
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
 
-# Animation constants
+# Add these constants at the top
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.15  # Speed of animation in seconds
 
-# Auto-delete settings
+# Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
-
-async def show_loading_animation(message):
-    """Shows an animated loading message"""
-    try:
-        loading_msg = await message.reply(WAIT_ANIMATION_TEXT)
-        for _ in range(2):  # Run animation twice
-            for frame in ANIMATION_FRAMES:
-                await asyncio.sleep(ANIMATION_INTERVAL)
-                await loading_msg.edit(frame)
-        return loading_msg
-    except Exception as e:
-        print(f"Error in loading animation: {e}")
-        return None
-
-async def auto_delete_message(message, delay):
-    """Delete message after delay if not exempt"""
-    if not any(text in message.text for text in EXEMPT_FROM_DELETE):
-        try:
-            await asyncio.sleep(delay)
-            await message.delete()
-        except Exception as e:
-            print(f"Error in auto delete: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -142,7 +121,7 @@ async def start_command(client: Client, message: Message):
         finally:
             await temp_msg.delete()
 
-        sent_messages = []
+        codeflix_msgs = []
         for msg in messages:
             caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
                                              filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
@@ -153,12 +132,12 @@ async def start_command(client: Client, message: Message):
             try:
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                sent_messages.append(copied_msg)
+                codeflix_msgs.append(copied_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                sent_messages.append(copied_msg)
+                codeflix_msgs.append(copied_msg)
             except Exception as e:
                 print(f"Failed to send message: {e}")
                 pass
@@ -170,12 +149,12 @@ async def start_command(client: Client, message: Message):
 
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for sent_msg in sent_messages:    
-                if sent_msg:
+            for snt_msg in codeflix_msgs:    
+                if snt_msg:
                     try:    
-                        await sent_msg.delete()  
+                        await snt_msg.delete()  
                     except Exception as e:
-                        print(f"Error deleting message {sent_msg.id}: {e}")
+                        print(f"Error deleting message {snt_msg.id}: {e}")
 
             try:
                 reload_url = (
@@ -217,7 +196,6 @@ async def start_command(client: Client, message: Message):
             #message_effect_id=5104841245755180586  # 🔥
         )
         return
-
 
 
 
@@ -272,32 +250,25 @@ async def not_joined(client: Client, message: Message):
     except IndexError:
         pass  # Ignore if no second argument is present
 
-        await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=FORCE_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-        return
+    await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=FORCE_MSG.format(
+        first=message.from_user.first_name,
+        last=message.from_user.last_name,
+        username=None if not message.from_user.username else '@' + message.from_user.username,
+        mention=message.from_user.mention,
+        id=message.from_user.id
+    ),
+    reply_markup=InlineKeyboardMarkup(buttons)#,
+    #message_effect_id=5104841245755180586  # Add the effect ID here
+)
 
-    # Rest of your start command code...
-    # (Keep all the existing start command functionality)
-    
-    # Remove broadcast and stats code
+
+#=====================================================================================##
 
 WAIT_MSG = "<b>Working....</b>"
+
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
-
-
-
-
-
-
 
 
 
