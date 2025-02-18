@@ -4,7 +4,7 @@ import asyncio
 from bot import Bot
 
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.1  # 100ms
+ANIMATION_INTERVAL = 0.15  # 100ms
 AUTO_DELETE_TIME = 600  # 10 minutes
 
 async def show_loading_animation(message: Message):

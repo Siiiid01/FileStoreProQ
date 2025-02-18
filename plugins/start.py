@@ -24,7 +24,7 @@ TUT_VID = f"{TUT_VID}"
 # Add these constants at the top
 WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.13  # Speed of animation in seconds
+ANIMATION_INTERVAL = 0.15  # Speed of animation in seconds
 
 # Add at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
@@ -236,7 +236,7 @@ async def not_joined(client: Client, message: Message):
         pass
         
     # Show loading animation first
-    loading_msg = await show_loading_animation(message)
+    # loading_msg = await show_loading_animation(message)
     
     # Initialize buttons list
     buttons = []
@@ -287,7 +287,7 @@ async def not_joined(client: Client, message: Message):
         pass  # Ignore if no second argument is present
 
     # Delete loading animation before sending final message
-    await loading_msg.delete()
+    await show_loading_animation.delete()
     
     force_msg = await message.reply_photo(
         photo=random.choice(PICS),
