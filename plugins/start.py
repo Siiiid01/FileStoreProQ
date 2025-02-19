@@ -153,8 +153,10 @@ async def start_command(client: Client, message: Message):
                     if message.command and len(message.command) > 1
                     else None
                 )
-                keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
+                keyboard = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
+                    [InlineKeyboardButton("Close", callback_data="close_fileagain")]
+                    ]
                 ) if reload_url else None
 
                 await notification_msg.edit(
@@ -164,11 +166,13 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
-        reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton("More", callback_data = "more")]
-            [InlineKeyboardButton("𝗔𝗯𝗼𝘂𝘁", callback_data = "about"),
-            InlineKeyboardButton('𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀', url='https://t.me/nova_flix')]
-            ])
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("More", callback_data="more")],
+            [
+                InlineKeyboardButton("𝗔𝗯𝗼𝘂𝘁", callback_data="about"),
+                InlineKeyboardButton('𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀', url='https://t.me/nova_flix')
+            ]
+        ])
         await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
@@ -178,7 +182,7 @@ async def start_command(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=reply_markup
+            reply_markup=keyboard
         )
         return
 
