@@ -13,8 +13,7 @@ from helper_func import encode
     & ~filters.command([
         "start", "id", "users", "broadcast", "batch", 
         "genlink", "stats", "telegraph", "alive", "ping",
-        "ae", "dart", "dice", "luck", "goal", "basketball", 
-        "bowling", "runs", "stickerid", "song"
+        "ae", "dart", "dice", "luck", "goal", "basketball", "bowling", "runs", "stickerid", "song", "errors"
     ])
 )
 
