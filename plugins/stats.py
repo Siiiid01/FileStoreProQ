@@ -7,13 +7,33 @@ from config import *  # For getting BOT_STATS_TEXT and AUTO_DELETE_TIME
 from helper_func import *  # For functions like get_readable_time
 from database.database import *  # Keep this if you're querying the database for user info
 import humanize  # If you're using it to format the uptime
-from plugins.start import show_loading_animation, auto_delete_message # For showing a loading animation
 from bot import Bot  # To access the bot client
 
+# Animation constants
+WAIT_ANIMATION_TEXT = "○ ○ ○"
+ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
+ANIMATION_INTERVAL = 0.15
 
-AUTO_DELETE_TIME=600
+AUTO_DELETE_TIME = 600
 
+async def show_loading_animation(message: Message):
+    """Shows a loading animation and returns the message object"""
+    loading_message = await message.reply_text(WAIT_ANIMATION_TEXT)
+    
+    for _ in range(2):  # Run animation 2 cycles
+        for frame in ANIMATION_FRAMES:
+            await asyncio.sleep(ANIMATION_INTERVAL)
+            await loading_message.edit_text(frame)
+    
+    return loading_message
 
+async def auto_delete_message(message: Message, seconds: int):
+    """Delete a message after specified seconds"""
+    await asyncio.sleep(seconds)
+    try:
+        await message.delete()
+    except:
+        pass
 
 @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
 async def stats(client: Bot, message: Message):
@@ -21,7 +41,7 @@ async def stats(client: Bot, message: Message):
         # 1. Delete the /stats command message as soon as it is received.
         await message.delete()
 
-        # 2. Show loading animation (showing a loading indicator while fetching stats)
+        # 2. Show loading animation with new implementation
         loading_msg = await show_loading_animation(message)
 
         # 3. Get the total number of users in the bot's userbase.
