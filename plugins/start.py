@@ -149,13 +149,13 @@ async def start_command(client: Client, message: Message):
             return
 
         # Delete the last text message from bot if it exists
-        try:
-            async for msg in client.get_chat_history(message.chat.id, limit=1):
-                if msg.from_user.is_bot and not msg.photo:
-                    await msg.delete()
-                    break
-        except:
-            pass
+        # try:
+        #     async for msg in client.get_chat_history(message.chat.id, limit=1):
+        #         if msg.from_user.is_bot and not msg.photo:
+        #             await msg.delete()
+        #             break
+        # except:
+        #     pass
 
         sent_msg = []
         for msg in messages:
