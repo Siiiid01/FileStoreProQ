@@ -159,6 +159,10 @@ async def start_command(client: Client, message: Message):
 
         sent_msg = []
         for msg in messages:
+            # Skip empty messages
+            if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
+                continue
+
             caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
                                              filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
                        else ("" if not msg.caption else msg.caption.html))
