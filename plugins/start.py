@@ -140,7 +140,7 @@ async def start_command(client: Client, message: Message):
             messages = await get_messages(client, ids)
         except Exception as e:
             error_msg = await message.reply_text("Something went wrong!")
-            await asyncio.sleep(2)  # Wait 3 seconds
+            await asyncio.sleep(10)  # Wait 3 seconds
             try:
                 await error_msg.delete()
             except:

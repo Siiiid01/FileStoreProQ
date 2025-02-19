@@ -24,3 +24,4 @@ youtube-search
 aiosqlite
 cachetools>=5.3.2
 Pillow
+traceback-with-variables==2.0.4
