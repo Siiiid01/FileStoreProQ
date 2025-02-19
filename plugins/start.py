@@ -29,13 +29,13 @@ ANIMATION_INTERVAL = 0.2  # Adjust for smoother animation
 
 async def show_loading(client: Client, message: Message):
     """Shows a smooth loading animation"""
-    loading_message = await message.reply_text("Initializing \\")
+    loading_message = await message.reply_text("Iɴɪᴛɪᴀʟɪᴢɪɴɢ \\")
     
     for _ in range(2):  # Run animation 2 cycles
         for frame in LOADING_ANIMATION:
             await asyncio.sleep(ANIMATION_INTERVAL)
             try:
-                await loading_message.edit_text(f"Initializing {frame}")
+                await loading_message.edit_text(f"Iɴɪᴛɪᴀʟɪᴢɪɴɢ {frame}")
             except:
                 pass
     
@@ -101,7 +101,7 @@ async def start_command(client: Client, message: Message):
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
+                    f"<b>• Yᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀs ᴇxᴘɪʀᴇᴅ. Pʟᴇᴀsᴇ ʀᴇғʀᴇsʜ ʏᴏᴜʀ ᴛᴏᴋᴇɴ ᴛᴏ ᴄᴏɴᴛɪɴᴜᴇ.\n\n<blockquote>Tᴏᴋᴇɴ Tɪᴍᴇᴏᴜᴛ: {get_exp_time(VERIFY_EXPIRE)}</blockquote>\n\nWʜᴀᴛ ɪs ᴛʜᴇ ᴛᴏᴋᴇɴ?\n\nTʜɪs ɪs ᴀɴ ᴀᴅs ᴛᴏᴋᴇɴ. Pᴀssɪɴɢ ᴏɴᴇ ᴀᴅ ᴀʟʟᴏᴡs ʏᴏᴜ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ ғᴏʀ` {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -139,7 +139,7 @@ async def start_command(client: Client, message: Message):
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            error_msg = await message.reply_text("Something went wrong!")
+            error_msg = await message.reply_text("Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
             await asyncio.sleep(10)  # Wait 3 seconds
             try:
                 await error_msg.delete()
@@ -184,7 +184,7 @@ async def start_command(client: Client, message: Message):
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
-                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
+                f"<blockquote><b>Tʜɪs ғɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ {get_exp_time(FILE_AUTO_DELETE)}.</blockquote>\nPʟᴇᴀsᴇ sᴀᴠᴇ ᴏʀ ғᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ʙᴇғᴏʀᴇ ɪᴛ ɢᴇᴛs ᴅᴇʟᴇᴛᴇᴅ.</b>"
             )
 
             await asyncio.sleep(FILE_AUTO_DELETE)
@@ -204,7 +204,7 @@ async def start_command(client: Client, message: Message):
                 )
                 keyboard = InlineKeyboardMarkup([
                     [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
-                    [InlineKeyboardButton("Close", callback_data="close_fileagain")]
+                    [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
                     ]
                 ) if reload_url else None
 
@@ -216,10 +216,10 @@ async def start_command(client: Client, message: Message):
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("More", callback_data="more")],
+            [InlineKeyboardButton("• Mᴏʀᴇ •", callback_data="more")],
             [
-                InlineKeyboardButton("𝗔𝗯𝗼𝘂𝘁", callback_data="about"),
-                InlineKeyboardButton('𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀', url='https://t.me/nova_flix')
+                InlineKeyboardButton("• Aʙᴏᴜᴛ", callback_data="about"),
+                InlineKeyboardButton('Wʜᴏʟᴇsᴏᴍᴇ •', url='https://t.me/nova_flix')
             ]
         ])
         start_msg = await message.reply_photo(
@@ -259,8 +259,8 @@ async def not_joined(client: Client, message: Message):
     # Check if the first and second channels are both set
     if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
         buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink1),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1),
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
         ])
     # Check if only the first channel is set
     elif FORCE_SUB_CHANNEL1:
@@ -276,8 +276,8 @@ async def not_joined(client: Client, message: Message):
     # Check if the third and fourth channels are set
     if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
         buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3),
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
         ])
     # Check if only the third channel is set
     elif FORCE_SUB_CHANNEL3:
@@ -297,7 +297,7 @@ async def not_joined(client: Client, message: Message):
         verify_url = f"https://t.me/{client.username}?start=verify_start"
     
     buttons.append([
-        InlineKeyboardButton(text="ᴛʀʏ ᴀɢᴀɪɴ", url=verify_url)
+        InlineKeyboardButton(text="• ᴛʀʏ ᴀɢᴀɪɴ/Rᴇʟᴏᴀᴅ •", url=verify_url)
     ])
 
     force_msg = await message.reply_photo(
@@ -322,9 +322,9 @@ async def not_joined(client: Client, message: Message):
             pass
 
 
-WAIT_MSG = "<b>Working....</b>"
+WAIT_MSG = "<b>Wᴏʀᴋɪɴɢ....</b>"
 
-REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
+REPLY_ERROR = "<code>Usᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴀs ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇssᴀɢᴇ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ sᴘᴀᴄᴇs.</code>"
 
 
 
@@ -332,7 +332,7 @@ REPLY_ERROR = "<code>Use this command as a reply to any telegram message without
 async def get_users(client: Bot, message: Message):
     msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
     users = await full_userbase()
-    await msg.edit(f"{len(users)} users are using this bot")
+    await msg.edit(f"{len(users)} ᴜsᴇʀs ᴀʀᴇ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ 卐")
 
 
 # @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))

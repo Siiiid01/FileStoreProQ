@@ -38,7 +38,7 @@ async def useless(_, message: Message):
             await message.reply_photo(
                 photo=random.choice(PICS),
                 caption=USER_REPLY_TEXT,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Close", callback_data="close")]])
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• Cʟᴏsᴇ •", callback_data="close")]])
                 # has_spoiler=True
             )
         except Exception as e:
