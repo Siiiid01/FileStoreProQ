@@ -215,27 +215,26 @@ async def not_joined(client: Client, message: Message):
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
             InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
         ])
-    # Check if only the first channel is set
+    # Check if only the third channel is set
     elif FORCE_SUB_CHANNEL3:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink3)
         ])
-    # Check if only the second channel is set
+    # Check if only the fourth channel is set
     elif FORCE_SUB_CHANNEL4:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink4)
         ])
 
-    # Append "Try Again" button if the command has a second argument
+    # Always add the Try Again button, with proper error handling
     try:
-        buttons.append([
-            InlineKeyboardButton(
-                text="ʀᴇʟᴏᴀᴅ",
-                url=f"https://t.me/{client.username}?start={message.command[1]}"
-            )
-        ])
+        verify_url = f"https://t.me/{client.username}?start=verify_{message.command[1]}"
     except IndexError:
-        pass  # Ignore if no second argument is present
+        verify_url = f"https://t.me/{client.username}?start=verify_start"
+    
+    buttons.append([
+        InlineKeyboardButton(text="ᴛʀʏ ᴀɢᴀɪɴ", url=verify_url)
+    ])
 
     await message.reply_photo(
         photo=random.choice(PICS),
