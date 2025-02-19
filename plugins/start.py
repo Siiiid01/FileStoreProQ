@@ -20,8 +20,19 @@ from database.database import *
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
 
+# Add these constants at the top with other constants
+AUTO_DELETE_TIME = 600  # 10 minutes in seconds
+EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
+
+
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
+    # Add reaction to start command
+    try:
+        await message.react(emoji=random.choice(REACTIONS), big=True)
+    except:
+        pass
+
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -173,7 +184,7 @@ async def start_command(client: Client, message: Message):
                 InlineKeyboardButton('𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀', url='https://t.me/nova_flix')
             ]
         ])
-        await message.reply_photo(
+        start_msg = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
@@ -184,11 +195,26 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=keyboard
         )
+        
+        # Schedule message deletion
+        if AUTO_DELETE_TIME > 0:
+            await asyncio.sleep(AUTO_DELETE_TIME)
+            try:
+                await message.delete()
+                await start_msg.delete()
+            except:
+                pass
         return
 
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
+    # Add reaction to command
+    try:
+        await message.react(emoji=random.choice(REACTIONS), big=True)
+    except:
+        pass
+
     # Initialize buttons list
     buttons = []
 
@@ -236,18 +262,26 @@ async def not_joined(client: Client, message: Message):
         InlineKeyboardButton(text="ᴛʀʏ ᴀɢᴀɪɴ", url=verify_url)
     ])
 
-    await message.reply_photo(
+    force_msg = await message.reply_photo(
         photo=random.choice(PICS),
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons)
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
+    # Schedule message deletion
+    if AUTO_DELETE_TIME > 0:
+        await asyncio.sleep(AUTO_DELETE_TIME)
+        try:
+            await message.delete()
+            await force_msg.delete()
+        except:
+            pass
 
 
 WAIT_MSG = "<b>Working....</b>"
