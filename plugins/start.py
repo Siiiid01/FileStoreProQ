@@ -23,7 +23,26 @@ TUT_VID = f"{TUT_VID}"
 # Add these constants at the top with other constants
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
+LOADING_ANIMATION = ["\\", "|", "/", "─"]
+ANIMATION_INTERVAL = 0.2  # Adjust for smoother animation
 
+
+async def show_loading(client: Client, message: Message):
+    """Shows a smooth loading animation"""
+    loading_message = await message.reply_text("Initializing \\")
+    
+    for _ in range(2):  # Run animation 2 cycles
+        for frame in LOADING_ANIMATION:
+            await asyncio.sleep(ANIMATION_INTERVAL)
+            try:
+                await loading_message.edit_text(f"Initializing {frame}")
+            except:
+                pass
+    
+    try:
+        await loading_message.delete()
+    except:
+        pass
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -32,6 +51,9 @@ async def start_command(client: Client, message: Message):
         await message.react(emoji=random.choice(REACTIONS), big=True)
     except:
         pass
+
+    # Show loading animation
+    await show_loading(client, message)
 
     id = message.from_user.id
     if not await present_user(id):
@@ -113,15 +135,27 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-        temp_msg = await message.reply("Please wait...")
+        # Replace the temp_msg block with direct message handling
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            await message.reply_text("Something went wrong!")
+            error_msg = await message.reply_text("Something went wrong!")
+            await asyncio.sleep(2)  # Wait 3 seconds
+            try:
+                await error_msg.delete()
+            except:
+                pass
             print(f"Error getting messages: {e}")
             return
-        finally:
-            await temp_msg.delete()
+
+        # Delete the last text message from bot if it exists
+        try:
+            async for msg in client.get_chat_history(message.chat.id, limit=1):
+                if msg.from_user.is_bot and not msg.photo:
+                    await msg.delete()
+                    break
+        except:
+            pass
 
         sent_msg = []
         for msg in messages:
