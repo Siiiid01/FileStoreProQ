@@ -11,12 +11,12 @@ from collections import defaultdict
 from time import time
 from typing import Dict, Set, Optional, Union
 import weakref
-from plugins.start import EXEMPT_FROM_DELETE
 from functools import lru_cache  # Use built-in lru_cache instead
 
 # Constants
 REFRESH_COOLDOWN = 5  # seconds between refreshes
 DEFAULT_DELETE_DELAY = 600  # 10 minutes
+EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']
 
 # Add to imports
 refresh_timestamps = defaultdict(float)
