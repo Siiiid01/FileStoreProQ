@@ -228,9 +228,9 @@ async def not_joined(client: Client, message: Message):
 
     # Always add the Try Again button, with proper error handling
     try:
-        verify_url = f"https://t.me/{client.username}?start=verify_{message.command[1]}"
+        verify_url = f"https://t.me/{client.username}?start={message.command[1]}"
     except IndexError:
-        verify_url = f"https://t.me/{client.username}?start=verify_start"
+        verify_url = f"https://t.me/{client.username}?start=start"
     
     buttons.append([
         InlineKeyboardButton(text="ᴛʀʏ ᴀɢᴀɪɴ", url=verify_url)
