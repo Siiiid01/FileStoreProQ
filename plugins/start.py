@@ -219,7 +219,7 @@ async def start_command(client: Client, message: Message):
             [InlineKeyboardButton("• Mᴏʀᴇ •", callback_data="more")],
             [
                 InlineKeyboardButton("• Aʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton('Wʜᴏʟᴇsᴏᴍᴇ •', url='https://t.me/nova_flix')
+                InlineKeyboardButton('Wʜᴏʟᴇsᴏᴍᴇ ও', url='https://t.me/Wholesomepics_Anime106exe')
             ]
         ])
         start_msg = await message.reply_photo(
