@@ -47,16 +47,24 @@ async def view_errors(client: Bot, message: Message):
         logs = get_error_logs()
         if len(logs) > 4000:
             # If logs are too long, send as file
-            with open("error_logs.txt", "w", encoding='utf-8') as f:
-                f.write(logs)
-            await message.reply_document(
-                "error_logs.txt",
-                caption="Bot Error Logs",
-                quote=True
-            )
-            os.remove("error_logs.txt")  # Clean up
+            file_path = "error_logs.txt"
+            try:
+                with open(file_path, "w", encoding='utf-8') as f:
+                    f.write(logs)
+                await message.reply_document(
+                    document=file_path,  # Use the file path directly
+                    caption="Bot Error Logs",
+                    quote=True,
+                    file_name="bot_errors.log"  # Specify the filename
+                )
+            except Exception as e:
+                await message.reply_text(f"Error sending log file: {str(e)}", quote=True)
+            finally:
+                # Clean up
+                if os.path.exists(file_path):
+                    os.remove(file_path)
         else:
-            # Send logs as message
+            # Send logs as message for shorter logs
             await message.reply_text(f"**Bot Error Logs:**\n\n```{logs}```", quote=True)
     except Exception as e:
         await message.reply_text(f"Error retrieving logs: {str(e)}", quote=True)
