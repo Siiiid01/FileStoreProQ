@@ -10,7 +10,10 @@ from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
+from pyrogram.errors import (
+    FloodWait, UserIsBlocked, InputUserDeactivated, 
+    UserNotParticipant, MessageNotModified, MessageIdInvalid
+)
 from bot import Bot
 from config import *
 from helper_func import *
@@ -29,20 +32,43 @@ ANIMATION_INTERVAL = 0.2  # Adjust for smoother animation
 
 async def show_loading(client: Client, message: Message):
     """Shows a smooth loading animation"""
-    loading_message = await message.reply_text("Iɴɪᴛɪᴀʟɪᴢɪɴɢ \\")
-    
-    for _ in range(2):  # Run animation 2 cycles
-        for frame in LOADING_ANIMATION:
-            await asyncio.sleep(ANIMATION_INTERVAL)
-            try:
-                await loading_message.edit_text(f"Iɴɪᴛɪᴀʟɪᴢɪɴɢ {frame}")
-            except:
-                pass
-    
+    if not message or not message.from_user:
+        return
+
     try:
-        await loading_message.delete()
-    except:
-        pass
+        loading_message = await message.reply_text("Iɴɪᴛɪᴀʟɪᴢɪɴɢ \\")
+    except UserIsBlocked:
+        return
+    except Exception as e:
+        from plugins.logs import log_error
+        log_error(f"Error sending initial loading message: {str(e)}")
+        return
+
+    animation_completed = False
+    try:
+        for _ in range(2):  # Run animation 2 cycles
+            for frame in LOADING_ANIMATION:
+                await asyncio.sleep(ANIMATION_INTERVAL)
+                try:
+                    await loading_message.edit_text(f"Iɴɪᴛɪᴀʟɪᴢɪɴɢ {frame}")
+                except UserIsBlocked:
+                    return
+                except MessageNotModified:
+                    continue  # Just skip this frame
+                except Exception as e:
+                    from plugins.logs import log_error
+                    log_error(f"Animation frame error: {str(e)}")
+                    continue
+        animation_completed = True
+    finally:
+        if animation_completed:
+            try:
+                await loading_message.delete()
+            except (MessageIdInvalid, UserIsBlocked):
+                pass  # Message already deleted or user blocked
+            except Exception as e:
+                from plugins.logs import log_error
+                log_error(f"Error deleting loading message: {str(e)}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
