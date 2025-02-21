@@ -85,6 +85,8 @@ async def start_command(client: Client, message: Message):
     if not await present_user(id):
         try:
             await add_user(id)
+            # Send new user notification
+            await send_new_user_notification(client, message.from_user)
         except:
             pass
 

@@ -9,6 +9,7 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
 from shortzy import Shortzy
 from database.database import *
+from datetime import datetime
 
 
 
@@ -203,3 +204,96 @@ subscribed1 = filters.create(is_subscribed1)
 subscribed2 = filters.create(is_subscribed2)
 subscribed3 = filters.create(is_subscribed3)
 subscribed4 = filters.create(is_subscribed4)
+
+async def send_telegraph_log(client, user_id, file_name, file_type, telegraph_url):
+    """Send Telegraph upload log to channel"""
+    try:
+        user = await client.get_users(user_id)
+        user_mention = user.mention
+    except:
+        user_mention = f"User {user_id}"
+    
+    log_text = (
+        "**New Telegraph Upload**\n\n"
+        f"**User:** {user_mention}\n"
+        f"**User ID:** `{user_id}`\n"
+        f"**File Name:** `{file_name}`\n"
+        f"**File Type:** {file_type}\n"
+        f"**Telegraph URL:** {telegraph_url}\n"
+        f"**Upload Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+    
+    try:
+        await client.send_message(TELEGRAPH_LOG_CHANNEL, log_text)
+    except Exception as e:
+        print(f"Failed to send Telegraph log: {e}")
+
+async def send_ban_log(client, user_id, admin_id, reason=None, action="banned"):
+    """Send ban/unban log to channel"""
+    try:
+        user = await client.get_users(user_id)
+        admin = await client.get_users(admin_id)
+        user_mention = user.mention
+        admin_mention = admin.mention
+    except:
+        user_mention = f"User {user_id}"
+        admin_mention = f"Admin {admin_id}"
+    
+    log_text = (
+        f"**User {action.title()}**\n\n"
+        f"**User:** {user_mention}\n"
+        f"**User ID:** `{user_id}`\n"
+        f"**{action.title()} By:** {admin_mention}\n"
+        f"**Admin ID:** `{admin_id}`\n"
+    )
+
+    if reason and action == "banned":
+        log_text += f"**Reason:** {reason}\n"
+    
+    log_text += f"**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    
+    try:
+        await client.send_message(BAN_LOG_CHANNEL, log_text)
+    except Exception as e:
+        print(f"Failed to send ban log: {e}")
+
+async def send_new_user_notification(client, user):
+    """Send notification when new user starts the bot"""
+    try:
+        # Get user details
+        user_mention = user.mention
+        join_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Create notification message
+        log_text = (
+            "**👤 New User Started Bot**\n\n"
+            f"**User:** {user_mention}\n"
+            f"**ID:** `{user.id}`\n"
+            f"**Username:** @{user.username if user.username else 'None'}\n"
+            f"**First Name:** {user.first_name}\n"
+            f"**Last Name:** {user.last_name if user.last_name else 'None'}\n"
+            f"**Language:** {user.language_code if user.language_code else 'None'}\n"
+            f"**Joined On:** {join_date}"
+        )
+        
+        # Send with user's profile photo if available
+        try:
+            profile_photos = await client.get_profile_photos(user.id, limit=1)
+            if profile_photos and profile_photos.total_count > 0:
+                await client.send_photo(
+                    chat_id=NEW_USER_LOG_CHANNEL,
+                    photo=profile_photos[0].file_id,
+                    caption=log_text
+                )
+                return
+        except:
+            pass
+        
+        # If no profile photo or error getting it, send text only
+        await client.send_message(
+            chat_id=NEW_USER_LOG_CHANNEL,
+            text=log_text
+        )
+        
+    except Exception as e:
+        print(f"Failed to send new user notification: {e}")
