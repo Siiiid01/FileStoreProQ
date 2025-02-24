@@ -297,3 +297,16 @@ async def send_new_user_notification(client, user):
         
     except Exception as e:
         print(f"Failed to send new user notification: {e}")
+
+def check_user_ban(func):
+    async def wrapper(client, message):
+        user_id = message.from_user.id
+        
+        # Check if user is banned
+        is_banned = await db_check_ban(user_id)  # Implement this in database.py
+        if is_banned:
+            await message.reply_text("You are banned from using this bot.")
+            return
+            
+        return await func(client, message)
+    return wrapper

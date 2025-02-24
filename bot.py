@@ -130,8 +130,16 @@ class Bot(Client):
         await web.TCPSite(app, "0.0.0.0", PORT).start()
 
 
-        try: await self.send_message(OWNER_ID, text = f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Moviess_Ok</blockquote></b>")
-        except: pass
+        try:
+            await self.send_message(
+                chat_id=BOT_RESTART_CHANNEL,
+                text="<b>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ!</b>\n\n" 
+                     "<b>• Tɪᴍᴇ:</b> <code>{}</code>".format(
+                         datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                     )
+            )
+        except Exception as e:
+            print(f"Failed to send restart notification: {e}")
 
     async def stop(self, *args):
         await super().stop()
