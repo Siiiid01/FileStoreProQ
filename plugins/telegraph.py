@@ -24,7 +24,7 @@ def upload_image_requests(image_path):
         return None
 
 @Bot.on_message(filters.command("telegraph") & filters.private)
-@check_user_ban  # Add ban check decorator
+@check_user_ban
 async def telegraph_upload(bot: Bot, message: Message):
     try:
         # Send instruction message

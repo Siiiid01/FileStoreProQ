@@ -40,8 +40,6 @@ FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to dis
 TELEGRAPH_LOG_CHANNEL = os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002023266715")
 BAN_LOG_CHANNEL = os.environ.get("BAN_LOG_CHANNEL", "-1002023266715")
 NEW_USER_LOG_CHANNEL = os.environ.get("NEW_USER_LOG_CHANNEL", "-1002023266715") 
-# Bot restart log channel
-BOT_RESTART_CHANNEL = os.environ.get("BOT_RESTART_CHANNEL", "-1002023266715")  # Using the same log channel
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))

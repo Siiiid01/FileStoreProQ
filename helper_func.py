@@ -302,13 +302,33 @@ def check_user_ban(func):
     async def wrapper(client, message):
         try:
             user_id = message.from_user.id
+            
+            # Skip ban check for admins
+            if user_id in ADMINS:
+                return await func(client, message)
+                
+            # Check if user is banned
             is_banned = await db_check_ban(user_id)
             if is_banned:
-                await message.reply_text("You are banned from using this bot.")
+                try:
+                    ban_info = await get_ban_status(user_id)
+                    ban_reason = ban_info.get('ban_reason', 'No reason provided')
+                    ban_date = ban_info.get('banned_on', 'Unknown date')
+                    
+                    ban_msg = (
+                        "<b>⚠️ You are banned from using this bot</b>\n\n"
+                        f"<b>Reason:</b> {ban_reason}\n"
+                        f"<b>Date:</b> {ban_date.strftime('%Y-%m-%d %H:%M:%S') if isinstance(ban_date, datetime) else ban_date}"
+                    )
+                    await message.reply_text(ban_msg)
+                except:
+                    await message.reply_text("You are banned from using this bot.")
                 return
+            
             # Add delay to prevent overwhelming
             await asyncio.sleep(0.5)
             return await func(client, message)
+            
         except Exception as e:
             print(f"Error in ban check: {e}")
     return wrapper

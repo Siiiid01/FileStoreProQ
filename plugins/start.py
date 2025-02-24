@@ -78,6 +78,7 @@ async def show_loading(client: Client, message: Message):
         print(f"Show loading overall error: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
+@check_user_ban  # Add ban check
 async def start_command(client: Client, message: Message):
     # Add reaction to start command
     try:
@@ -171,17 +172,17 @@ async def start_command(client: Client, message: Message):
                 return
 
         # Replace the temp_msg block with direct message handling
-        # try:
-        #     messages = await get_messages(client, ids)
-        # except Exception as e:
-        #     error_msg = await message.reply_text("Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
-        #     await asyncio.sleep(10)  # Wait 3 seconds
-        #     try:
-        #         await error_msg.delete()
-        #     except:
-        #         pass
-        #     print(f"Error getting messages: {e}")
-        #     return
+        try:
+            messages = await get_messages(client, ids)
+        except Exception as e:
+            error_msg = await message.reply_text("Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
+            await asyncio.sleep(10)  # Wait 3 seconds
+            try:
+                await error_msg.delete()
+            except:
+                pass
+            print(f"Error getting messages: {e}")
+            return
 
         # Delete the last text message from bot if it exists
         # try:
@@ -198,24 +199,21 @@ async def start_command(client: Client, message: Message):
             if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
                 continue
 
-            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
-                                             filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
-                       else ("" if not msg.caption else msg.caption.html))
-
-            reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
-
-            try:
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
-                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                sent_msg.append(copied_msg)
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
-                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
-                sent_msg.append(copied_msg)
-            except Exception as e:
-                print(f"Failed to send message: {e}")
-                pass
+            # Handle file sending with custom caption
+            if msg.media in ['photo', 'video', 'document']:
+                await msg.copy(
+                    chat_id=message.from_user.id,
+                    caption=CUSTOM_CAPTION,
+                    protect_content=PROTECT_CONTENT
+                )
+            else:
+                # For text and other types, keep original caption
+                await msg.copy(
+                    chat_id=message.from_user.id,
+                    protect_content=PROTECT_CONTENT
+                )
+            
+            await asyncio.sleep(0.5)  # Add delay between messages
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
