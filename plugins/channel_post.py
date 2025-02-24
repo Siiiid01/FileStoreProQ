@@ -11,7 +11,7 @@ from helper_func import encode
     filters.private 
     & filters.user(ADMINS) 
     & ~filters.command([
-        "start", "id", "users", "broadcast", "batch", "genlink", "stats", "telegraph", "alive", "ping", "stickerid", "errors", "ban", "unban"
+        "start", "id", "users", "broadcast", "batch", "genlink", "stats", "telegraph", "alive", "ping", "stickerid", "errors", "ban", "unban", "feedback"
     ])
 )
 

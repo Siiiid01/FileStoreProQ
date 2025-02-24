@@ -39,7 +39,10 @@ FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to dis
 # Log channels
 TELEGRAPH_LOG_CHANNEL = os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002023266715")
 BAN_LOG_CHANNEL = os.environ.get("BAN_LOG_CHANNEL", "-1002023266715")
-NEW_USER_LOG_CHANNEL = os.environ.get("NEW_USER_LOG_CHANNEL", "-1002023266715")   
+NEW_USER_LOG_CHANNEL = os.environ.get("NEW_USER_LOG_CHANNEL", "-1002023266715") 
+# Bot restart log channel
+BOT_RESTART_CHANNEL = os.environ.get("BOT_RESTART_CHANNEL", "-1002023266715")  # Using the same log channel
+
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
@@ -71,15 +74,6 @@ HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ 〕──╮<
 📌 /ping – ᴛᴇꜱᴛ ʙᴏᴛ ʀᴇꜱᴘᴏɴꜱᴇ ᴛɪᴍᴇ  
 📌 /stickerid – ɢᴇᴛ ꜱᴛɪᴄᴋᴇʀ ɪᴅ </blockquote>  
 
-<blockquote expandable><b>• ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ:</b>  
-🎭 /ae – ᴘʟᴀʏ <i>ᴀᴇꜱᴛʜᴇᴛɪᴄ ᴛᴇꜱᴛ</i>  
-🎯 /dart – ᴘʟᴀʏ <i>ᴅᴀʀᴛ ɢᴀᴍᴇ</i>  
-🎲 /dice – ᴘʟᴀʏ <i>ᴅɪᴄᴇ ɢᴀᴍᴇ</i>  
-🍀 /luck – ᴘʟᴀʏ <i>ʟᴜᴄᴋ ɢᴀᴍᴇ</i>  
-⚽ /goal – ᴘʟᴀʏ <i>ɢᴏᴀʟ ɢᴀᴍᴇ</i>  
-🏀 /basketball – ᴘʟᴀʏ <i>ʙᴀꜱᴋᴇᴛʙᴀʟʟ ɢᴀᴍᴇ</i>  
-🎳 /bowling – ᴘʟᴀʏ <i>ʙᴏᴡʟɪɴɢ ɢᴀᴍᴇ</i>  
-💨 /runs – ʀᴜɴ <i>ꜰᴜɴ ᴛᴇxᴛ</i></blockquote>  
 
 <blockquote>• <i>ᴏᴡɴᴇʀ:</i> <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a></blockquote>'''
 
