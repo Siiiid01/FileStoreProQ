@@ -27,48 +27,55 @@ TUT_VID = f"{TUT_VID}"
 AUTO_DELETE_TIME = 600  # 10 minutes in seconds
 EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't be deleted
 LOADING_ANIMATION = ["\\", "|", "/", "─"]
-ANIMATION_INTERVAL = 0.2  # Adjust for smoother animation
+ANIMATION_INTERVAL = 0.1  # Adjust for smoother animation
 
 
 async def show_loading(client: Client, message: Message):
     """Shows a smooth loading animation"""
-    if not message or not message.from_user:
-        return
-
     try:
-        loading_message = await message.reply_text("Iɴɪᴛɪᴀʟɪᴢɪɴɢ \\")
-    except UserIsBlocked:
-        return
-    except Exception as e:
-        from plugins.logs import log_error
-        log_error(f"Error sending initial loading message: {str(e)}")
-        return
+        if not message or not message.from_user:
+            return
 
-    animation_completed = False
-    try:
-        for _ in range(2):  # Run animation 2 cycles
-            for frame in LOADING_ANIMATION:
-                await asyncio.sleep(ANIMATION_INTERVAL)
-                try:
-                    await loading_message.edit_text(f"Iɴɪᴛɪᴀʟɪᴢɪɴɢ {frame}")
-                except UserIsBlocked:
-                    return
-                except MessageNotModified:
-                    continue  # Just skip this frame
-                except Exception as e:
-                    from plugins.logs import log_error
-                    log_error(f"Animation frame error: {str(e)}")
-                    continue
-        animation_completed = True
-    finally:
-        if animation_completed:
+        # Add delay before starting
+        await asyncio.sleep(0.2)
+        
+        try:
+            loading_message = await message.reply_text("Iɴɪᴛɪᴀʟɪᴢɪɴɢ \\")
+        except UserIsBlocked:
+            return
+        except Exception as e:
+            print(f"Error sending initial loading message: {e}")
+            return
+
+        try:
+            for _ in range(2):  # Run animation 2 cycles
+                for frame in LOADING_ANIMATION:
+                    try:
+                        await asyncio.sleep(ANIMATION_INTERVAL)
+                        await loading_message.edit_text(f"Iɴɪᴛɪᴀʟɪᴢɪɴɢ {frame}")
+                    except MessageNotModified:
+                        continue
+                    except (UserIsBlocked, MessageIdInvalid):
+                        return
+                    except Exception as e:
+                        print(f"Animation frame error: {e}")
+                        return
+                        
+            # Clean up animation message
             try:
                 await loading_message.delete()
-            except (MessageIdInvalid, UserIsBlocked):
-                pass  # Message already deleted or user blocked
-            except Exception as e:
-                from plugins.logs import log_error
-                log_error(f"Error deleting loading message: {str(e)}")
+            except:
+                pass
+                
+        except Exception as e:
+            print(f"Loading animation error: {e}")
+            try:
+                await loading_message.delete()
+            except:
+                pass
+            
+    except Exception as e:
+        print(f"Show loading overall error: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):

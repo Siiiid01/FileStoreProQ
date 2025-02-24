@@ -132,14 +132,21 @@ class Bot(Client):
 
         try:
             await self.send_message(
-                chat_id=BOT_RESTART_CHANNEL,
-                text="<b>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ!</b>\n\n" 
-                     "<b>• Tɪᴍᴇ:</b> <code>{}</code>".format(
-                         datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                     )
+                int(BOT_RESTART_CHANNEL),  # Convert channel ID to integer
+                text=f"<b>🤖 Bot Restarted!</b>\n\n"
+                     f"<b>• Time:</b> <code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>\n"
+                     f"<b>• Bot:</b> @{self.username}"
             )
         except Exception as e:
             print(f"Failed to send restart notification: {e}")
+            # Try sending to owner as fallback
+            try:
+                await self.send_message(
+                    OWNER_ID,
+                    text=f"⚠️ Failed to send restart notification to channel.\nError: {str(e)}"
+                )
+            except:
+                pass
 
     async def stop(self, *args):
         await super().stop()

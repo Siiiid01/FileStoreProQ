@@ -121,3 +121,10 @@ async def get_user_telegraph_uploads(user_id: int):
     """Get all Telegraph uploads by a user"""
     cursor = telegraph_collection.find({'user_id': user_id})
     return [doc async for doc in cursor]
+
+async def db_check_ban(user_id: int) -> bool:
+    """Check if a user is banned"""
+    user = await banned_collection.find_one({'_id': user_id})
+    if user and user.get('banned', False):
+        return True
+    return False
