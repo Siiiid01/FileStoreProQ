@@ -3,7 +3,7 @@ from pyrogram.types import Message
 from bot import Bot
 from config import ADMINS, USER_REPLY_TEXT, PICS
 from database.database import add_banned_user, remove_banned_user, get_ban_status
-from helper_func import send_ban_log
+from helper_func import send_ban_log, check_user_ban
 import random
 
 # Handler for unauthorized access
@@ -34,6 +34,7 @@ async def unauthorized_command(client: Bot, message: Message):
         print(f"Error in unauthorized handler: {e}")
 
 @Bot.on_message(filters.command("ban") & filters.user(ADMINS))
+@check_user_ban
 async def ban_user(client: Bot, message: Message):
     try:
         # Get command parts
@@ -101,6 +102,7 @@ async def ban_user(client: Bot, message: Message):
         await message.reply_text(f"An error occurred: {str(e)}")
 
 @Bot.on_message(filters.command("unban") & filters.user(ADMINS))
+@check_user_ban
 async def unban_user(client: Bot, message: Message):
     try:
         # Get command parts

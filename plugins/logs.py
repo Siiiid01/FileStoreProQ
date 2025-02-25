@@ -7,6 +7,7 @@ from pyrogram.types import Message
 from pyrogram.errors import UserIsBlocked, FloodWait
 from bot import Bot
 from config import ADMINS
+from helper_func import check_user_ban
 
 # Initialize error log file
 ERROR_LOG_FILE = "bot_errors.log"
@@ -42,6 +43,7 @@ def get_error_logs():
 
 # Command to view errors
 @Bot.on_message(filters.command("errors") & filters.private & filters.user(ADMINS))
+@check_user_ban
 async def view_errors(client: Bot, message: Message):
     try:
         logs = get_error_logs()

@@ -6,8 +6,10 @@ from pyrogram.types import Message
 from bot import Bot
 from config import ADMINS
 from datetime import datetime
+from helper_func import check_user_ban
 
 @Bot.on_message(filters.command("restart") & filters.user(ADMINS))
+@check_user_ban
 async def restart_bot(client: Bot, message: Message):
     try:
         # Send restart message

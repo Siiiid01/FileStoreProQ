@@ -8,6 +8,7 @@ from helper_func import *  # For functions like get_readable_time
 from database.database import *  # Keep this if you're querying the database for user info
 import humanize  # If you're using it to format the uptime
 from bot import Bot  # To access the bot client
+from helper_func import check_user_ban  # Import check_user_ban function
 
 # Animation constants
 WAIT_ANIMATION_TEXT = "○ ○ ○"
@@ -36,6 +37,7 @@ async def auto_delete_message(message: Message, seconds: int):
         pass
 
 @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
+@check_user_ban
 async def stats(client: Bot, message: Message):
     try:
         # Get total users

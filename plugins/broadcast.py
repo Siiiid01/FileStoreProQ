@@ -7,6 +7,7 @@ from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, Peer
 from bot import Bot
 from database.database import *
 from config import *
+from helper_func import check_user_ban
 
 # Loading animation frames
 LOADING_CHARS = ['\\', '|', '/', '—']
@@ -43,6 +44,7 @@ async def update_progress_message(message, current, total, successful, blocked, 
         print(f"Error updating progress: {e}")
 
 @Bot.on_message(filters.private & filters.command('broadcast') & filters.user(ADMINS))
+@check_user_ban
 async def broadcast_handler(client: Bot, message: Message):
     if not message.reply_to_message:
         temp_msg = await message.reply("• ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ!")

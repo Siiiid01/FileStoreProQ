@@ -1,12 +1,10 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from bot import Bot
-from helper_func import check_user_ban
 import asyncio
 
 @Bot.on_message(filters.command('feedback') & filters.private)
-@check_user_ban
-async def feedback(client: Bot, message: Message):
+async def feedback_handler(bot: Bot, message: Message):
     try:
         # Add small delay to prevent spam
         await asyncio.sleep(0.5)
