@@ -193,60 +193,72 @@ async def start_command(client: Client, message: Message):
         # except:
         #     pass
 
+        # Handle file sending with custom caption
         sent_msg = []
         for msg in messages:
-            # Skip empty messages
-            if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
+            try:
+                # Skip empty messages
+                if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
+                    continue
+
+                # Handle file sending with custom caption
+                if msg.media in ['photo', 'video', 'document']:
+                    sent = await msg.copy(
+                        chat_id=message.from_user.id,
+                        caption=CUSTOM_CAPTION,
+                        protect_content=PROTECT_CONTENT
+                    )
+                else:
+                    # For text and other types, keep original caption
+                    sent = await msg.copy(
+                        chat_id=message.from_user.id,
+                        protect_content=PROTECT_CONTENT
+                    )
+                
+                sent_msg.append(sent)
+                await asyncio.sleep(0.5)  # Add delay between messages
+                
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+            except Exception as e:
+                print(f"Error sending message: {e}")
                 continue
 
-            # Handle file sending with custom caption
-            if msg.media in ['photo', 'video', 'document']:
-                await msg.copy(
-                    chat_id=message.from_user.id,
-                    caption=CUSTOM_CAPTION,
-                    protect_content=PROTECT_CONTENT
-                )
-            else:
-                # For text and other types, keep original caption
-                await msg.copy(
-                    chat_id=message.from_user.id,
-                    protect_content=PROTECT_CONTENT
-                )
-            
-            await asyncio.sleep(0.5)  # Add delay between messages
-
-        if FILE_AUTO_DELETE > 0:
-            notification_msg = await message.reply(
-                f"<blockquote><b>Tʜɪs ғɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ {get_exp_time(FILE_AUTO_DELETE)}.</blockquote>\nPʟᴇᴀsᴇ sᴀᴠᴇ ᴏʀ ғᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ʙᴇғᴏʀᴇ ɪᴛ ɢᴇᴛs ᴅᴇʟᴇᴛᴇᴅ.</b>"
-            )
-
-            await asyncio.sleep(FILE_AUTO_DELETE)
-
-            for snt_msg in sent_msg:    
-                if snt_msg:
-                    try:    
-                        await snt_msg.delete()  
-                    except Exception as e:
-                        print(f"Error deleting message {snt_msg.id}: {e}")
-
+        if FILE_AUTO_DELETE > 0 and sent_msg:
             try:
-                reload_url = (
-                    f"https://t.me/{client.username}?start={message.command[1]}"
-                    if message.command and len(message.command) > 1
-                    else None
+                notification_msg = await message.reply(
+                    f"<blockquote><b>Tʜɪs ғɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ {get_exp_time(FILE_AUTO_DELETE)}.</blockquote>\nPʟᴇᴀsᴇ sᴀᴠᴇ ᴏʀ ғᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ʙᴇғᴏʀᴇ ɪᴛ ɢᴇᴛs ᴅᴇʟᴇᴛᴇᴅ.</b>"
                 )
-                keyboard = InlineKeyboardMarkup([
-                    [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
-                    [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
-                    ]
-                ) if reload_url else None
 
-                await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
-                    reply_markup=keyboard
-                )
+                await asyncio.sleep(FILE_AUTO_DELETE)
+
+                for snt_msg in sent_msg:    
+                    try:    
+                        await snt_msg.delete()
+                    except Exception as e:
+                        print(f"Error deleting message: {e}")
+                        continue
+
+                try:
+                    reload_url = (
+                        f"https://t.me/{client.username}?start={message.command[1]}"
+                        if len(message.command) > 1
+                        else None
+                    )
+                    keyboard = InlineKeyboardMarkup([
+                        [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
+                        [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
+                    ]) if reload_url else None
+
+                    await notification_msg.edit(
+                        "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                        reply_markup=keyboard
+                    )
+                except Exception as e:
+                    print(f"Error updating notification: {e}")
+
             except Exception as e:
-                print(f"Error updating notification with 'Get File Again' button: {e}")
+                print(f"Error in auto-delete: {e}")
     else:
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("• Mᴏʀᴇ •", callback_data="more")],
