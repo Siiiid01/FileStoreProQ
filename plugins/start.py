@@ -171,18 +171,19 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-        # Replace the temp_msg block with direct message handling
+        # Handle file sending
+        sent_msg = []
+        
+        # Get messages first
+        temp_msg = await message.reply("Please wait...")
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            error_msg = await message.reply_text("Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
-            await asyncio.sleep(10)  # Wait 3 seconds
-            try:
-                await error_msg.delete()
-            except:
-                pass
+            await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
             return
+        finally:
+            await temp_msg.delete()
 
         # Delete the last text message from bot if it exists
         # try:
@@ -198,32 +199,49 @@ async def start_command(client: Client, message: Message):
         for msg in messages:
             try:
                 # Skip empty messages
-                if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
+                if not msg:
                     continue
-
-                # Send message with original caption
+                    
+                # Add delay between messages
+                await asyncio.sleep(0.5)
+                
+                # Copy message with original caption
+                reply_markup = msg.reply_markup if not DISABLE_CHANNEL_BUTTON else None
                 sent = await msg.copy(
                     chat_id=message.from_user.id,
+                    caption=msg.caption.html if msg.caption else None,
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=reply_markup,
                     protect_content=PROTECT_CONTENT
                 )
-                
                 sent_msg.append(sent)
-                await asyncio.sleep(0.5)  # Add delay between messages
                 
             except FloodWait as e:
                 await asyncio.sleep(e.value)
+                # Retry after flood wait
+                sent = await msg.copy(
+                    chat_id=message.from_user.id,
+                    caption=msg.caption.html if msg.caption else None,
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=reply_markup,
+                    protect_content=PROTECT_CONTENT
+                )
+                sent_msg.append(sent)
             except Exception as e:
                 print(f"Error sending message: {e}")
                 continue
 
+        # Handle auto-delete if enabled
         if FILE_AUTO_DELETE > 0 and sent_msg:
             try:
                 notification_msg = await message.reply(
-                    f"<blockquote><b>Tʜɪs ғɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ {get_exp_time(FILE_AUTO_DELETE)}.</blockquote>\nPʟᴇᴀsᴇ sᴀᴠᴇ ᴏʀ ғᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ʙᴇғᴏʀᴇ ɪᴛ ɢᴇᴛs ᴅᴇʟᴇᴛᴇᴅ.</b>"
+                    f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}.</b>\n"
+                    "<b>Please save or forward it to your saved messages before it gets deleted.</b>"
                 )
 
                 await asyncio.sleep(FILE_AUTO_DELETE)
 
+                # Delete sent messages
                 for snt_msg in sent_msg:    
                     try:    
                         await snt_msg.delete()
@@ -231,12 +249,9 @@ async def start_command(client: Client, message: Message):
                         print(f"Error deleting message: {e}")
                         continue
 
+                # Update notification with get file again button
                 try:
-                    reload_url = (
-                        f"https://t.me/{client.username}?start={message.command[1]}"
-                        if len(message.command) > 1
-                        else None
-                    )
+                    reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
                     keyboard = InlineKeyboardMarkup([
                         [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
                         [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
