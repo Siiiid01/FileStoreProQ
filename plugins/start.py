@@ -38,6 +38,24 @@ FLOOD_LIMIT = 3  # Max requests within time window
 FLOOD_TIME = 600  # 10 minutes in seconds
 FLOOD_WAIT = 600  # 10 minutes wait after flood
 
+# Update the constants at the top
+START_FLOOD_LIMIT = 2  # Max start commands within time window
+START_FLOOD_TIME = 300  # 5 minutes in seconds
+START_FLOOD_WAIT = 300  # 5 minutes wait after flood
+start_requests = defaultdict(list)  # Track start command requests
+
+# Add this function to check start command flood
+async def check_start_flood(user_id: int) -> bool:
+    """Check if user has exceeded start command limit"""
+    now = datetime.now()
+    start_requests[user_id] = [t for t in start_requests[user_id] if now - t < timedelta(seconds=START_FLOOD_TIME)]
+    
+    if len(start_requests[user_id]) >= START_FLOOD_LIMIT:
+        return True
+        
+    start_requests[user_id].append(now)
+    return False
+
 async def show_loading(client: Client, message: Message):
     """Shows a smooth loading animation"""
     try:
@@ -88,6 +106,17 @@ async def show_loading(client: Client, message: Message):
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 @check_user_ban  # Add ban check
 async def start_command(client: Client, message: Message):
+    user_id = message.from_user.id
+    
+    # Check for flood
+    if await check_start_flood(user_id):
+        wait_time = get_exp_time(START_FLOOD_WAIT)
+        await message.reply(
+            f"<b>⚠️ Please wait {wait_time} before using start command again.</b>\n\n"
+            "<i>This is to prevent excessive requests.</i>"
+        )
+        return
+
     # Add reaction to start command
     try:
         await message.react(emoji=random.choice(REACTIONS), big=True)

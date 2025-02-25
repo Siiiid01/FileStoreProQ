@@ -7,6 +7,8 @@ from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
 from config import *
+import os
+from helper_func import get_readable_time
 
 
 name ="""
@@ -140,6 +142,24 @@ class Bot(Client):
             )
         except Exception as e:
             print(f"Failed to send restart notification: {e}")
+
+        # Check for restart message
+        try:
+            if os.path.exists("restart.txt"):
+                with open("restart.txt", "r") as f:
+                    chat_id = int(f.readline().strip())
+                    message_id = int(f.readline().strip())
+                    restart_time = f.readline().strip()
+                
+                await self.edit_message_text(
+                    chat_id=chat_id,
+                    message_id=message_id,
+                    text=f"<b>✅ Bot Restarted Successfully!</b>\n\n"
+                         f"<b>Downtime:</b> {get_readable_time((datetime.now() - datetime.strptime(restart_time, '%Y-%m-%d %H:%M:%S')).total_seconds())}"
+                )
+                os.remove("restart.txt")
+        except:
+            pass
 
     async def stop(self, *args):
         await super().stop()
