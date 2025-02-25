@@ -12,6 +12,8 @@ from database.database import *
 from datetime import datetime
 from database.database import db_check_ban, get_ban_status
 from config import ADMINS
+from pyrogram.client import Client
+from pyrogram.types import User
 
 
 
@@ -205,57 +207,54 @@ subscribed2 = filters.create(is_subscribed2)
 subscribed3 = filters.create(is_subscribed3)
 subscribed4 = filters.create(is_subscribed4)
 
-async def send_telegraph_log(client, user_id, file_name, file_type, telegraph_url):
-    """Send Telegraph upload log to channel"""
+async def send_log(client: Client, user_id: int, action: str, log_channel: str):
+    """Generic function to send logs to specified channel"""
     try:
         user = await client.get_users(user_id)
-        user_mention = user.mention
-    except:
-        user_mention = f"User {user_id}"
-    
-    log_text = (
-        "**New Telegraph Upload**\n\n"
-        f"**User:** {user_mention}\n"
-        f"**User ID:** `{user_id}`\n"
-        f"**File Name:** `{file_name}`\n"
-        f"**File Type:** {file_type}\n"
-        f"**Telegraph URL:** {telegraph_url}\n"
-        f"**Upload Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
-    
-    try:
-        await client.send_message(TELEGRAPH_LOG_CHANNEL, log_text)
+        log_text = f"""
+#New_{action}
+**User:** {user.mention}
+**ID:** `{user.id}`
+**Username:** @{user.username}
+**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        await client.send_message(chat_id=log_channel, text=log_text)
     except Exception as e:
-        print(f"Failed to send Telegraph log: {e}")
+        print(f"Error sending {action} log: {e}")
 
-async def send_ban_log(client, user_id, admin_id, reason=None, action="banned"):
-    """Send ban/unban log to channel"""
+async def send_telegraph_log(client: Client, user: User, url: str):
+    """Send telegraph upload log"""
+    try:
+        log_text = f"""
+#Telegraph_Upload
+**User:** {user.mention}
+**ID:** `{user.id}`
+**Username:** @{user.username}
+**URL:** {url}
+**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        await client.send_message(chat_id=TELEGRAPH_LOG_CHANNEL, text=log_text)
+    except Exception as e:
+        print(f"Error sending telegraph log: {e}")
+
+async def send_ban_log(client: Client, user_id: int, admin_id: int, reason: str = None, action: str = "banned"):
+    """Send ban/unban log"""
     try:
         user = await client.get_users(user_id)
         admin = await client.get_users(admin_id)
-        user_mention = user.mention
-        admin_mention = admin.mention
-    except:
-        user_mention = f"User {user_id}"
-        admin_mention = f"Admin {admin_id}"
-    
-    log_text = (
-        f"**User {action.title()}**\n\n"
-        f"**User:** {user_mention}\n"
-        f"**User ID:** `{user_id}`\n"
-        f"**{action.title()} By:** {admin_mention}\n"
-        f"**Admin ID:** `{admin_id}`\n"
-    )
-
-    if reason and action == "banned":
-        log_text += f"**Reason:** {reason}\n"
-    
-    log_text += f"**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    
-    try:
-        await client.send_message(BAN_LOG_CHANNEL, log_text)
+        log_text = f"""
+#{action.title()}
+**User:** {user.mention}
+**ID:** `{user.id}`
+**Admin:** {admin.mention}
+**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        if reason and action == "banned":
+            log_text += f"**Reason:** {reason}"
+            
+        await client.send_message(chat_id=BAN_LOG_CHANNEL, text=log_text)
     except Exception as e:
-        print(f"Failed to send ban log: {e}")
+        print(f"Error sending ban log: {e}")
 
 async def send_new_user_notification(client, user):
     """Send notification when new user starts the bot"""

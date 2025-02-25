@@ -28,66 +28,64 @@ def upload_image_requests(image_path):
 async def telegraph_upload(client: Bot, message: Message):
     try:
         # Send instruction message
-        t_msg = await message.reply_text("• ɴᴏᴡ ꜱᴇɴᴅ ᴍᴇ ʏᴏᴜʀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ 5ᴍʙ ᴛᴏ ɢᴇᴛ ᴍᴇᴅɪᴀ ʟɪɴᴋ.")
-        
-        # Wait for media response
-        async def media_filter(_, __, m):
-            return bool(m.media) and m.from_user.id == message.from_user.id
+        instruction = await message.reply(
+            "<b>Please send me a photo or video under 5MB.</b>\n"
+            "<i>Note: Video thumbnails will be auto-generated</i>"
+        )
+
+        # Define media filter
+        def media_filter(_, __, m):
+            return bool(m.photo or (m.video and m.video.file_size < 5242880))
             
         try:
+            # Wait for media message
             media_msg = await client.listen(
                 message.chat.id,
                 filters=filters.create(media_filter),
-                timeout=60
+                timeout=30
             )
-        except TimeoutError:
-            await t_msg.edit("⚠️ Timeout: No media received within 60 seconds.")
-            return
 
-        if not media_msg.media:
-            return await t_msg.edit("⚠︎ ᴏɴʟʏ ᴍᴇᴅɪᴀ ꜱᴜᴘᴘᴏʀᴛᴇᴅ.")
+            if not media_msg:
+                await instruction.edit("No media received. Process cancelled.")
+                return
 
-        uploading_message = await message.reply_text("<b>ᴜᴘʟᴏᴀᴅɪɴɢ...</b>")
-        
-        try:
-            # Download and upload file
-            path = await media_msg.download()
-            image_url = upload_image_requests(path)
-            
-            # Clean up downloaded file
+            # Show processing message
+            processing_msg = await media_msg.reply("Processing...")
+
             try:
-                os.remove(path)
-            except:
-                pass
-                
-            if not image_url:
-                return await uploading_message.edit_text("⚠︎ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴜᴘʟᴏᴀᴅ ꜰɪʟᴇ.")
+                # Download and upload to telegraph
+                if media_msg.photo or media_msg.video:
+                    media_path = await media_msg.download()
+                    try:
+                        telegraph_url = upload_image_requests(media_path)
+                        
+                        # Send success message
+                        await processing_msg.edit(
+                            f"<b>Successfully uploaded to Telegraph!</b>\n\n"
+                            f"<b>🔗 URL:</b> {telegraph_url}",
+                            disable_web_page_preview=True
+                        )
+                        
+                        # Send log
+                        await send_telegraph_log(client, message.from_user, telegraph_url)
+                        
+                    except Exception as e:
+                        await processing_msg.edit(f"Failed to upload: {str(e)}")
+                    finally:
+                        try:
+                            os.remove(media_path)
+                        except:
+                            pass
+                else:
+                    await processing_msg.edit("Please send a valid photo or video file.")
+            except Exception as e:
+                await processing_msg.edit(f"An error occurred: {str(e)}")
 
-            # Log the upload
-            await send_telegraph_log(
-                client,
-                message.from_user.id,
-                os.path.basename(path),
-                media_msg.media.value,
-                image_url
-            )
-
-            # Send success message
-            await uploading_message.edit_text(
-                text=f"<b>Link :-</b>\n\n<code>{image_url}</code>",
-                disable_web_page_preview=True,
-                reply_markup=InlineKeyboardMarkup([
-                    [
-                        InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=image_url),
-                        InlineKeyboardButton("• ꜱʜᴀʀᴇ ʟɪɴᴋ •", url=f"https://telegram.me/share/url?url={image_url}")
-                    ],
-                    [InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close")]
-                ])
-            )
-
+        except TimeoutError:
+            await instruction.edit("Timeout! Please try again.")
         except Exception as e:
-            await uploading_message.edit_text(f"**Upload failed: {str(e)}**")
-            
+            await instruction.edit(f"An error occurred: {str(e)}")
+
     except Exception as e:
         print(f"Telegraph command error: {e}")
 
