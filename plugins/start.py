@@ -18,6 +18,8 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
+from collections import defaultdict
+from datetime import datetime, timedelta
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -29,6 +31,12 @@ EXEMPT_FROM_DELETE = ['Get File Again!', 'broadcast']  # Messages that shouldn't
 LOADING_ANIMATION = ["\\", "|", "/", "─"]
 ANIMATION_INTERVAL = 0.07  # Adjust for smoother animation
 
+# Add these tracking dictionaries
+active_delete_tasks = defaultdict(set)  # Track deletion tasks
+user_requests = defaultdict(list)  # Track user requests
+FLOOD_LIMIT = 3  # Max requests within time window
+FLOOD_TIME = 600  # 10 minutes in seconds
+FLOOD_WAIT = 600  # 10 minutes wait after flood
 
 async def show_loading(client: Client, message: Message):
     """Shows a smooth loading animation"""
@@ -146,6 +154,17 @@ async def start_command(client: Client, message: Message):
     # Handle normal message flow
     text = message.text
     if len(text) > 7:
+        user_id = message.from_user.id
+        
+        # Check for flood
+        if await check_flood(user_id):
+            wait_time = get_exp_time(FLOOD_WAIT)
+            await message.reply(
+                f"<b>⚠️ Please wait {wait_time} before requesting this file again.</b>\n\n"
+                "<i>This is to prevent excessive requests.</i>"
+            )
+            return
+            
         try:
             base64_string = text.split(" ", 1)[1]
         except IndexError:
@@ -234,38 +253,66 @@ async def start_command(client: Client, message: Message):
         # Handle auto-delete if enabled
         if FILE_AUTO_DELETE > 0 and sent_msg:
             try:
+                user_id = message.from_user.id
+                
+                # Cancel any existing delete tasks for this user
+                for task in active_delete_tasks[user_id]:
+                    try:
+                        task.cancel()
+                    except:
+                        pass
+                active_delete_tasks[user_id].clear()
+
+                # Send notification first
                 notification_msg = await message.reply(
                     f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}.</b>\n"
                     "<b>Please save or forward it to your saved messages before it gets deleted.</b>"
                 )
 
-                await asyncio.sleep(FILE_AUTO_DELETE)
+                # Create deletion task
+                async def delete_files():
+                    try:
+                        await asyncio.sleep(FILE_AUTO_DELETE)
+                        
+                        # Delete sent messages one by one
+                        for snt_msg in sent_msg:    
+                            try:    
+                                if snt_msg and not snt_msg.empty:
+                                    await snt_msg.delete()
+                                    await asyncio.sleep(0.5)  # Small delay between deletions
+                            except Exception as e:
+                                print(f"Error deleting message: {e}")
+                                continue
 
-                # Delete sent messages
-                for snt_msg in sent_msg:    
-                    try:    
-                        await snt_msg.delete()
+                        # Update notification with get file again button
+                        try:
+                            reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
+                            keyboard = InlineKeyboardMarkup([
+                                [
+                                    InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url),
+                                    InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")
+                                ]
+                            ]) if reload_url else None
+
+                            await notification_msg.edit(
+                                "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                                reply_markup=keyboard
+                            )
+                        except Exception as e:
+                            print(f"Error updating notification: {e}")
+
                     except Exception as e:
-                        print(f"Error deleting message: {e}")
-                        continue
+                        print(f"Error in delete_files task: {e}")
+                    finally:
+                        # Clean up task tracking
+                        active_delete_tasks[user_id].clear()
 
-                # Update notification with get file again button
-                try:
-                    reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
-                    keyboard = InlineKeyboardMarkup([
-                        [InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)],
-                        [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close_fileagain")]
-                    ]) if reload_url else None
-
-                    await notification_msg.edit(
-                        "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
-                        reply_markup=keyboard
-                    )
-                except Exception as e:
-                    print(f"Error updating notification: {e}")
+                # Create and track deletion task
+                task = asyncio.create_task(delete_files())
+                active_delete_tasks[user_id].add(task)
 
             except Exception as e:
-                print(f"Error in auto-delete: {e}")
+                print(f"Error setting up auto-delete: {e}")
     else:
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("• Mᴏʀᴇ •", callback_data="more")],
@@ -428,3 +475,14 @@ async def get_users(client: Bot, message: Message):
 #     except Exception as e:
 #         print(f"Error in stats command: {e}")
 #         await message.reply("❌ An error occurred while fetching stats.")
+
+async def check_flood(user_id: int) -> bool:
+    """Check if user has exceeded request limit"""
+    now = datetime.now()
+    user_requests[user_id] = [t for t in user_requests[user_id] if now - t < timedelta(seconds=FLOOD_TIME)]
+    
+    if len(user_requests[user_id]) >= FLOOD_LIMIT:
+        return True
+        
+    user_requests[user_id].append(now)
+    return False
