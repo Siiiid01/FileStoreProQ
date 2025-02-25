@@ -124,7 +124,11 @@ async def get_user_telegraph_uploads(user_id: int):
 
 async def db_check_ban(user_id: int) -> bool:
     """Check if a user is banned"""
-    user = await banned_collection.find_one({'_id': user_id})
-    if user and user.get('banned', False):
+    try:
+        user = await banned_collection.find_one({'user_id': user_id})
+        # If user exists in banned collection, they're banned
+        return bool(user)
+    except Exception as e:
+        print(f"Ban check error: {e}")
+        # On any error, treat as banned for safety
         return True
-    return False

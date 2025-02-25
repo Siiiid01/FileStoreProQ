@@ -2,10 +2,9 @@ import asyncio
 from pyrogram import filters, Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait
-
 from bot import Bot
 from config import ADMINS, CHANNEL_ID, DISABLE_CHANNEL_BUTTON
-from helper_func import encode
+from helper_func import encode, check_user_ban
 
 @Bot.on_message(
     filters.private 
@@ -14,7 +13,6 @@ from helper_func import encode
         "start", "id", "users", "broadcast", "batch", "genlink", "stats", "telegraph", "alive", "ping", "stickerid", "errors", "ban", "unban", "feedback"
     ])
 )
-
 async def channel_post(client: Client, message: Message):
     reply_text = await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...!", quote = True)
     try:

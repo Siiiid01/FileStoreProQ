@@ -10,6 +10,8 @@ from pyrogram.errors import FloodWait
 from shortzy import Shortzy
 from database.database import *
 from datetime import datetime
+from database.database import db_check_ban, get_ban_status
+from config import ADMINS
 
 
 
@@ -310,25 +312,24 @@ def check_user_ban(func):
             # Check if user is banned
             is_banned = await db_check_ban(user_id)
             if is_banned:
+                # Send ban message and stop all further processing
+                ban_info = await get_ban_status(user_id)
+                ban_reason = ban_info.get('ban_reason', 'No reason provided')
+                ban_msg = f"<b>⚠️ You are banned from using this bot</b>\n\n<b>Reason:</b> {ban_reason}"
                 try:
-                    ban_info = await get_ban_status(user_id)
-                    ban_reason = ban_info.get('ban_reason', 'No reason provided')
-                    ban_date = ban_info.get('banned_on', 'Unknown date')
-                    
-                    ban_msg = (
-                        "<b>⚠️ You are banned from using this bot</b>\n\n"
-                        f"<b>Reason:</b> {ban_reason}\n"
-                        f"<b>Date:</b> {ban_date.strftime('%Y-%m-%d %H:%M:%S') if isinstance(ban_date, datetime) else ban_date}"
-                    )
                     await message.reply_text(ban_msg)
                 except:
-                    await message.reply_text("You are banned from using this bot.")
+                    pass
+                # Important: Return None to stop command execution
                 return
             
-            # Add delay to prevent overwhelming
-            await asyncio.sleep(0.5)
+            # User not banned, add small delay and continue
+            await asyncio.sleep(0.3)
             return await func(client, message)
             
         except Exception as e:
             print(f"Error in ban check: {e}")
+            # On any error, block access
+            return
+            
     return wrapper
