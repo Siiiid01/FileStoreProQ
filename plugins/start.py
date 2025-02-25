@@ -193,7 +193,7 @@ async def start_command(client: Client, message: Message):
         # except:
         #     pass
 
-        # Handle file sending with custom caption
+        # Handle file sending
         sent_msg = []
         for msg in messages:
             try:
@@ -201,19 +201,11 @@ async def start_command(client: Client, message: Message):
                 if not msg or (not msg.document and not msg.video and not msg.photo and not msg.text and not msg.audio):
                     continue
 
-                # Handle file sending with custom caption
-                if msg.media in ['photo', 'video', 'document']:
-                    sent = await msg.copy(
-                        chat_id=message.from_user.id,
-                        caption=CUSTOM_CAPTION,
-                        protect_content=PROTECT_CONTENT
-                    )
-                else:
-                    # For text and other types, keep original caption
-                    sent = await msg.copy(
-                        chat_id=message.from_user.id,
-                        protect_content=PROTECT_CONTENT
-                    )
+                # Send message with original caption
+                sent = await msg.copy(
+                    chat_id=message.from_user.id,
+                    protect_content=PROTECT_CONTENT
+                )
                 
                 sent_msg.append(sent)
                 await asyncio.sleep(0.5)  # Add delay between messages

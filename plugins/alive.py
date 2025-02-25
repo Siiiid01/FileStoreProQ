@@ -2,6 +2,7 @@ import time
 import random
 import asyncio
 from pyrogram import Client, filters
+from helper_func import check_user_ban
 
 CMD = ["/", "."]
 
@@ -32,10 +33,10 @@ ALIVE_CAPTIONS = [
 "🥳 i'ᴍ ᴜᴘ ᴀɴᴅ ᴋɪᴄᴋɪɴɢ! wʜᴀᴛ's ɴᴇxᴛ?",
 "👀 cᴀɴ'ᴛ ʙᴇʟɪᴇᴠᴇ ɪᴛ? pɪɴᴄʜ ʏᴏᴜʀsᴇʟꜰ!",
 "⚡ bᴀᴄᴋ ꜰʀᴏᴍ ᴛʜᴇ ᴅᴇᴀᴅ, ᴀɴᴅ sᴛʀᴏɴɢᴇʀ ᴛʜᴀɴ ᴇᴠᴇʀ! 💪",
-"🎉 wʜᴏ sᴀɪᴅ i’ᴍ ɢᴏɴᴇ? i’ᴍ ᴊᴜsᴛ ɢᴇᴛᴛɪɴɢ sᴛᴀʀᴛᴇᴅ! 🚀",
+"🎉 wʜᴏ sᴀɪᴅ i'ᴍ ɢᴏɴᴇ? i'ᴍ ᴊᴜsᴛ ɢᴇᴛᴛɪɴɢ sᴛᴀʀᴛᴇᴅ! 🚀",
 "💥 tʜᴏᴜɢʜᴛ ʏᴏᴜ ᴄᴏᴜʟᴅ sᴛᴏᴘ ᴍᴇ? nɪᴄᴇ ᴛʀʏ! 😈",
-"💡 lɪꜰᴇ’s ᴛᴏᴏ sʜᴏʀᴛ ᴛᴏ sᴛᴀʏ ᴅᴏᴡɴ. Lᴇᴛ’s ɢᴏ! 🌟",
-"🔥 yᴏᴜ ᴄᴀɴ’ᴛ ʙʀᴇᴀᴋ ᴡʜᴀᴛ’s ᴀʟʀᴇᴀᴅʏ ᴏɴ ꜰɪʀᴇ! 💯" 
+"💡 lɪꜰᴇ's ᴛᴏᴏ sʜᴏʀᴛ ᴛᴏ sᴛᴀʏ ᴅᴏᴡɴ. Lᴇᴛ's ɢᴏ! 🌟",
+"🔥 yᴏᴜ ᴄᴀɴ'ᴛ ʙʀᴇᴀᴋ ᴡʜᴀᴛ's ᴀʟʀᴇᴀᴅʏ ᴏɴ ꜰɪʀᴇ! 💯" 
 ]
 
 # Translations for /ping
@@ -47,7 +48,8 @@ PING_CAPTIONS = [
 "🔍 tᴇsᴛɪɴɢ ᴍʏ ʀᴇꜰʟᴇxᴇs!"
 ]
 
-@Client.on_message(filters.command("alive", CMD))
+@Client.on_message(filters.command("alive", CMD) & filters.private)
+@check_user_ban
 async def check_alive(_, message):
     # Delete the command message
     try:
@@ -75,6 +77,7 @@ async def check_alive(_, message):
         pass
 
 @Client.on_message(filters.command("ping", CMD))
+@check_user_ban
 async def ping(_, message):
     start_t = time.time()
     rm = await message.reply_text("🏓 ᴘɪɴɢɪɴɢ...")

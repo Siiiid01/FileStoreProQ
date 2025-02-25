@@ -25,7 +25,7 @@ def upload_image_requests(image_path):
 
 @Bot.on_message(filters.command("telegraph") & filters.private)
 @check_user_ban
-async def telegraph_upload(bot: Bot, message: Message):
+async def telegraph_upload(client: Bot, message: Message):
     try:
         # Send instruction message
         t_msg = await message.reply_text("• ɴᴏᴡ ꜱᴇɴᴅ ᴍᴇ ʏᴏᴜʀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ 5ᴍʙ ᴛᴏ ɢᴇᴛ ᴍᴇᴅɪᴀ ʟɪɴᴋ.")
@@ -35,7 +35,7 @@ async def telegraph_upload(bot: Bot, message: Message):
             return bool(m.media) and m.from_user.id == message.from_user.id
             
         try:
-            media_msg = await bot.listen(
+            media_msg = await client.listen(
                 message.chat.id,
                 filters=filters.create(media_filter),
                 timeout=60
@@ -65,7 +65,7 @@ async def telegraph_upload(bot: Bot, message: Message):
 
             # Log the upload
             await send_telegraph_log(
-                bot,
+                client,
                 message.from_user.id,
                 os.path.basename(path),
                 media_msg.media.value,

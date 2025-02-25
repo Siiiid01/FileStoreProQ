@@ -3,8 +3,10 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, 
 import random
 from bot import Bot
 from config import PICS  # Ensure PICS is correctly imported
+from helper_func import check_user_ban
 
 @Bot.on_message(filters.command("id") & filters.private)
+@check_user_ban
 async def showid(client, message: Message):
     try:
         await message.delete()

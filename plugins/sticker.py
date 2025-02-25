@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import asyncio 
 from bot import Bot
+from utils.ban_check import check_user_ban
 
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.15  # 100ms
@@ -24,17 +25,18 @@ async def show_loading_animation(message: Message):
         print(f"Error in animation: {e}")
     
 @Bot.on_message(filters.command("stickerid") & filters.private)
-async def stickerid(bot, message):
+@check_user_ban
+async def sticker_id(client: Bot, message: Message):
     """Handle /stickerid command with animation and sticker request."""
     await show_loading_animation(message)
     
-    ask_msg = await bot.send_message(
+    ask_msg = await client.send_message(
         chat_id=message.from_user.id,
         text="• ɴᴏᴡ ꜱᴇɴᴅ ᴍᴇ ʏᴏᴜʀ ꜱᴛɪᴄᴋᴇʀ!"
     )
     
     try:
-        s_msg = await bot.listen(message.chat.id, timeout=30)  # Wait for sticker
+        s_msg = await client.listen(message.chat.id, timeout=30)  # Wait for sticker
         if s_msg.sticker:
             info_text = (
                 f"<blockquote expandable><b><i>🎯 Sticker Information</b></i>\n\n"
