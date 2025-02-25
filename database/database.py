@@ -81,18 +81,21 @@ async def add_banned_user(user_id: int, banned_by: int, reason: str = None):
     )
     return ban_time
 
-async def remove_banned_user(user_id: int, unbanned_by: int):
+async def remove_banned_user(user_id: int, unbanned_by: int = None):
     """Remove a user from banned users with unban logging"""
-    ban_data = await get_ban_status(user_id)
-    if ban_data:
-        unban_log = {
-            'user_id': user_id,
-            'unbanned_by': unbanned_by,
-            'unbanned_on': datetime.now(),
-            'original_ban': ban_data
-        }
-        await database['unban_logs'].insert_one(unban_log)
-    await banned_collection.delete_one({'user_id': user_id})
+    try:
+        ban_data = await get_ban_status(user_id)
+        if ban_data:
+            unban_log = {
+                'user_id': user_id,
+                'unbanned_by': unbanned_by,
+                'unbanned_on': datetime.now(),
+                'original_ban': ban_data
+            }
+            await database['unban_logs'].insert_one(unban_log)
+        await banned_collection.delete_one({'user_id': user_id})
+    except Exception as e:
+        print(f"Error in remove_banned_user: {e}")
 
 async def get_ban_status(user_id: int):
     """Get user ban status and info"""

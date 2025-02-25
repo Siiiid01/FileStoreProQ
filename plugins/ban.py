@@ -128,7 +128,7 @@ async def unban_user(client: Bot, message: Message):
             return
         
         # Unban user
-        await remove_banned_user(user_id)
+        await remove_banned_user(user_id, message.from_user.id)
         
         # Try to get user info
         try:
