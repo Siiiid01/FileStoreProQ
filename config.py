@@ -25,7 +25,7 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster99")
 COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "zoro")
 
 #Time in seconds for message delete, put 0 to never delete
-TIME = int(os.environ.get("TIME", "300"))
+TIME = int(os.environ.get("TIME", "120"))
 
 
 #force sub channel id, if you want enable force sub
