@@ -459,9 +459,67 @@ REPLY_ERROR = "<code>Usᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴀs ᴀ ʀᴇᴘʟʏ �
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 @check_user_ban
 async def get_users(client: Bot, message: Message):
-    msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
-    users = await full_userbase()
-    await msg.edit(f"{len(users)} ᴜsᴇʀs ᴀʀᴇ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ 卐")
+    try:
+        # Send initial processing message
+        msg = await message.reply_text("<b>Processing user data...</b>")
+        
+        # Get all users
+        users = await full_userbase()
+        if not users:
+            await msg.edit("No users found in database!")
+            return
+            
+        # Prepare user data
+        user_data = []
+        total_users = len(users)
+        
+        for user_id in users:
+            try:
+                user = await client.get_users(user_id)
+                user_info = (
+                    f"👤 <b>Name:</b> {user.first_name}"
+                    f"{' ' + user.last_name if user.last_name else ''}\n"
+                    f"🆔 <b>ID:</b> <code>{user.id}</code>\n"
+                    f"👤 <b>Username:</b> @{user.username if user.username else 'None'}\n"
+                    f"📞 <b>Contact:</b> {user.mention}\n"
+                    "───────────────────"
+                )
+                user_data.append(user_info)
+            except Exception as e:
+                print(f"Error getting user {user_id}: {e}")
+                user_data.append(f"👤 User ID: {user_id} (Error fetching details)\n───────────────────")
+
+        # If user list is too long, create a text file
+        if total_users > 50:
+            # Create text file
+            file_path = "users_data.txt"
+            with open(file_path, "w", encoding='utf-8') as f:
+                f.write(f"Total Users: {total_users}\n\n")
+                f.write("\n".join(user_data))
+            
+            # Send file with caption
+            await message.reply_document(
+                document=file_path,
+                caption=f"<b>Total Users:</b> {total_users}\n<b>Data:</b> Full user list attached",
+                quote=True
+            )
+            
+            # Clean up
+            try:
+                os.remove(file_path)
+            except:
+                pass
+            
+        else:
+            # Send as message for smaller lists
+            response = (
+                f"<b>Total Users:</b> {total_users}\n\n"
+                f"{chr(10).join(user_data)}"
+            )
+            await msg.edit(response)
+            
+    except Exception as e:
+        await message.reply_text(f"An error occurred: {str(e)}")
 
 
 # @Bot.on_message(filters.command('stats') & filters.private & filters.user(ADMINS))
