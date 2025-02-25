@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import asyncio 
 from bot import Bot
-from utils.ban_check import check_user_ban
+from helper_func import check_user_ban
 
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.15  # 100ms
