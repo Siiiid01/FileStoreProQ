@@ -39,13 +39,13 @@ async def sticker_id(client: Bot, message: Message):
         s_msg = await client.listen(message.chat.id, timeout=30)  # Wait for sticker
         if s_msg.sticker:
             info_text = (
-                f"<blockquote expandable><b><i>🎯 Sticker Information</b></i>\n\n"
-                f"<b><i>🔖 File ID:</b></i>\n`{s_msg.sticker.file_id}`\n\n"
-                f"<b><i>🎟️ Unique ID:</b></i>\n`{s_msg.sticker.file_unique_id}`\n\n"
-                f"<b><i>📏 Dimensions:</b></i> {s_msg.sticker.width}x{s_msg.sticker.height}\n"
-                f"<b><i>📦 File Size:</b></i> {s_msg.sticker.file_size} bytes\n"
-                f"<b><i>🎨 Animated:</b></i> {'Yes' if s_msg.sticker.is_animated else 'No'}\n"
-                f"<b><i>🎭 Video:</b></i> {'Yes' if s_msg.sticker.is_video else 'No'}<blockquote>"
+                f"<blockquote expandable><b><i>❖ Sᴛɪᴄᴋᴇʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ</b></i>\n\n"
+                f"<b><i>⤷ Fɪʟᴇ ID:</b></i>\n`{s_msg.sticker.file_id}`\n\n"
+                f"<b><i>⤷ Uɴɪᴏ̨ᴜᴇ ID:</b></i>\n`{s_msg.sticker.file_unique_id}`\n\n"
+                f"<b><i>⤷ Dɪᴍᴇɴsɪᴏɴs:</b></i> {s_msg.sticker.width}x{s_msg.sticker.height}\n"
+                f"<b><i>⤷ Fɪʟᴇ Sɪᴢᴇ:</b></i> {s_msg.sticker.file_size} bytes\n"
+                f"<b><i>⤷ Aɴɪᴍᴀᴛᴇᴅ:</b></i> {'Yes' if s_msg.sticker.is_animated else 'No'}\n"
+                f"<b><i>⤷ Vɪᴅᴇᴏ:</b></i> {'Yes' if s_msg.sticker.is_video else 'No'}<blockquote>"
             )
             
             buttons = [[InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close_data")]]

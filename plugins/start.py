@@ -112,8 +112,8 @@ async def start_command(client: Client, message: Message):
     if await check_start_flood(user_id):
         wait_time = get_exp_time(START_FLOOD_WAIT)
         await message.reply(
-            f"<b>⚠️ Please wait {wait_time} before using start command again.</b>\n\n"
-            "<i>This is to prevent excessive requests.</i>"
+            f"<b>ツ Pʟᴇᴀsᴇ ᴡᴀɪᴛ {wait_time} ʙᴇғᴏʀᴇ ᴜsɪɴɢ sᴛᴀʀᴛ ᴄᴏᴍᴍᴀɴᴅ ᴀɢᴀɪɴ.</b>\n\n"
+            "<blockquote expandable><i> Dᴇᴠ Wᴀs ᴜɴᴀʙʟᴇ ᴛᴏ ғɪɴᴅ ᴛʜᴇ sɴᴇᴀᴋʏ ʙᴜɢ ᴄᴀᴜsɪɴɢ ᴡʜɪᴄʜ ᴡᴀs ᴄᴀᴜsɪɴɢ sɪʟᴇɴᴛ ᴇʀʀᴏʀs, sᴏ ʜᴇ ᴀᴅᴅᴇᴅ ᴀ ᴛᴏ ʜᴀɴᴅʟᴇ ɪᴛ😎.</i></blockquote>"
         )
         return
 
@@ -154,12 +154,12 @@ async def start_command(client: Client, message: Message):
             if "verify_" in message.text:
                 _, token = message.text.split("_", 1)
                 if verify_status['verify_token'] != token:
-                    return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
+                    return await message.reply("• Yᴏᴜʀ ᴛᴏᴋᴇɴ ɪs ɪɴᴠᴀʟɪᴅ ᴏʀ ᴇxᴘɪʀᴇᴅ. Tʀʏ ᴀɢᴀɪɴ ʙʏ ᴄʟɪᴄᴋɪɴɢ /sᴛᴀʀᴛ.")
                 await update_verify_status(id, is_verified=True, verified_time=time.time())
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
-                    f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
+                    f"• Yᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀs ʙᴇᴇɴ sᴜᴄᴄᴇssғᴜʟʟʏ ᴠᴇʀɪғɪᴇᴅ ᴀɴᴅ ɪs ᴠᴀʟɪᴅ ғᴏʀ <blockqute>{get_exp_time(VERIFY_EXPIRE)}</blockqute>",
                     reply_markup=reply_markup,
                     protect_content=False,
                     quote=True
@@ -189,8 +189,8 @@ async def start_command(client: Client, message: Message):
         if await check_flood(user_id):
             wait_time = get_exp_time(FLOOD_WAIT)
             await message.reply(
-                f"<b>⚠️ Please wait {wait_time} before requesting this file again.</b>\n\n"
-                "<i>This is to prevent excessive requests.</i>"
+                f"<b>ツ Pʟᴇᴀsᴇ ᴡᴀɪᴛ {wait_time} ʙᴇғᴏʀᴇ ʀᴇᴏ̨ᴜᴇsᴛɪɴɢ ᴛʜɪs ғɪʟᴇ ᴀɢᴀɪɴ.</b>\n\n"
+                "<blockquote><i>Tʜɪs ɪs ᴛᴏ ᴘʀᴇᴠᴇɴᴛ ᴇxᴄᴇssɪᴠᴇ ʀᴇᴏ̨ᴜᴇsᴛs.</i></blockquote>"
             )
             return
             
@@ -223,11 +223,11 @@ async def start_command(client: Client, message: Message):
         sent_msg = []
         
         # Get messages first
-        temp_msg = await message.reply("Please wait...")
+        temp_msg = await message.reply("• Pʟᴇᴀsᴇ ᴡᴀɪᴛ...")
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            await message.reply_text("Something went wrong!")
+            await message.reply_text("• Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ!")
             print(f"Error getting messages: {e}")
             return
         finally:
@@ -294,8 +294,8 @@ async def start_command(client: Client, message: Message):
 
                 # Send notification first
                 notification_msg = await message.reply(
-                    f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}.</b>\n"
-                    "<b>Please save or forward it to your saved messages before it gets deleted.</b>"
+                    f"<blockquote><b>This file will be deleted in <i>{get_exp_time(FILE_AUTO_DELETE)}</i>.\n"
+                    "Please save or forward it to your saved messages before it gets deleted.</b></blockquote>"
                 )
 
                 # Create deletion task
@@ -461,12 +461,12 @@ REPLY_ERROR = "<code>Usᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴀs ᴀ ʀᴇᴘʟʏ �
 async def get_users(client: Bot, message: Message):
     try:
         # Send initial processing message
-        msg = await message.reply_text("<b>Processing user data...</b>")
+        msg = await message.reply_text("<b>•・Pʀᴏᴄᴇssɪɴɢ ᴜsᴇʀ ᴅᴀᴛᴀ...</b>")
         
         # Get all users
         users = await full_userbase()
         if not users:
-            await msg.edit("No users found in database!")
+            await msg.edit("ツ Nᴏ ᴜsᴇʀs ғᴏᴜɴᴅ ɪɴ ᴅᴀᴛᴀʙᴀsᴇ!")
             return
             
         # Prepare user data
@@ -477,17 +477,17 @@ async def get_users(client: Bot, message: Message):
             try:
                 user = await client.get_users(user_id)
                 user_info = (
-                    f"👤 <b>Name:</b> {user.first_name}"
+                    f"⤹ <b>Nᴀᴍᴇ:</b> {user.first_name}"
                     f"{' ' + user.last_name if user.last_name else ''}\n"
-                    f"🆔 <b>ID:</b> <code>{user.id}</code>\n"
-                    f"👤 <b>Username:</b> @{user.username if user.username else 'None'}\n"
-                    f"📞 <b>Contact:</b> {user.mention}\n"
+                    f"⤹ <b>Iᴅ:</b> <code>{user.id}</code>\n"
+                    f"⤹ <b>Usᴇʀɴᴀᴍᴇ:</b> @{user.username if user.username else 'None'}\n"
+                    f"⤹ <b>Cᴏɴᴛᴀᴄᴛ:</b> {user.mention}\n"
                     "───────────────────"
                 )
                 user_data.append(user_info)
             except Exception as e:
                 print(f"Error getting user {user_id}: {e}")
-                user_data.append(f"👤 User ID: {user_id} (Error fetching details)\n───────────────────")
+                user_data.append(f"⊱ Usᴇʀ ID: {user_id} (Error fetching details)\n───────────────────")
 
         # If user list is too long, create a text file
         if total_users > 50:
@@ -500,7 +500,7 @@ async def get_users(client: Bot, message: Message):
             # Send file with caption
             await message.reply_document(
                 document=file_path,
-                caption=f"<b>Total Users:</b> {total_users}\n<b>Data:</b> Full user list attached",
+                caption=f"<b>❝ Tᴏᴛᴀʟ Usᴇʀs:</b> {total_users}\n<b>• Dᴀᴛᴀ:</b> Fᴜʟʟ ᴜsᴇʀ ʟɪsᴛ ᴀᴛᴛᴀᴄʜᴇᴅ",
                 quote=True
             )
             
@@ -513,7 +513,7 @@ async def get_users(client: Bot, message: Message):
         else:
             # Send as message for smaller lists
             response = (
-                f"<b>Total Users:</b> {total_users}\n\n"
+                f"<b>⤹ Tᴏᴛᴀʟ Usᴇʀs:</b> {total_users}\n\n"
                 f"{chr(10).join(user_data)}"
             )
             await msg.edit(response)

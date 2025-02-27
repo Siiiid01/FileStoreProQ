@@ -135,10 +135,10 @@ class Bot(Client):
         try:
             await self.send_message(
                 chat_id=OWNER_ID,  # Send to owner instead of channel
-                text=f"<b>🤖 Bot Restarted!</b>\n\n"
-                     f"<b>• Time:</b> <code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>\n"
-                     f"<b>• Bot:</b> @{self.username}\n"
-                     f"<b>• Status:</b> Running ✅"
+                text=f"<b><i>Bot Restarted!</i> ও</b>\n\n"
+                     f"<b>• Tɪᴍᴇ:</b> <code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>\n"
+                     f"<b>• Bᴏᴛ:</b> @{self.username}\n"
+                     f"<b>• Sᴛᴀᴛᴜs:</b> Running ↺"
             )
         except Exception as e:
             print(f"Failed to send restart notification: {e}")
@@ -154,8 +154,8 @@ class Bot(Client):
                 await self.edit_message_text(
                     chat_id=chat_id,
                     message_id=message_id,
-                    text=f"<b>✅ Bot Restarted Successfully!</b>\n\n"
-                         f"<b>Downtime:</b> {get_readable_time((datetime.now() - datetime.strptime(restart_time, '%Y-%m-%d %H:%M:%S')).total_seconds())}"
+                    text=f"<b>↺ Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ!</b>\n\n"
+                         f"<b>Dᴏᴡɴᴛɪᴍᴇ:</b> {get_readable_time((datetime.now() - datetime.strptime(restart_time, '%Y-%m-%d %H:%M:%S')).total_seconds())}"
                 )
                 os.remove("restart.txt")
         except:

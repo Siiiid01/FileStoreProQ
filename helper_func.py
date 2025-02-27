@@ -213,10 +213,10 @@ async def send_log(client: Client, user_id: int, action: str, log_channel: str):
         user = await client.get_users(user_id)
         log_text = f"""
 #New_{action}
-**User:** {user.mention}
-**ID:** `{user.id}`
-**Username:** @{user.username}
-**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+• Usᴇʀ: {user.mention}
+• ID: <code>{user.id}</code>
+• Usᴇʀɴᴀᴍᴇ: @{user.username}
+• Tɪᴍᴇ: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         await client.send_message(chat_id=log_channel, text=log_text)
     except Exception as e:
@@ -227,11 +227,11 @@ async def send_telegraph_log(client: Client, user: User, url: str):
     try:
         log_text = f"""
 #Telegraph_Upload
-**User:** {user.mention}
-**ID:** `{user.id}`
-**Username:** @{user.username}
-**URL:** {url}
-**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+• Usᴇʀ: {user.mention}
+• ID: <code>{user.id}</code>
+• Usᴇʀɴᴀᴍᴇ: @{user.username}
+• Uʀʟ: {url}
+• Tɪᴍᴇ: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         await client.send_message(chat_id=TELEGRAPH_LOG_CHANNEL, text=log_text)
     except Exception as e:
@@ -244,13 +244,13 @@ async def send_ban_log(client: Client, user_id: int, admin_id: int, reason: str 
         admin = await client.get_users(admin_id)
         log_text = f"""
 #{action.title()}
-**User:** {user.mention}
-**ID:** `{user.id}`
-**Admin:** {admin.mention}
-**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+• Usᴇʀ: {user.mention}
+• ID: <code>{user.id}</code>
+• Aᴅᴍɪɴ: {admin.mention}
+• Tɪᴍᴇ: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         if reason and action == "banned":
-            log_text += f"**Reason:** {reason}"
+            log_text += f"Rᴇᴀsᴏɴ: {reason}"
             
         await client.send_message(chat_id=BAN_LOG_CHANNEL, text=log_text)
     except Exception as e:
@@ -265,14 +265,14 @@ async def send_new_user_notification(client, user):
         
         # Create notification message
         log_text = (
-            "**👤 New User Started Bot**\n\n"
-            f"**User:** {user_mention}\n"
-            f"**ID:** `{user.id}`\n"
-            f"**Username:** @{user.username if user.username else 'None'}\n"
-            f"**First Name:** {user.first_name}\n"
-            f"**Last Name:** {user.last_name if user.last_name else 'None'}\n"
-            f"**Language:** {user.language_code if user.language_code else 'None'}\n"
-            f"**Joined On:** {join_date}"
+            "𝄤 Nᴇᴡ Usᴇʀ Sᴛᴀʀᴛᴇᴅ Bᴏᴛ\n\n"
+            f"• Usᴇʀ: {user_mention}\n"
+            f"• ID: <code>{user.id}<code>\n"
+            f"• Usᴇʀɴᴀᴍᴇ: @{user.username if user.username else 'None'}\n"
+            f"• Fɪʀsᴛ Nᴀᴍᴇ: {user.first_name}\n"
+            f"• Lᴀsᴛ Nᴀᴍᴇ: {user.last_name if user.last_name else 'None'}\n"
+            f"• Lᴀɴɢᴜᴀɢᴇ: {user.language_code if user.language_code else 'None'}\n"
+            f"• Jᴏɪɴᴇᴅ Oɴ: {join_date}"
         )
         
         # Send with user's profile photo if available
@@ -312,7 +312,7 @@ def check_user_ban(func):
                 # Send ban message and stop all further processing
                 ban_info = await get_ban_status(user_id)
                 ban_reason = ban_info.get('ban_reason', 'No reason provided')
-                ban_msg = f"<b>⚠️ You are banned from using this bot</b>\n\n<b>Reason:</b> {ban_reason}"
+                ban_msg = f"<b>♯ Yᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ</b>\n\n<b>Rᴇᴀsᴏɴ:</b> {ban_reason}"
                 try:
                     await message.reply_text(ban_msg)
                 except:

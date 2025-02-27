@@ -17,7 +17,7 @@ def upload_image_requests(image_path):
             if response.status_code == 200:
                 return response.text.strip() 
             else:
-                return print(f"Upload failed with status code {response.status_code}")
+                return print(f"• Uᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ ᴡɪᴛʜ sᴛᴀᴛᴜs ᴄᴏᴅᴇ {response.status_code}")
 
     except Exception as e:
         print(f"Error during upload: {e}")
@@ -29,8 +29,8 @@ async def telegraph_upload(client: Bot, message: Message):
     try:
         # Send instruction message
         instruction = await message.reply(
-            "<b>Please send me a photo or video under 5MB.</b>\n"
-            "<i>Note: Video thumbnails will be auto-generated</i>"
+            "<b>• Pʟᴇᴀsᴇ sᴇɴᴅ ᴍᴇ ᴀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ <b>5MB</b>.</b>\n"
+            "<i>Nᴏᴛᴇ: Vɪᴅᴇᴏ ᴛʜᴜᴍʙɴᴀɪʟs ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ-ɢᴇɴᴇʀᴀᴛᴇᴅ</i>"
         )
 
         # Define media filter
@@ -46,11 +46,11 @@ async def telegraph_upload(client: Bot, message: Message):
             )
 
             if not media_msg:
-                await instruction.edit("No media received. Process cancelled.")
+                await instruction.edit("• Nᴏ ᴍᴇᴅɪᴀ ʀᴇᴄᴇɪᴠᴇᴅ. Pʀᴏᴄᴇss ᴄᴀɴᴄᴇʟʟᴇᴅ.")
                 return
 
             # Show processing message
-            processing_msg = await media_msg.reply("Processing...")
+            processing_msg = await media_msg.reply("• Pʀᴏᴄᴇssɪɴɢ...")
 
             try:
                 # Download and upload to telegraph
@@ -61,8 +61,8 @@ async def telegraph_upload(client: Bot, message: Message):
                         
                         # Send success message
                         await processing_msg.edit(
-                            f"<b>Successfully uploaded to Telegraph!</b>\n\n"
-                            f"<b>🔗 URL:</b> {telegraph_url}",
+                            f"<b>Sᴜᴄᴄᴇssғᴜʟʟʏ ᴜᴘʟᴏᴀᴅᴇᴅ ᴛᴏ Tᴇʟᴇɢʀᴀᴘʜ!</b>\n\n"
+                            f"<b>𝄽 Uʀʟ:</b> {telegraph_url}",
                             disable_web_page_preview=True
                         )
                         
@@ -70,24 +70,24 @@ async def telegraph_upload(client: Bot, message: Message):
                         await send_telegraph_log(client, message.from_user, telegraph_url)
                         
                     except Exception as e:
-                        await processing_msg.edit(f"Failed to upload: {str(e)}")
+                        await processing_msg.edit(f"Fᴀɪʟᴇᴅ ᴛᴏ ᴜᴘʟᴏᴀᴅ: {str(e)}")
                     finally:
                         try:
                             os.remove(media_path)
                         except:
                             pass
                 else:
-                    await processing_msg.edit("Please send a valid photo or video file.")
+                    await processing_msg.edit("ツ Pʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ғɪʟᴇ.")
             except Exception as e:
                 await processing_msg.edit(f"An error occurred: {str(e)}")
 
         except TimeoutError:
-            await instruction.edit("Timeout! Please try again.")
+            await instruction.edit("••Tɪᴍᴇᴏᴜᴛ! Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ.••")
         except Exception as e:
             await instruction.edit(f"An error occurred: {str(e)}")
 
     except Exception as e:
-        print(f"Telegraph command error: {e}")
+        print(f"𝄽 Tᴇʟᴇɢʀᴀᴘʜ ᴄᴏᴍᴍᴀɴᴅ ᴇʀʀᴏʀ: {e}")
 
 @Bot.on_callback_query(filters.regex("^close$"))
 async def close_callback(client, callback_query: CallbackQuery):

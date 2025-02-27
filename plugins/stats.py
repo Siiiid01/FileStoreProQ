@@ -51,9 +51,9 @@ async def stats(client: Bot, message: Message):
         
         # Send stats message
         stats_msg = await message.reply_text(
-            f"<b>📊 Bot Statistics</b>\n\n"
-            f"<b>👥 Total Users:</b> <code>{total_users}</code>\n"
-            f"<b>⏱ Uptime:</b> <code>{uptime_str}</code>"
+            f"<b>ღ Bᴏᴛ Sᴛᴀᴛɪsᴛɪᴄs</b>\n\n"
+            f"<b>• Tᴏᴛᴀʟ Usᴇʀs:</b> <code>{total_users}</code>\n"
+            f"<b>• Uᴘᴛɪᴍᴇ:</b> <code>{uptime_str}</code>"
         )
         
         # Auto-delete after 10 minutes

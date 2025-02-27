@@ -117,7 +117,7 @@ async def broadcast_handler(client: Bot, message: Message):
 
     # Final status update
     final_status = f"""
-<b>📊 ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ!</b>
+<b>‡ ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ!</b>
 
 [██████████] 100% ✓
 

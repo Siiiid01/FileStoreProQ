@@ -30,15 +30,15 @@ async def useless(_, message: Message):
     if USER_REPLY_TEXT:
         try:
             # Add reaction to message
-            try:
-                await message.react(emoji=random.choice(REACTIONS), big=True)
-            except:
-                pass
+            # try:
+            #     await message.react(emoji=random.choice(REACTIONS), big=True)
+            # except:
+            #     pass
                 
-            await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=USER_REPLY_TEXT,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• Cʟᴏsᴇ •", callback_data="close")]])
+            await message.reply_text(
+                # photo=random.choice(PICS),
+                caption=USER_REPLY_TEXT
+                # reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• Cʟᴏsᴇ •", callback_data="close")]])
                 # has_spoiler=True
             )
         except Exception as e:
@@ -59,7 +59,7 @@ async def close_message(bot: Bot, message: Message):
             try:
                 temp_msg = await message.reply_photo(
                     photo=random.choice(PICS),
-                    caption="🗑️ Deleting messages..."
+                    caption="❝ Dᴇʟᴇᴛɪɴɢ ᴍᴇssᴀɢᴇs..."
                     # has_spoiler=True
                 )
                 await asyncio.sleep(1)  # Brief delay for visual feedback
@@ -83,7 +83,7 @@ async def callback_handler(bot: Bot, callback_query):
             
     except Exception as e:
         print(f"Error in callback handler: {e}")
-        await callback_query.answer("Error processing request!", show_alert=True)
+        await callback_query.answer("❁ Eʀʀᴏʀ ᴘʀᴏᴄᴇssɪɴɢ ʀᴇᴏ̨ᴜᴇsᴛ!", show_alert=True)
 
 async def cleanup_old_messages(user_id: int, keep_latest: int = 5):
     """Cleanup old messages, keeping only the latest few"""
@@ -95,7 +95,7 @@ async def cleanup_old_messages(user_id: int, keep_latest: int = 5):
                 await bot.delete_messages(user_id, msg_id)
                 active_messages[user_id].remove(msg_id)
             except Exception as e:
-                print(f"Error cleaning up message {msg_id}: {e}")
+                print(f"• Eʀʀᴏʀ ᴄʟᴇᴀɴɪɴɢ ᴜᴘ ᴍᴇssᴀɢᴇ {msg_id}: {e}")
 
 async def schedule_message_deletion(message: Message, delay: int = DEFAULT_DELETE_DELAY):
     """Schedule a message for deletion after delay"""
@@ -106,4 +106,4 @@ async def schedule_message_deletion(message: Message, delay: int = DEFAULT_DELET
     try:
         await message.delete()
     except Exception as e:
-        print(f"Error deleting scheduled message: {e}")
+        print(f"• Eʀʀᴏʀ ᴅᴇʟᴇᴛɪɴɢ sᴄʜᴇᴅᴜʟᴇᴅ ᴍᴇssᴀɢᴇ: {e}")

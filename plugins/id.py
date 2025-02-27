@@ -4,11 +4,13 @@ import random
 from bot import Bot
 from config import PICS  # Ensure PICS is correctly imported
 from helper_func import check_user_ban
+import asyncio
 
 @Bot.on_message(filters.command("id") & filters.private)
 @check_user_ban
 async def showid(client, message: Message):
     try:
+        await asyncio.sleep(1)
         await message.delete()
     except:
         pass  # Ignore errors if the bot cannot delete the message
@@ -27,16 +29,16 @@ async def showid(client, message: Message):
 
     # All info in one message with improved formatting
     info_text = (
-        f"<blockquote><b>🔥 ᴜꜱᴇʀ ɪɴꜰᴏ</b></blockquote>\n\n"
+        f"<blockquote><b>⤹ ᴜꜱᴇʀ ɪɴꜰᴏ</b></blockquote>\n\n"
         f"<blockquote expandable><b>"
-        f"🆔 ᴜꜱᴇʀ ɪᴅ: <code>{user_id}</code>\n"
-        f"📛 ꜰɪʀꜱᴛ ɴᴀᴍᴇ: <code>{first_name}</code>\n"
-        f"📝 ʟᴀꜱᴛ ɴᴀᴍᴇ: <code>{last_name}</code>\n"
-        f"🔗 ᴜꜱᴇʀɴᴀᴍᴇ: <code>{username}</code>\n"
-        f"🌍 ʟᴀɴɢᴜᴀɢᴇ: <code>{language}</code>\n"
-        f"📝 ʙɪᴏ: <code>{about}</code>\n"
-        f"🤖 ʙᴏᴛ ʟᴀɴɢᴜᴀɢᴇ: <code>{bot_lang_code}</code></b></blockquote>\n\n"
-        f"<blockquote><i>👑 ʙᴏᴛ ᴏᴡɴᴇʀ @Anime106_Request_Bot</i></blockquote>"
+        f"• ᴜꜱᴇʀ ɪᴅ: <code>{user_id}</code>\n"
+        f"• ꜰɪʀꜱᴛ ɴᴀᴍᴇ: <code>{first_name}</code>\n"
+        f"• ʟᴀꜱᴛ ɴᴀᴍᴇ: <code>{last_name}</code>\n"
+        f"• ᴜꜱᴇʀɴᴀᴍᴇ: <code>{username}</code>\n"
+        f"• ʟᴀɴɢᴜᴀɢᴇ: <code>{language}</code>\n"
+        f"• ʙɪᴏ: <code>{about}</code>\n"
+        f"• ʙᴏᴛ ʟᴀɴɢᴜᴀɢᴇ: <code>{bot_lang_code}</code></b></blockquote>\n\n"
+        f"<blockquote><i>❁ ʙᴏᴛ ᴏᴡɴᴇʀ @Anime106_Request_Bot</i></blockquote>"
     )
     
     # Create button with improved style
@@ -52,7 +54,7 @@ async def showid(client, message: Message):
             reply_markup=buttons,
             parse_mode=enums.ParseMode.HTML
         )
-        await bot_msg.react("😍", big=True)
+        # await bot_msg.react("😍", big=True)
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
 

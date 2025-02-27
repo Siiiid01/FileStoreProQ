@@ -37,9 +37,9 @@ FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to dis
 
 
 # Log channels
-TELEGRAPH_LOG_CHANNEL = int(os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002008657265"))
-BAN_LOG_CHANNEL = int(os.environ.get("BAN_LOG_CHANNEL", "-1002008657265"))
-NEW_USER_LOG_CHANNEL = int(os.environ.get("NEW_USER_LOG_CHANNEL", "-1002008657265"))
+TELEGRAPH_LOG_CHANNEL = int(os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002046739771"))
+BAN_LOG_CHANNEL = int(os.environ.get("BAN_LOG_CHANNEL", "-1002046739771"))
+NEW_USER_LOG_CHANNEL = int(os.environ.get("NEW_USER_LOG_CHANNEL", "-1002046739771"))
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
@@ -76,8 +76,7 @@ HELP_TXT = '''<b>╭──〔 📂 ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ 〕──╮<
 <blockquote>• <i>ᴏᴡɴᴇʀ:</i> <a href="https://t.me/Anime106_Request_bot">QuirkySiiiiiid</a></blockquote>'''
 
 
-ABOUT_TXT = '''<b><blockquote expandable>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/Anime106_Request_Bot>QuirkySiiiiiid</a>
-◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴍᴏᴠɪᴇꜱ ᴏᴋ</a>
+ABOUT_TXT = '''<b><blockquote expandable>◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Moviess_Ok>ᴍᴏᴠɪᴇꜱ ᴏᴋ</a>
 ◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/AnnimeMoviessok>ᴀɴɪᴍᴇ'ꜱ ᴏᴋ</a>
 ◈ ᴏɴᴇ ᴘɪᴇᴄᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Moviess_Ok>ᴏɴᴇ ᴘɪᴇᴄᴇ</a>
 ◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/H_Anime_and_popular_videos>ᴀᴅ*ʟᴛ</a>
@@ -90,15 +89,15 @@ MORE_TXT = '''<b><blockquote expandable>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪ
 
 
 
-START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {mention} ⚡🔥 ◂─╮</b>  
+START_MSG = os.environ.get("START_MESSAGE", '''<b>╭─▸ ʙᴀᴋᴋᴀᴀᴀ!! {mention} ❧ ◂─╮</b>  
 <blockquote expandable>╔════════════════════════════╗  
-  🚀 <b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ғɪʟᴇ ʙᴏᴛ!</b>  
-  🛡️ <i>ᴘʀɪᴠᴀᴛᴇ & sᴇᴄᴜʀᴇ ғɪʟᴇ sᴛᴏʀᴀɢᴇ.</i>  
-  🎮 <b>ᴍɪɴɪ-ɢᴀᴍᴇs ᴍᴏᴅᴇ:</b> <i>ғᴜɴ ᴀᴡᴀɪᴛs!</i>  
-  🔗 <b>ɢᴇɴᴇʀᴀᴛᴇ ᴜɴɪǫᴜᴇ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋs!</b>  
-  ⚡ <i>ʙʟᴀᴢɪɴɢ ғᴀsᴛ ғɪʟᴇ ʀᴇᴛʀɪᴇᴠᴀʟ.</i>  
-  🕹️ <b>ʀᴇᴛʀᴏ-ɢᴀᴍɪɴɢ ᴠɪʙᴇs ᴜɴʟᴏᴄᴋᴇᴅ!</b>  
-  💠 <i>ᴜɴʙʀᴇᴀᴋᴀʙʟᴇ, ᴜʟᴛʀᴀ-ᴇʟɪᴛᴇ, ᴄʟᴀssɪᴄ.</i>  
+  ♯ <b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴜʟᴛɪᴍᴀᴛᴇ ғɪʟᴇ ʙᴏᴛ!</b>  
+  ♯ <i>ᴘʀɪᴠᴀᴛᴇ & sᴇᴄᴜʀᴇ ғɪʟᴇ sᴛᴏʀᴀɢᴇ.</i>  
+  ♯ <b>ᴍɪɴɪ-ɢᴀᴍᴇs ᴍᴏᴅᴇ:</b> <i>ғᴜɴ ᴀᴡᴀɪᴛs!</i>  
+  ♯ <b>ɢᴇɴᴇʀᴀᴛᴇ ᴜɴɪǫᴜᴇ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋs!</b>  
+  ♯ <i>ʙʟᴀᴢɪɴɢ ғᴀsᴛ ғɪʟᴇ ʀᴇᴛʀɪᴇᴠᴀʟ.</i>  
+  ♯ <b>ʀᴇᴛʀᴏ-ɢᴀᴍɪɴɢ ᴠɪʙᴇs ᴜɴʟᴏᴄᴋᴇᴅ!</b>  
+  ♯ <i>ᴜɴʙʀᴇᴀᴋᴀʙʟᴇ, ᴜʟᴛʀᴀ-ᴇʟɪᴛᴇ, ᴄʟᴀssɪᴄ.</i>  
 ╚════════════════════════════╝</blockquote>''')
 try:
     ADMINS=[2090517919]
@@ -120,13 +119,13 @@ CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<<blockquote><i><b>• ʙʏ @
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False
 
 # Message effect IDs
-REACTIONS = ["❤️", "🔥", "🎉" ]
+REACTIONS = ["😇", "🤗", "😍", "🥰", "😱", "😈", "🎉", "⚡️", "😎", "🔥", "🌚", "👻",]
 
 #Set true if you want Disable your Channel Posts Share button
 DISABLE_CHANNEL_BUTTON = os.environ.get("DISABLE_CHANNEL_BUTTON", None) == 'True'
 
 BOT_STATS_TEXT = """
-<b>📊 Bot Statistics</b>
+<b>• Bot Statistics</b>
 
 ⏱ Uptime: {uptime}
 """

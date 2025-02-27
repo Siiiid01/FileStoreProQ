@@ -63,7 +63,7 @@ async def check_alive(_, message):
     
     # Send sticker and text
     sticker_msg = await message.reply_sticker(sticker)
-    text_msg = await message.reply_text(f"<b><i><blockquote>{caption}</b></i></blockquote>\n\nʙʏ @ᴍᴏᴠɪᴇꜱꜱ_ᴏᴋ")
+    text_msg = await message.reply_text(f"<b><i><blockquote>{caption}</b></i></blockquote>\n\nʙʏ @Moviess_Ok")
     
     # Wait for 10 seconds
     await asyncio.sleep(10)

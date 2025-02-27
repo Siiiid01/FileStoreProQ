@@ -36,8 +36,8 @@ def get_error_logs():
         if os.path.exists(ERROR_LOG_FILE):
             with open(ERROR_LOG_FILE, "r", encoding='utf-8') as f:
                 logs = f.read().strip()
-            return logs if logs else "No errors logged."
-        return "No error log file exists."
+            return logs if logs else "۵ Nᴏ ᴇʀʀᴏʀs ʟᴏɢɢᴇᴅ."
+        return "۵ Nᴏ ᴇʀʀᴏʀ ʟᴏɢ ғɪʟᴇ ᴇxɪsᴛs."
     except Exception as e:
         return f"Error reading logs: {str(e)}"
 
@@ -55,9 +55,9 @@ async def view_errors(client: Bot, message: Message):
                     f.write(logs)
                 await message.reply_document(
                     document=file_path,  # Use the file path directly
-                    caption="Bot Error Logs",
+                    caption="Bᴏᴛ Eʀʀᴏʀ Lᴏɢs",
                     quote=True,
-                    file_name="bot_errors.log"  # Specify the filename
+                    file_name="zoro_errors.log"  # Specify the filename
                 )
             except Exception as e:
                 await message.reply_text(f"Error sending log file: {str(e)}", quote=True)
@@ -67,7 +67,7 @@ async def view_errors(client: Bot, message: Message):
                     os.remove(file_path)
         else:
             # Send logs as message for shorter logs
-            await message.reply_text(f"**Bot Error Logs:**\n\n```{logs}```", quote=True)
+            await message.reply_text(f"<blockquote>• Bᴏᴛ Eʀʀᴏʀ Lᴏɢs:</blockquote>\n\n{logs}", quote=True)
     except Exception as e:
         await message.reply_text(f"Error retrieving logs: {str(e)}", quote=True)
 
