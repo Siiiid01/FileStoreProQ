@@ -34,14 +34,14 @@ async def telegraph_upload(client: Bot, message: Message):
         )
 
         # Define media filter
-        def media_filter(_, __, m):
+        async def media_filter(_, m):
             return bool(m.photo or (m.video and m.video.file_size < 5242880))
             
         try:
-            # Wait for media message
+            # Wait for media message - fixed listen() call
             media_msg = await client.listen(
-                message.chat.id,
-                filters=filters.create(media_filter),
+                chat_id=message.chat.id,
+                filters=media_filter,
                 timeout=30
             )
 
