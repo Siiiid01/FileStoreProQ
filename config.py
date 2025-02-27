@@ -37,9 +37,9 @@ FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to dis
 
 
 # Log channels
-TELEGRAPH_LOG_CHANNEL = int(os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002023266715"))
-BAN_LOG_CHANNEL = int(os.environ.get("BAN_LOG_CHANNEL", "-1002023266715"))
-NEW_USER_LOG_CHANNEL = int(os.environ.get("NEW_USER_LOG_CHANNEL", "-1002023266715"))
+TELEGRAPH_LOG_CHANNEL = int(os.environ.get("TELEGRAPH_LOG_CHANNEL", "-1002008657265"))
+BAN_LOG_CHANNEL = int(os.environ.get("BAN_LOG_CHANNEL", "-1002008657265"))
+NEW_USER_LOG_CHANNEL = int(os.environ.get("NEW_USER_LOG_CHANNEL", "-1002008657265"))
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
