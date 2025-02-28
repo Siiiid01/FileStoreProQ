@@ -5,6 +5,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 from bot import Bot
 from helper_func import send_telegraph_log, check_user_ban
+from telegraph import upload_file
 
 def upload_image_requests(image_path):
     upload_url = "https://envs.sh"
@@ -28,39 +29,42 @@ def upload_image_requests(image_path):
 async def telegraph_upload(client: Bot, message: Message):
     try:
         # Send instruction message
-        instruction = await message.reply(
-            "<b>• Pʟᴇᴀsᴇ sᴇɴᴅ ᴍᴇ ᴀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ <b>5MB</b>.</b>\n"
-            "<i>Nᴏᴛᴇ: Vɪᴅᴇᴏ ᴛʜᴜᴍʙɴᴀɪʟs ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ-ɢᴇɴᴇʀᴀᴛᴇᴅ</i>"
+        instruction = await message.reply_text(
+            "<b>Please send me a photo or video under 5MB.</b>\n"
+            "<i>Note: Video thumbnails will be auto-generated</i>"
         )
 
         # Define media filter
-        async def media_filter(_, m):
-            return bool(m.photo or (m.video and m.video.file_size < 5242880))
+        def media_filter(_, __, m):
+            return bool(
+                (m.photo or m.video) and 
+                (not m.video or m.video.file_size < 5242880)
+            )
             
         try:
-            # Wait for media message - fixed listen() call
+            # Wait for media message
             media_msg = await client.listen(
-                chat_id=message.chat.id,
-                filters=media_filter,
+                message.chat.id,
+                filters=filters.create(media_filter),
                 timeout=30
             )
 
             if not media_msg:
-                await instruction.edit("• Nᴏ ᴍᴇᴅɪᴀ ʀᴇᴄᴇɪᴠᴇᴅ. Pʀᴏᴄᴇss ᴄᴀɴᴄᴇʟʟᴇᴅ.")
+                await instruction.edit_text("• Nᴏ ᴍᴇᴅɪᴀ ʀᴇᴄᴇɪᴠᴇᴅ. Pʀᴏᴄᴇss ᴄᴀɴᴄᴇʟʟᴇᴅ.")
                 return
 
             # Show processing message
-            processing_msg = await media_msg.reply("• Pʀᴏᴄᴇssɪɴɢ...")
+            processing_msg = await media_msg.reply_text("• Pʀᴏᴄᴇssɪɴɢ...")
 
             try:
                 # Download and upload to telegraph
                 if media_msg.photo or media_msg.video:
                     media_path = await media_msg.download()
                     try:
-                        telegraph_url = upload_image_requests(media_path)
+                        telegraph_url = upload_file(media_path)[0]
                         
                         # Send success message
-                        await processing_msg.edit(
+                        await processing_msg.edit_text(
                             f"<b>Sᴜᴄᴄᴇssғᴜʟʟʏ ᴜᴘʟᴏᴀᴅᴇᴅ ᴛᴏ Tᴇʟᴇɢʀᴀᴘʜ!</b>\n\n"
                             f"<b>𝄽 Uʀʟ:</b> {telegraph_url}",
                             disable_web_page_preview=True
@@ -70,24 +74,24 @@ async def telegraph_upload(client: Bot, message: Message):
                         await send_telegraph_log(client, message.from_user, telegraph_url)
                         
                     except Exception as e:
-                        await processing_msg.edit(f"Fᴀɪʟᴇᴅ ᴛᴏ ᴜᴘʟᴏᴀᴅ: {str(e)}")
+                        await processing_msg.edit_text(f"Fᴀɪʟᴇᴅ ᴛᴏ ᴜᴘʟᴏᴀᴅ: {str(e)}")
                     finally:
                         try:
                             os.remove(media_path)
                         except:
                             pass
                 else:
-                    await processing_msg.edit("ツ Pʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ғɪʟᴇ.")
+                    await processing_msg.edit_text("ツ Pʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ғɪʟᴇ.")
             except Exception as e:
-                await processing_msg.edit(f"An error occurred: {str(e)}")
+                await processing_msg.edit_text(f"An error occurred: {str(e)}")
 
         except TimeoutError:
-            await instruction.edit("••Tɪᴍᴇᴏᴜᴛ! Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ.••")
+            await instruction.edit_text("••Tɪᴍᴇᴏᴜᴛ! Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ.••")
         except Exception as e:
-            await instruction.edit(f"An error occurred: {str(e)}")
+            await instruction.edit_text(f"An error occurred: {str(e)}")
 
     except Exception as e:
-        print(f"𝄽 Tᴇʟᴇɢʀᴀᴘʜ ᴄᴏᴍᴍᴀɴᴅ ᴇʀʀᴏʀ: {e}")
+        print(f"Telegraph command error: {e}")
 
 @Bot.on_callback_query(filters.regex("^close$"))
 async def close_callback(client, callback_query: CallbackQuery):
