@@ -20,7 +20,7 @@ async def unauthorized_command(client: Bot, message: Message):
             
         # Reply with custom message and random image
         await message.reply_text(
-            caption=USER_REPLY_TEXT,
+            text=USER_REPLY_TEXT,
             quote=True
         )
         

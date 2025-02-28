@@ -37,7 +37,7 @@ async def useless(_, message: Message):
                 
             await message.reply_text(
                 # photo=random.choice(PICS),
-                caption=USER_REPLY_TEXT
+                text=USER_REPLY_TEXT
                 # reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• Cʟᴏsᴇ •", callback_data="close")]])
                 # has_spoiler=True
             )
