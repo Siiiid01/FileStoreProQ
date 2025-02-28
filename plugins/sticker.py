@@ -5,13 +5,14 @@ from bot import Bot
 from helper_func import check_user_ban
 
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
-ANIMATION_INTERVAL = 0.15  # 100ms
+ANIMATION_INTERVAL = 0.05  # 100ms
 AUTO_DELETE_TIME = 600  # 10 minutes
 
 async def show_loading_animation(message: Message):
     """Shows an animated loading message and deletes it after completion."""
     try:
         loading_msg = await message.reply("○ ○ ○")
+        await asyncio.sleep(2)  # Wait for 2 seconds
         await message.delete()  # Delete the /stickerid command message
         
         for _ in range(2):  # Run animation twice
@@ -39,9 +40,9 @@ async def sticker_id(client: Bot, message: Message):
         s_msg = await client.listen(message.chat.id, timeout=30)  # Wait for sticker
         if s_msg.sticker:
             info_text = (
-                f"<blockquote expandable><b><i>❖ Sᴛɪᴄᴋᴇʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ</b></i>\n\n"
-                f"<b><i>⤷ Fɪʟᴇ ID:</b></i>\n`{s_msg.sticker.file_id}`\n\n"
-                f"<b><i>⤷ Uɴɪᴏ̨ᴜᴇ ID:</b></i>\n`{s_msg.sticker.file_unique_id}`\n\n"
+                f"<b><i>❖ Sᴛɪᴄᴋᴇʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ</b></i>\n\n"
+                f"<blockquote expandable><b><i>⤷ Fɪʟᴇ ID:</b></i>\n<code>{s_msg.sticker.file_id}</code>\n\n"
+                f"<b><i>⤷ Uɴɪᴏ̨ᴜᴇ ID:</b></i>\n<code>{s_msg.sticker.file_unique_id}</code>\n\n"
                 f"<b><i>⤷ Dɪᴍᴇɴsɪᴏɴs:</b></i> {s_msg.sticker.width}x{s_msg.sticker.height}\n"
                 f"<b><i>⤷ Fɪʟᴇ Sɪᴢᴇ:</b></i> {s_msg.sticker.file_size} bytes\n"
                 f"<b><i>⤷ Aɴɪᴍᴀᴛᴇᴅ:</b></i> {'Yes' if s_msg.sticker.is_animated else 'No'}\n"

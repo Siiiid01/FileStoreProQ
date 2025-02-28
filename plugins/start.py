@@ -366,7 +366,7 @@ async def start_command(client: Client, message: Message):
         if AUTO_DELETE_TIME > 0:
             await asyncio.sleep(AUTO_DELETE_TIME)
             try:
-                await message.delete()
+                await message.delete(1)
                 await start_msg.delete()
             except:
                 pass
@@ -444,7 +444,7 @@ async def not_joined(client: Client, message: Message):
     if AUTO_DELETE_TIME > 0:
         await asyncio.sleep(AUTO_DELETE_TIME)
         try:
-            await message.delete()
+            await message.delete(1)
             await force_msg.delete()
         except:
             pass

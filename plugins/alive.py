@@ -53,6 +53,7 @@ PING_CAPTIONS = [
 async def check_alive(_, message):
     # Delete the command message
     try:
+        await asyncio.sleep(1)
         await message.delete()
     except:
         pass
@@ -91,6 +92,7 @@ async def ping(_, message):
     # Wait for 10 seconds and delete both messages
     await asyncio.sleep(10)
     try:
+        await asyncio.sleep(1)
         await message.delete()
         await rm.delete()
     except Exception as e:

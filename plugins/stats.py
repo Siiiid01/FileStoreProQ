@@ -32,6 +32,7 @@ async def auto_delete_message(message: Message, seconds: int):
     """Delete a message after specified seconds"""
     await asyncio.sleep(seconds)
     try:
+        await asyncio.sleep(1)
         await message.delete()
     except:
         pass
