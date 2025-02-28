@@ -30,8 +30,8 @@ async def telegraph_upload(client: Bot, message: Message):
     try:
         # Send instruction message
         instruction = await message.reply_text(
-            "<b>Please send me a photo or video under 5MB.</b>\n"
-            "<i>Note: Video thumbnails will be auto-generated</i>"
+            "• Pʟᴇᴀsᴇ sᴇɴᴅ ᴍᴇ ᴀ ᴘʜᴏᴛᴏ ᴏʀ ᴠɪᴅᴇᴏ ᴜɴᴅᴇʀ <b>5MB</b>.\n"
+            "<i>Nᴏᴛᴇ: Vɪᴅᴇᴏ ᴛʜᴜᴍʙɴᴀɪʟs ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ-ɢᴇɴᴇʀᴀᴛᴇᴅ</i>"
         )
 
         # Define media filter
@@ -44,7 +44,7 @@ async def telegraph_upload(client: Bot, message: Message):
         try:
             # Wait for media message
             media_msg = await client.listen(
-                message.chat.id,
+                chat_id=message.chat.id,
                 filters=filters.create(media_filter),
                 timeout=30
             )
