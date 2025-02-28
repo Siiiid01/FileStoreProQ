@@ -61,11 +61,11 @@ async def telegraph_upload(client: Bot, message: Message):
                 if media_msg.photo or media_msg.video:
                     media_path = await media_msg.download()
                     try:
-                        telegraph_url = upload_file(media_path)[0]
+                        telegraph_url = upload_image_requests(media_path)
                         
                         # Send success message
                         await processing_msg.edit_text(
-                            f"<b>Sᴜᴄᴄᴇssғᴜʟʟʏ ᴜᴘʟᴏᴀᴅᴇᴅ ᴛᴏ Tᴇʟᴇɢʀᴀᴘʜ!</b>\n\n"
+                            f"<b>Sᴜᴄᴄᴇssғᴜʟʟʏ ᴜᴘʟᴏᴀᴅᴇᴅ!</b>\n\n"
                             f"<b>𝄽 Uʀʟ:</b> {telegraph_url}",
                             disable_web_page_preview=True
                         )

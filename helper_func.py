@@ -211,7 +211,7 @@ async def send_log(client: Client, user_id: int, action: str, log_channel: str):
     """Generic function to send logs to specified channel"""
     try:
         user = await client.get_users(user_id)
-        log_text = f"""
+        log_text = f"""#𝆎ₒᵣₒ
 #New_{action}
 • Usᴇʀ: {user.mention}
 • ID: <code>{user.id}</code>
@@ -225,7 +225,7 @@ async def send_log(client: Client, user_id: int, action: str, log_channel: str):
 async def send_telegraph_log(client: Client, user: User, url: str):
     """Send telegraph upload log"""
     try:
-        log_text = f"""
+        log_text = f"""#𝆎ₒᵣₒ
 #Telegraph_Upload
 • Usᴇʀ: {user.mention}
 • ID: <code>{user.id}</code>
@@ -242,7 +242,7 @@ async def send_ban_log(client: Client, user_id: int, admin_id: int, reason: str 
     try:
         user = await client.get_users(user_id)
         admin = await client.get_users(admin_id)
-        log_text = f"""
+        log_text = f"""#𝆎ₒᵣₒ
 #{action.title()}
 • Usᴇʀ: {user.mention}
 • ID: <code>{user.id}</code>
@@ -265,7 +265,7 @@ async def send_new_user_notification(client, user):
         
         # Create notification message
         log_text = (
-            "𝄤 Nᴇᴡ Usᴇʀ Sᴛᴀʀᴛᴇᴅ Bᴏᴛ\n\n"
+            "𝄤 #𝆎ₒᵣₒ Nᴇᴡ Usᴇʀ Sᴛᴀʀᴛᴇᴅ Bᴏᴛ\n\n"
             f"• Usᴇʀ: {user_mention}\n"
             f"• ID: <code>{user.id}<code>\n"
             f"• Usᴇʀɴᴀᴍᴇ: @{user.username if user.username else 'None'}\n"
