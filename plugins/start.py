@@ -284,14 +284,6 @@ async def start_command(client: Client, message: Message):
             try:
                 user_id = message.from_user.id
                 
-                # Cancel any existing delete tasks for this user
-                for task in active_delete_tasks[user_id]:
-                    try:
-                        task.cancel()
-                    except:
-                        pass
-                active_delete_tasks[user_id].clear()
-
                 # Send notification first
                 notification_msg = await message.reply(
                     f"<blockquote><b>This file will be deleted in <i>{get_exp_time(FILE_AUTO_DELETE)}</i>.\n"
@@ -313,7 +305,13 @@ async def start_command(client: Client, message: Message):
                                 print(f"Error deleting message: {e}")
                                 continue
 
-                        # Update notification with get file again button
+                        # Delete notification message
+                        try:
+                            await notification_msg.delete()
+                        except Exception as e:
+                            print(f"Error deleting notification: {e}")
+
+                        # Send "Get File Again" message
                         try:
                             reload_url = f"https://t.me/{client.username}?start={message.command[1]}" if len(message.command) > 1 else None
                             keyboard = InlineKeyboardMarkup([
@@ -323,22 +321,18 @@ async def start_command(client: Client, message: Message):
                                 ]
                             ]) if reload_url else None
 
-                            await notification_msg.edit(
+                            await message.reply(
                                 "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                                 reply_markup=keyboard
                             )
                         except Exception as e:
-                            print(f"Error updating notification: {e}")
+                            print(f"Error sending get file again message: {e}")
 
                     except Exception as e:
                         print(f"Error in delete_files task: {e}")
-                    finally:
-                        # Clean up task tracking
-                        active_delete_tasks[user_id].clear()
 
-                # Create and track deletion task
-                task = asyncio.create_task(delete_files())
-                active_delete_tasks[user_id].add(task)
+                # Create deletion task
+                asyncio.create_task(delete_files())
 
             except Exception as e:
                 print(f"Error setting up auto-delete: {e}")
