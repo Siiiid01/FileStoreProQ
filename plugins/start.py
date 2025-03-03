@@ -32,7 +32,6 @@ LOADING_ANIMATION = ["\\", "|", "/", "─"]
 ANIMATION_INTERVAL = 0.07  # Adjust for smoother animation
 
 # Add these tracking dictionaries
-active_delete_tasks = defaultdict(set)  # Track deletion tasks
 user_requests = defaultdict(list)  # Track user requests
 FLOOD_LIMIT = 3  # Max requests within time window
 FLOOD_TIME = 600  # 10 minutes in seconds
