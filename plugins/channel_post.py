@@ -10,7 +10,7 @@ from helper_func import encode, check_user_ban
     filters.private 
     & filters.user(ADMINS) 
     & ~filters.command([
-        "start", "id", "users", "broadcast", "batch", "genlink", "stats", "telegraph", "alive", "ping", "stickerid", "errors", "ban", "unban", "feedback", "restart"
+        "start", "id", "users", "broadcast", "batch", "genlink", "stats", "telegraph", "alive", "ping", "stickerid", "errors", "ban", "unban", "feedback", "restart", "react", "react_now"
     ])
 )
 async def channel_post(client: Client, message: Message):
