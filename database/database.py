@@ -135,3 +135,20 @@ async def db_check_ban(user_id: int) -> bool:
         print(f"Ban check error: {e}")
         # On any error, treat as banned for safety
         return True
+
+class Database:
+    def __init__(self):
+        self.col = user_data  # Use existing collection
+
+    async def set_thumbnail(self, user_id: str, status: bool):
+        """Update user's thumbnail status"""
+        await self.col.update_one(
+            {'_id': user_id},
+            {'$set': {'has_thumbnail': status}},
+            upsert=True
+        )
+
+    async def get_thumbnail_status(self, user_id: str) -> bool:
+        """Check if user has custom thumbnail"""
+        user = await self.col.find_one({'_id': user_id})
+        return user.get('has_thumbnail', False) if user else False

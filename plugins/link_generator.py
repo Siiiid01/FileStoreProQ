@@ -1,9 +1,9 @@
-
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from bot import Bot
 from config import ADMINS
 from helper_func import encode, get_message_id, check_user_ban
+from plugins.thumb_handler import add_thumbnail, get_user_thumbnail
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & filters.command('batch'))
 @check_user_ban
@@ -59,3 +59,32 @@ async def link_generator(client: Client, message: Message):
     link = f"https://t.me/{client.username}?start={base64_string}"
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("◈ Sʜᴀʀᴇ Uʀʟ ◈", url=f'https://telegram.me/share/url?url={link}')]])
     await channel_message.reply_text(f"<blockquote><b>• ʜᴇʀᴇ ɪꜱ ʏᴏᴜʀ ʟɪɴᴋ •</b></blockquote>\n\n{link}", quote=True, reply_markup=reply_markup)
+
+    # Get the message from DB channel to determine file type
+    db_message = await client.get_messages(client.db_channel.id, msg_id)
+    file_type = "video" if db_message.video else "document"
+
+    # Get user's thumbnail
+    thumb_path = await get_user_thumbnail(
+        str(message.from_user.id),
+        is_video=(file_type == "video")
+    )
+
+    # Send file with thumbnail
+    try:
+        if file_type == "video":
+            await client.send_video(
+                chat_id=message.chat.id,
+                video=msg_id,
+                thumb=thumb_path if thumb_path else None,
+                reply_to_message_id=message.id
+            )
+        else:
+            await client.send_document(
+                chat_id=message.chat.id,
+                document=msg_id,
+                thumb=thumb_path if thumb_path else None,
+                reply_to_message_id=message.id
+            )
+    except Exception as e:
+        print(f"Error sending file: {e}")
