@@ -20,6 +20,7 @@ from helper_func import *
 from database.database import *
 from collections import defaultdict
 from datetime import datetime, timedelta
+from plugins.user_start_log import log_start_usage  # for logging
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -106,6 +107,9 @@ async def show_loading(client: Client, message: Message):
 @check_user_ban  # Add ban check
 async def start_command(client: Client, message: Message):
     user_id = message.from_user.id
+
+    # Log user start usage
+    log_start_usage(user_id)
     
     # Check for flood
     if await check_start_flood(user_id):

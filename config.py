@@ -27,6 +27,9 @@ COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "zoro")
 #Time in seconds for message delete, put 0 to never delete
 TIME = int(os.environ.get("TIME", "120"))
 
+#log for bot usage
+USER_LOG_FILE = "UsersLog.txt"
+
 
 #force sub channel id, if you want enable force sub
 FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "-1001712434868"))
