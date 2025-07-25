@@ -1,11 +1,12 @@
 import json
+import sys
 import os
 from datetime import datetime, timedelta
 from pytz import timezone
 from config import *
 from pyrogram import Client, filters
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from bot import Bot
-
 
 
 # India timezone (UTC+5:30)
