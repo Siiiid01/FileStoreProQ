@@ -20,7 +20,7 @@ from helper_func import *
 from database.database import *
 from collections import defaultdict
 from datetime import datetime, timedelta
-from plugins.user_start_log import log_start_usage  # for logging
+from plugins.user_start_log import log_start_usage, get_start_stats  # for logging
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -571,3 +571,15 @@ async def check_flood(user_id: int) -> bool:
         
     user_requests[user_id].append(now)
     return False
+
+@Bot.on_message(filters.command("startstats"))
+def stats_handler(client, message):
+    if message.from_user.id not in ADMINS:
+        return Bot.send_message(message.chat.id, "🚫 You're not allowed.")
+
+    stats = get_start_stats()
+    msg = "📊 `/start` Usage (IST):\n"
+    for day, count in stats.items():
+        msg += f"- {day}: {count} times\n"
+
+    Bot.send_message(message.chat.id, msg, parse_mode="Markdown")
