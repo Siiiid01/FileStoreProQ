@@ -5,19 +5,22 @@ from plugins.user_start_log import get_start_stats  # ✅ Import function
 import asyncio
 
 @Bot.on_message(filters.command("startstats"))
-async def startstats_handler(client, message):
+async def stats_handler(client, message):
     if message.from_user.id not in ADMINS:
         await client.send_message(message.chat.id, "🚫 You're not allowed.")
         return
 
     stats = get_start_stats()
-    msg = "📊 `/start` Usage (IST):\n"
+    msg_lines = ["📊 /start Usage (IST):"]
     for day, count in stats.items():
-        msg += f"- {day}: {count} times\n"
+        msg_lines.append(f"- {day}: {count} times")
+    msg = "\n".join(msg_lines)
 
-    stats_msg = await client.send_message(message.chat.id, msg, parse_mode="MarkdownV2")
+    await client.send_message(message.chat.id, msg)
+
+    
     await asyncio.sleep(600)
     try:
-        await stats_msg.delete()
+        await stats.delete()
     except:
             pass
