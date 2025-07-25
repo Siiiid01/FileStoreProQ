@@ -15,7 +15,7 @@ WAIT_ANIMATION_TEXT = "○ ○ ○"
 ANIMATION_FRAMES = ["● ○ ○", "● ● ○", "● ● ●"]
 ANIMATION_INTERVAL = 0.15
 
-AUTO_DELETE_TIME = 1800
+AUTO_DELETE_TIME = 600
 
 async def show_loading_animation(message: Message):
     """Shows a loading animation and returns the message object"""
@@ -66,17 +66,3 @@ async def stats(client: Bot, message: Message):
             
     except Exception as e:
         print(f"Stats command error: {e}")
-
-@Bot.on_message(filters.command("startstats"))
-async def stats_handler(client, message):
-    if message.from_user.id not in ADMINS:
-        await client.send_message(message.chat.id, "🚫 You're not allowed.")
-        return
-
-    stats = get_start_stats()
-    msg = "📊 `/start` Usage (IST):\n"
-    for day, count in stats.items():
-        msg += f"- {day}: {count} times\n"
-
-    await client.send_message(message.chat.id, msg, parse_mode="Markdown")
-    await auto_delete_message(message, AUTO_DELETE_TIME)
