@@ -15,7 +15,7 @@ async def startstats_handler(client, message):
     for day, count in stats.items():
         msg += f"- {day}: {count} times\n"
 
-    stats_msg = await client.send_message(message.chat.id, msg, parse_mode="Markdown")
+    stats_msg = await client.send_message(message.chat.id, msg, parse_mode="MarkdownV2")
     await asyncio.sleep(600)
     try:
         await stats_msg.delete()
