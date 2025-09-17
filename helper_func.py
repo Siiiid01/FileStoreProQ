@@ -96,20 +96,16 @@ async def decode(base64_string):
             
         # Add padding if needed
         base64_string = base64_string.strip("=")
-        padding = len(base64_string) % 4
-        if padding:
-            base64_string += "=" * (4 - padding)
-
-        # Decode with padding
+        decoded_string = None  # Initialize before try block
+        
         try:
             string_bytes = base64.urlsafe_b64decode(base64_string)
             decoded_string = string_bytes.decode('utf-8')
-            if not decoded_string:
-                return None
-            return decoded_string
         except Exception as e:
             print(f"Decode error: {e}")
             return None
+            
+        return decoded_string
             
     except Exception as e:
         print(f"Base64 decode error: {e}")
@@ -318,19 +314,13 @@ def check_user_ban(func):
             if is_banned:
                 ban_info = await get_ban_status(user_id)
                 ban_reason = ban_info.get('ban_reason', 'No reason provided')
-                ban_msg = f"<b>♯ Yᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ</b>\n\n<b>Rᴇᴀsᴏɴ:</b> {ban_reason}"
-                try:
-                    await message.reply_text(ban_msg)
-                except:
-                    pass
+                await message.reply_text(f"<b>♯ Yᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ</b>\n\n<b>Rᴇᴀsᴏɴ:</b> {ban_reason}")
                 return
-
-            # User not banned, run the decorated function
+            
             return await func(client, message)
             
         except Exception as e:
             print(f"Error in ban check: {e}")
-            # Return None on error instead of continuing
-            return None
+            return None  # Return None on error instead of continuing
             
     return wrapper
