@@ -162,20 +162,20 @@ async def unban_user(client: Bot, message: Message):
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
 
-# Add this check at the start of your command handlers
+# The ban check is safe because:
 async def check_ban_status(message: Message):
     """Check if user is banned"""
     if message.from_user.id in ADMINS:
         return False
         
     ban_status = await get_ban_status(message.from_user.id)
+    # No string variable access that could fail
     if ban_status:
         await message.reply_text(
             f"<b><i>☣ Yᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ</i></b>\n\n"
             f"<blockquote>Rᴇᴀsᴏɴ: {ban_status['ban_reason']}\n"
             f"Bᴀɴɴᴇᴅ Oɴ: {ban_status['banned_on'].strftime('%Y-%m-%d %H:%M:%S')}\n"
             f"ᴄᴏɴᴛᴀᴄᴛ Aᴅᴍɪɴ @Anime106_Request_bot ᴏʀ /feedback </blockquote>"
-
         )
         return True
-    return False 
+    return False

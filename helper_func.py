@@ -95,7 +95,7 @@ async def decode(base64_string):
             return None
             
         # Add padding if needed
-        base64_string = base64_string.strip("=")  # Remove any existing padding
+        base64_string = base64_string.strip("=")
         padding = len(base64_string) % 4
         if padding:
             base64_string += "=" * (4 - padding)
@@ -104,6 +104,8 @@ async def decode(base64_string):
         try:
             string_bytes = base64.urlsafe_b64decode(base64_string)
             decoded_string = string_bytes.decode('utf-8')
+            if not decoded_string:
+                return None
             return decoded_string
         except Exception as e:
             print(f"Decode error: {e}")
@@ -322,13 +324,13 @@ def check_user_ban(func):
                 except:
                     pass
                 return
-                
-            # User not banned, continue with small delay
-            await asyncio.sleep(0.1)
+
+            # User not banned, run the decorated function
             return await func(client, message)
             
         except Exception as e:
             print(f"Error in ban check: {e}")
-            return
+            # Return None on error instead of continuing
+            return None
             
     return wrapper
