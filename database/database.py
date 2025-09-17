@@ -152,3 +152,17 @@ class Database:
         """Check if user has custom thumbnail"""
         user = await self.col.find_one({'_id': user_id})
         return user.get('has_thumbnail', False) if user else False
+
+async def set_maintenance_mode(status: bool):
+    """Set bot maintenance status"""
+    await user_data.update_one(
+        {'_id': 'maintenance_status'},
+        {'$set': {'is_maintenance': status}},
+        upsert=True
+    )
+    return True
+
+async def get_maintenance_mode() -> bool:
+    """Get current maintenance status"""
+    data = await user_data.find_one({'_id': 'maintenance_status'})
+    return data.get('is_maintenance', False) if data else False

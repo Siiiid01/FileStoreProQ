@@ -4,7 +4,6 @@ import random
 import sys
 import time
 import string
-import string
 import humanize
 from pyrogram import Client, filters, __version__ 
 from pyrogram.enums import ParseMode
@@ -21,6 +20,7 @@ from database.database import *
 from collections import defaultdict
 from datetime import datetime, timedelta
 from plugins.user_start_log import log_start_usage, get_start_stats  # for logging
+from plugins.maintenance import maintenance_mode_check
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -104,7 +104,8 @@ async def show_loading(client: Client, message: Message):
         print(f"Show loading overall error: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
-@check_user_ban  # Add ban check
+@check_user_ban
+@maintenance_mode_check  # Add this decorator
 async def start_command(client: Client, message: Message):
     user_id = message.from_user.id
 
@@ -162,7 +163,7 @@ async def start_command(client: Client, message: Message):
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
-                    f"• Yᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀs ʙᴇᴇɴ sᴜᴄᴄᴇssғᴜʟʟʏ ᴠᴇʀɪғɪᴇᴅ ᴀɴᴅ ɪs ᴠᴀʟɪᴅ ғᴏʀ <blockqute>{get_exp_time(VERIFY_EXPIRE)}</blockqute>",
+                    f"• Yᴏᴜʀ ᴛᴏᴋᴇɴ ʜᴀs ʙᴇᴇɪɴ sᴜᴄᴄᴇssғᴜʟʟʏ ᴠᴇʀɪғɪᴇᴅ ᴀɴᴅ ɪs ᴠᴀʟɪɖ ғᴏʀ <blockqute>{get_exp_time(VERIFY_EXPIRE)}</blockqute>",
                     reply_markup=reply_markup,
                     protect_content=False,
                     quote=True
