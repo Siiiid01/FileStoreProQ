@@ -91,6 +91,9 @@ async def encode(string):
 async def decode(base64_string):
     """Decode base64 string with better error handling"""
     try:
+        if not base64_string:
+            return None
+            
         # Add padding if needed
         base64_string = base64_string.strip("=")  # Remove any existing padding
         padding = len(base64_string) % 4
@@ -98,14 +101,16 @@ async def decode(base64_string):
             base64_string += "=" * (4 - padding)
 
         # Decode with padding
-        string_bytes = base64.urlsafe_b64decode(base64_string)
         try:
-            return string_bytes.decode('utf-8')
-        except UnicodeDecodeError:
-            return string_bytes.decode('ascii', errors='ignore')
+            string_bytes = base64.urlsafe_b64decode(base64_string)
+            decoded_string = string_bytes.decode('utf-8')
+            return decoded_string
+        except Exception as e:
+            print(f"Decode error: {e}")
+            return None
+            
     except Exception as e:
-        from plugins.logs import log_error
-        log_error(f"Base64 decode error: {str(e)} for string: {base64_string}")
+        print(f"Base64 decode error: {e}")
         return None
 
 async def get_messages(client, message_ids):
@@ -271,7 +276,7 @@ async def send_new_user_notification(client, user):
             f"• Usᴇʀɴᴀᴍᴇ: @{user.username if user.username else 'None'}\n"
             f"• Fɪʀsᴛ Nᴀᴍᴇ: {user.first_name}\n"
             f"• Lᴀsᴛ Nᴀᴍᴇ: {user.last_name if user.last_name else 'None'}\n"
-            f"• Lᴀɴɢᴜᴀɢᴇ: {user.language_code if user.language_code else 'None'}\n"
+            f"• Lᴀɴɡᴜᴀɡᴇ: {user.language_code if user.language_code else 'None'}\n"
             f"• Jᴏɪɴᴇᴅ Oɴ: {join_date}"
         )
         
@@ -309,7 +314,6 @@ def check_user_ban(func):
             # Check if user is banned
             is_banned = await db_check_ban(user_id)
             if is_banned:
-                # Send ban message and stop all further processing
                 ban_info = await get_ban_status(user_id)
                 ban_reason = ban_info.get('ban_reason', 'No reason provided')
                 ban_msg = f"<b>♯ Yᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ</b>\n\n<b>Rᴇᴀsᴏɴ:</b> {ban_reason}"
@@ -317,16 +321,14 @@ def check_user_ban(func):
                     await message.reply_text(ban_msg)
                 except:
                     pass
-                # Important: Return None to stop command execution
                 return
-            
-            # User not banned, add small delay and continue
-            await asyncio.sleep(0.3)
+                
+            # User not banned, continue with small delay
+            await asyncio.sleep(0.1)
             return await func(client, message)
             
         except Exception as e:
             print(f"Error in ban check: {e}")
-            # On any error, block access
             return
             
     return wrapper
