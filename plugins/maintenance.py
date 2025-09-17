@@ -18,7 +18,7 @@ MAINTENANCE_TEXT = """
 
 We'll be back soon! Thanks for your patience.</blockquote>
 
-<i>Contact: @{}</i>
+<i>Contact: @</i>
 """
 
 @Bot.on_message(filters.command("maintenance") & filters.user(ADMINS))
@@ -101,7 +101,7 @@ def maintenance_mode_check(func):
                     photo=random.choice(PICS),
                     caption=MAINTENANCE_TEXT.format(OWNER),
                     reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton("📢 Updates", url=f"https://t.me/Moviess_Ok")]
+                        [InlineKeyboardButton("📢 Updates", url=f"https://t.me/WilsonVerse")]
                     ])
                 )
             except Exception as e:
