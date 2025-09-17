@@ -10,6 +10,7 @@ from config import *
 import os
 from helper_func import get_readable_time
 from plugins.user_start_log import log_start_usage, get_start_stats
+from database.database import set_maintenance_mode
 
 name ="""
  BY SIIIIIID
@@ -34,6 +35,13 @@ class Bot(Client):
 
     async def start(self):
         await super().start()
+        # Initialize maintenance mode to False on start
+        try:
+            await set_maintenance_mode(False)
+            self.LOGGER(__name__).info("Maintenance mode initialized")
+        except Exception as e:
+            self.LOGGER(__name__).warning(f"Failed to initialize maintenance mode: {e}")
+            
         usr_bot_me = await self.get_me()
         self.uptime = datetime.now()
 
